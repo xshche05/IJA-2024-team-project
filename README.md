@@ -55,7 +55,7 @@ Pokud detekuje překážku, zastaví svůj pohyb vpřed.
 
 GUI umožňuje ovládání simulátoru a vizualizuje simulaci. Zobrazuje mapu prostředí s překážkami a roboty a obsahuje ovládací prvky pro dálkové ovládání vybraného robota.
 
-Simulaci lze spustit z výchozího stavu, pozastavit, nechat pokračovat nebo přehrát pozpátku
+Simulaci lze spustit z výchozího stavu, pozastavit, nechat pokračovat nebo přehrát pozpátku.
 
 Simulace pracuje se zjednodušenou fyzikou, pracující s diskrétním časem, spojitým 2D prostorem a rovnoměrným přímočarým pohybem danou rychlostí a rotací rovnoměrnou úhlovou rychlostí (nebere se v úvahu hmotnost, setrvačnost, zrychlení apod., pouze vzdálenost, rychlost, úhlová rychlost a čas). Simulace i vizualizace probíhá ve vhodně zvolených časových krocích. Kroky by měly být dostatečně jemné (vzhledem k rychlosti pohybu), aby robot stihl detekovat překážku dříve, než dojde ke kolizi a také aby vizualizace probíhala zdánlivě plynule.
 
