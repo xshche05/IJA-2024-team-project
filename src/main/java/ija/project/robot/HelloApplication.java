@@ -1,6 +1,7 @@
 package ija.project.robot;
 
 import ija.project.robot.common.Position;
+import ija.project.robot.robots.AutomatedRobot;
 import ija.project.robot.room.Room;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +28,7 @@ public class HelloApplication extends Application {
         }
         LOG.log(System.Logger.Level.INFO, "Loading FXML file");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 400, 400);
         LOG.log(System.Logger.Level.INFO, "Setting stage");
         stage.setTitle("Hello!");
         stage.setScene(scene);
@@ -35,20 +36,33 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    public static void setUpRoom() {
+    public static void setUpRoom() throws InterruptedException {
         LOG.log(System.Logger.Level.INFO, "Setting up room");
         Room room = Room.getInstance();
         room.setDimensions(10, 10);
+        AutomatedRobot r = room.addAutoRobot(new Position(4, 4));
+        r.rotate();
+        r.rotate();
+        r.rotate();
+        r.setSpeed(2);
+        room.addObstacle(new Position(0, 0));
         room.addObstacle(new Position(1, 1));
-        room.addObstacle(new Position(1, 2));
-        room.addObstacle(new Position(2, 1));
-        room.addObstacle(new Position(2, 2));
-        room.addAutoRobot(new Position(3, 3));
-        room.addManualRobot(new Position(4, 4));
-        System.out.println(room);
+
+        room.addObstacle(new Position(9, 0));
+        room.addObstacle(new Position(8, 1));
+
+        room.addObstacle(new Position(0, 9));
+        room.addObstacle(new Position(1, 8));
+
+        room.addObstacle(new Position(9, 9));
+        room.addObstacle(new Position(8, 8));
+
+        room.addAutoRobot(new Position(5, 5));
+        System.out.println(room + "\n");
+        Room.getInstance().runAutomatedRobots();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         LOG.log(System.Logger.Level.INFO, "Launching application");
         setUpRoom();
         launch();

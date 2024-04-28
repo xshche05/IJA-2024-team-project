@@ -48,6 +48,14 @@ public class Room {
                 "Room cleared");
     }
 
+    public void tick() {
+        for (AbstractRobot robot : robots) {
+            if (robot instanceof AutomatedRobot) {
+                ((AutomatedRobot) robot).tick();
+            }
+        }
+    }
+
     public boolean isPositionInRoom(Position pos) {
         return pos.x() >= 0 && pos.x() < width && pos.y() >= 0 && pos.y() < height;
     }
@@ -66,19 +74,48 @@ public class Room {
         return isPositionInRoom(pos);
     }
 
-    public void addAutoRobot(Position pos) {
-        robots.add(new AutomatedRobot(pos));
-        logger.log(System.Logger.Level.INFO,
-                "AutomatedRobot added to room");
+    public void runAutomatedRobots() throws InterruptedException {
+        for (AbstractRobot robot : robots) {
+            if (robot instanceof AutomatedRobot) {
+                ((AutomatedRobot) robot).startMoving();
+                // run robot in separate thread
+                new Thread(() -> {
+                    try {
+                        ((AutomatedRobot) robot).run();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+            }
+        }
     }
 
-    public void addManualRobot(Position pos) {
-        robots.add(new ManualRobot(pos));
+    public AutomatedRobot addAutoRobot(Position pos) {
+        if (!isPositionFree(pos)) {
+            throw new IllegalArgumentException("Position is not free");
+        }
+        AutomatedRobot robot = new AutomatedRobot(pos);
+        robots.add(robot);
+        logger.log(System.Logger.Level.INFO,
+                "AutomatedRobot added to room");
+        return robot;
+    }
+
+    public ManualRobot addManualRobot(Position pos) {
+        if (!isPositionFree(pos)) {
+            throw new IllegalArgumentException("Position is not free");
+        }
+        ManualRobot robot = new ManualRobot(pos);
+        robots.add(robot);
         logger.log(System.Logger.Level.INFO,
                 "ManualRobot added to room");
+        return robot;
     }
 
     public void addObstacle(Position pos){
+        if (!isPositionFree(pos)) {
+            throw new IllegalArgumentException("Position is not free");
+        }
         obstacles.add(new Obstacle(pos));
         logger.log(System.Logger.Level.INFO,
                 "Obstacle added to room");
