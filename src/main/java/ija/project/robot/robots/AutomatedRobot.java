@@ -10,7 +10,6 @@ import java.util.concurrent.Semaphore;
 public class AutomatedRobot extends AbstractRobot {
 
     private int view_distance = 1;
-    private final System.Logger logger;
     private boolean moving = false;
     // Queue of commands
     private final Queue<String> path = new LinkedList<>();
@@ -20,9 +19,7 @@ public class AutomatedRobot extends AbstractRobot {
 
     public AutomatedRobot(Position pos) {
         super(pos);
-        logger = System.getLogger("AutomatedRobot id: " + this.id);
-        logger.log(System.Logger.Level.INFO,
-                "AutomatedRobot created on " + pos + " with view distance " + view_distance);
+        logger.info("AutomatedRobot ("+this.id+") created at " + pos);
     }
 
     public Queue<String> getPath() {
@@ -31,8 +28,7 @@ public class AutomatedRobot extends AbstractRobot {
 
     public void setView_distance(int view_distance) {
         this.view_distance = view_distance;
-        logger.log(System.Logger.Level.INFO,
-                "AutomatedRobot view distance set to " + view_distance);
+        logger.info("AutomatedRobot ("+this.id+") view distance set to " + view_distance);
     }
 
     public Position _canMoveFrom(Position pos) {
@@ -73,22 +69,19 @@ public class AutomatedRobot extends AbstractRobot {
 
     public void rotate() {
         super.rotate(rotate_angle);
-        logger.log(System.Logger.Level.INFO,
-                "AutomatedRobot (" + this.id + ") rotated");
+        logger.info("AutomatedRobot (" + this.id + ") rotated");
         path.add("rotate " + this.rotate_angle);
     }
     @Override
     public boolean move() {
         Position newPos = canMove();
         if (newPos == null) {
-            logger.log(System.Logger.Level.WARNING,
-                    "AutomatedRobot cannot move forward, there is an obstacle in the way");
+            logger.warning("AutomatedRobot (" + this.id + ") cannot move forward, there is an obstacle on the way");
             return false;
         }
         this.pos = newPos;
         path.add("move");
-        logger.log(System.Logger.Level.INFO,
-                "AutomatedRobot (" + this.id + ") moved to " + newPos);
+        logger.info("AutomatedRobot (" + this.id + ") moved to " + newPos);
         return true;
     }
 
@@ -98,17 +91,16 @@ public class AutomatedRobot extends AbstractRobot {
 
     public void startMoving(){
         moving = true;
-        logger.log(System.Logger.Level.INFO,
-                "AutomatedRobot started moving");
+        logger.info("AutomatedRobot ("+ this.id +") started moving");
     }
 
     public void stopMoving(){
         moving = false;
-        logger.log(System.Logger.Level.INFO,
-                "AutomatedRobot stopped moving");
+        logger.info("AutomatedRobot ("+ this.id +") stopped moving");
     }
 
     public void run() throws InterruptedException {
+        logger.info("AutomatedRobot ("+ this.id +") started running");
         while (moving) {
             semaphore.acquire();
             if (!moving) break;
@@ -118,5 +110,6 @@ public class AutomatedRobot extends AbstractRobot {
                 }
             }
         }
+        logger.info("AutomatedRobot ("+ this.id +") finished running");
     }
 }

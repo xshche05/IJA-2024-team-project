@@ -10,6 +10,7 @@ module ija.project.robot {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.logging;
 
     opens ija.project.robot to javafx.fxml;
     exports ija.project.robot;

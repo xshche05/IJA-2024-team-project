@@ -73,7 +73,6 @@ public class Room {
         }
         return isPositionInRoom(pos);
     }
-
     public void runAutomatedRobots() throws InterruptedException {
         for (AbstractRobot robot : robots) {
             if (robot instanceof AutomatedRobot) {
@@ -89,29 +88,22 @@ public class Room {
             }
         }
     }
-
     public AutomatedRobot addAutoRobot(Position pos) {
         if (!isPositionFree(pos)) {
             throw new IllegalArgumentException("Position is not free");
         }
         AutomatedRobot robot = new AutomatedRobot(pos);
         robots.add(robot);
-        logger.log(System.Logger.Level.INFO,
-                "AutomatedRobot added to room");
         return robot;
     }
-
     public ManualRobot addManualRobot(Position pos) {
         if (!isPositionFree(pos)) {
             throw new IllegalArgumentException("Position is not free");
         }
         ManualRobot robot = new ManualRobot(pos);
         robots.add(robot);
-        logger.log(System.Logger.Level.INFO,
-                "ManualRobot added to room");
         return robot;
     }
-
     public void addObstacle(Position pos){
         if (!isPositionFree(pos)) {
             throw new IllegalArgumentException("Position is not free");
@@ -120,11 +112,9 @@ public class Room {
         logger.log(System.Logger.Level.INFO,
                 "Obstacle added to room");
     }
-
     public List<AbstractRobot> getRobots() {
         return robots;
     }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -145,9 +135,9 @@ public class Room {
                     for (AbstractRobot robot : robots) {
                         if (robot.getPosition().equals(pos)) {
                             if (robot instanceof ManualRobot) {
-                                sb.append("C");
+                                sb.append(robot.getId()); // todo
                             } else {
-                                sb.append("A");
+                                sb.append(robot.getId()); // todo
                             }
                         }
                     }
