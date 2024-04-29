@@ -14,4 +14,7 @@ module ija.project.robot {
 
     opens ija.project.robot to javafx.fxml;
     exports ija.project.robot;
+    exports ija.project.robot.gui;
+    exports ija.project.robot.gui.interfaces;
+    exports ija.project.robot.gui.controllers;
 }

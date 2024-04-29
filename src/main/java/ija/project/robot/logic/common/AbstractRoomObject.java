@@ -1,4 +1,4 @@
-package ija.project.robot.common;
+package ija.project.robot.logic.common;
 
 import java.util.logging.Logger;
 

@@ -1,8 +1,8 @@
-package ija.project.robot.control;
+package ija.project.robot.logic.control;
 
-import ija.project.robot.robots.AbstractRobot;
-import ija.project.robot.robots.ManualRobot;
-import ija.project.robot.room.Room;
+import ija.project.robot.logic.robots.AbstractRobot;
+import ija.project.robot.logic.robots.ManualRobot;
+import ija.project.robot.logic.room.Room;
 
 import java.util.List;
 

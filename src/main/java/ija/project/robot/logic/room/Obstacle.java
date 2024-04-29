@@ -1,7 +1,7 @@
-package ija.project.robot.room;
+package ija.project.robot.logic.room;
 
-import ija.project.robot.common.AbstractRoomObject;
-import ija.project.robot.common.Position;
+import ija.project.robot.logic.common.AbstractRoomObject;
+import ija.project.robot.logic.common.Position;
 
 public class Obstacle extends AbstractRoomObject {
 

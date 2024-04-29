@@ -1,10 +1,11 @@
-package ija.project.robot.room;
+package ija.project.robot.logic.room;
 
-import ija.project.robot.common.Position;
-import ija.project.robot.robots.AbstractRobot;
-import ija.project.robot.robots.AutomatedRobot;
-import ija.project.robot.robots.ManualRobot;
+import ija.project.robot.logic.common.Position;
+import ija.project.robot.logic.robots.AbstractRobot;
+import ija.project.robot.logic.robots.AutomatedRobot;
+import ija.project.robot.logic.robots.ManualRobot;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class Room {
                 "Room dimensions set to " + width + "x" + height);
     }
 
-    public void clearRoom() {
+    public void clear() {
         robots.clear();
         obstacles.clear();
         logger.log(System.Logger.Level.INFO,
@@ -135,9 +136,9 @@ public class Room {
                     for (AbstractRobot robot : robots) {
                         if (robot.getPosition().equals(pos)) {
                             if (robot instanceof ManualRobot) {
-                                sb.append(robot.getId()); // todo
+                                sb.append("M"); // todo
                             } else {
-                                sb.append(robot.getId()); // todo
+                                sb.append("A"); // todo
                             }
                         }
                     }
@@ -147,5 +148,53 @@ public class Room {
             if (i != height - 1) sb.append("\n");
         }
         return sb.toString();
+    }
+
+    public void loadRoomConfiguration(String configuration) {
+        List<String[]> linesList = new ArrayList<>();
+        String[] lines = configuration.split("\n");
+        int len_x = -1;
+        for (int i = 0; i < lines.length; i++) {
+            linesList.add(lines[i].split(" "));
+            if (len_x == -1) {
+                len_x = linesList.get(i).length;
+            } else if (len_x != linesList.get(i).length) {
+                throw new IllegalArgumentException("Invalid room configuration");
+            }
+        }
+        int x_dim = linesList.get(0).length;
+        int y_dim = linesList.size();
+        setDimensions(x_dim, y_dim);
+
+        for (int i = 0; i < y_dim; i++) {
+            for (int j = 0; j < x_dim; j++) {
+                switch (linesList.get(i)[j]) {
+                    case "O" -> addObstacle(new Position(j, i));
+                    case "M" -> addManualRobot(new Position(j, i));
+                    case "A" -> addAutoRobot(new Position(j, i));
+                    case "*" -> {}
+                    default -> throw new IllegalArgumentException("Invalid room configuration");
+                }
+            }
+        }
+    }
+
+    public void loadRoomConfiguration(File file) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            loadRoomConfiguration(sb.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        logger.log(System.Logger.Level.INFO, "Room configuration loaded from file " + file.getName());
+    }
+
+    public String getRoomConfiguration() {
+        return toString();
     }
 }

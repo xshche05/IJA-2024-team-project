@@ -1,6 +1,6 @@
 package ija.project.robot;
 
-import ija.project.robot.room.Room;
+import ija.project.robot.logic.room.Room;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

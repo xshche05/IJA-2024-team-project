@@ -1,4 +1,4 @@
-package ija.project.robot.common;
+package ija.project.robot.logic.common;
 
 public record Position(int x, int y) {
 

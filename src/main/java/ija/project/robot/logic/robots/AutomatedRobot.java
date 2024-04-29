@@ -1,7 +1,7 @@
-package ija.project.robot.robots;
+package ija.project.robot.logic.robots;
 
-import ija.project.robot.common.Position;
-import ija.project.robot.room.Room;
+import ija.project.robot.logic.common.Position;
+import ija.project.robot.logic.room.Room;
 
 import java.util.LinkedList;
 import java.util.Queue;
