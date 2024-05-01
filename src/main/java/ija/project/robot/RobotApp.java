@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class RobotApp {
 
-    private static final Logger logger = Logger.getAnonymousLogger();
+    public static final Logger logger = Logger.getAnonymousLogger();
 
     public static void main(String[] args) throws InterruptedException, IOException {
         LogManager.getLogManager().readConfiguration(RobotApp.class.getResourceAsStream("logging.properties"));

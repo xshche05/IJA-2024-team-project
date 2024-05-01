@@ -11,6 +11,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
+import static ija.project.robot.RobotApp.logger;
+
 public class Playground implements MenuInterface, SceneInterface {
 
     @FXML
@@ -45,6 +47,7 @@ public class Playground implements MenuInterface, SceneInterface {
     }
 
     private void gridConstruct() {
+        logger.info("Constructing grid");
         String[][] room = Room.getInstance().getRoomConfigurationArray();
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -56,10 +59,12 @@ public class Playground implements MenuInterface, SceneInterface {
                 grid.add(label, j, i);
             }
         }
+        grid.setAlignment(javafx.geometry.Pos.CENTER);
         AnchorPane.getChildren().add(grid);
     }
 
     public static Scene getScene() {
-        return SceneInterface.getScene("playground.fxml");
+        logger.info("Getting playground scene");
+        return SceneInterface.getScene(Playground.class, "playground.fxml");
     }
 }

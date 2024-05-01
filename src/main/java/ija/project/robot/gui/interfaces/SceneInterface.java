@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public interface SceneInterface {
-    static Scene getScene(String sceneFxml) {
-        FXMLLoader fxmlLoader = new FXMLLoader(Start.class.getResource(sceneFxml));
+    static Scene getScene(Class<?> sceneClass, String fxml) {
+        FXMLLoader fxmlLoader = new FXMLLoader(sceneClass.getResource(fxml));
         try {
             return new Scene(fxmlLoader.load());
         } catch (IOException e) {

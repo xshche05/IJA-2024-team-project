@@ -1,7 +1,9 @@
 package ija.project.robot.gui.logic;
 
+import ija.project.robot.gui.controllers.CreateDialog;
 import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.gui.controllers.Start;
+import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.logic.room.Room;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -11,6 +13,8 @@ import javafx.stage.Stage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+
+import static ija.project.robot.RobotApp.logger;
 
 public class Menu {
     private final FileChooser fileChooser = new FileChooser();
@@ -62,5 +66,21 @@ public class Menu {
     }
 
 
-    public void Help(AnchorPane AnchorPane) {}
+    public void CreateNew(AnchorPane AnchorPane) {
+        logger.info("Creating new room");
+        Room.getInstance().clear();
+        Stage dialog = new Stage();
+        dialog.initOwner(AnchorPane.getScene().getWindow());
+        dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        dialog.setTitle("New room");
+        Scene dialogScene = SceneInterface.getScene(CreateDialog.class, "create_dialog.fxml");
+        dialog.setScene(dialogScene);
+        dialog.setResizable(false);
+        dialog.show();
+    }
+
+
+    public void Help(AnchorPane AnchorPane) {
+        logger.info("Help opened");
+    }
 }
