@@ -6,6 +6,7 @@ import ija.project.robot.gui.logic.Menu;
 import ija.project.robot.logic.room.Room;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
@@ -16,6 +17,8 @@ import static ija.project.robot.RobotApp.logger;
 public class Playground implements MenuInterface, SceneInterface {
 
     @FXML
+    private Canvas PlayCanvas;
+    @FXML
     public AnchorPane AnchorPane; // fx:id="AnchorPane"
     @FXML
     public MenuItem MenuFileSaveAs;
@@ -24,7 +27,7 @@ public class Playground implements MenuInterface, SceneInterface {
 
     @FXML
     public void initialize() {
-        gridConstruct();
+        canvasConstruct();
     }
 
 
@@ -46,13 +49,16 @@ public class Playground implements MenuInterface, SceneInterface {
         new Menu().initialize().Help(AnchorPane);
     }
 
-    private void gridConstruct() {
+    private void canvasConstruct() {
+        // add canvas
         logger.info("Constructing grid");
         String[][] room = Room.getInstance().getRoomConfigurationArray();
         GridPane grid = new GridPane();
         grid.setHgap(10);
+
         // enable grid lines
         grid.setGridLinesVisible(true);
+
         for (int i = 0; i < room.length; i++) {
             for (int j = 0; j < room[i].length; j++) {
                 Label label = new Label(room[i][j]);
@@ -67,4 +73,31 @@ public class Playground implements MenuInterface, SceneInterface {
         logger.info("Getting playground scene");
         return SceneInterface.getScene(Playground.class, "playground.fxml");
     }
+
+    // Add/Remove obstacles
+    @FXML
+    public void PressToggle() {
+
+    }
+
+    // Obstacles
+    @FXML
+    public void PressButton1() {
+
+    }
+
+    // Manual robot
+    @FXML
+    public void PressButton2() {
+
+    }
+
+    // Automatic robot
+    @FXML
+    public void PressButton3() {
+
+    }
+
+
+
 }
