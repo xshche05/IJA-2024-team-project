@@ -13,9 +13,11 @@ public class App extends Application {
 
     private static final Logger logger = Logger.getAnonymousLogger();
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         setIcon(stage);
         stage.setTitle("Robot simulation");
+        stage.setMinHeight(200);
+        stage.setMinWidth(300);
         Scene scene = Start.getScene();
         stage.setScene(scene);
         stage.show();

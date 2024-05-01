@@ -3,35 +3,38 @@ package ija.project.robot.gui.controllers;
 import ija.project.robot.gui.interfaces.MenuInterface;
 import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.gui.logic.Menu;
-import javafx.fxml.FXMLLoader;
+import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
-
 public class Start implements MenuInterface, SceneInterface {
+    @FXML
     public AnchorPane AnchorPane; // fx:id="AnchorPane"
+    @FXML
     public MenuItem MenuFileLoad; // fx:id="MenuFileLoad"
+    @FXML
     public MenuItem MenuFileSaveAs; // fx:id="MenuFileSaveAs"
 
     @Override
+    @FXML
     public void FileLoad() {
         new Menu().initialize().FileLoad(AnchorPane);
     }
 
     @Override
+    @FXML
     public void FileSaveAs() {
         new Menu().initialize().FileSaveAs(AnchorPane);
     }
 
+    @Override
+    @FXML
+    public void Help() {
+        new Menu().initialize().Help(AnchorPane);
+    }
+
     public static Scene getScene() {
-        FXMLLoader fxmlLoader = new FXMLLoader(Start.class.getResource("start.fxml"));
-        try {
-            return new Scene(fxmlLoader.load());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return SceneInterface.getScene("start.fxml");
     }
 }

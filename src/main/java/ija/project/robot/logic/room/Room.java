@@ -189,12 +189,51 @@ public class Room {
             }
             loadRoomConfiguration(sb.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            eprintStackTrace();
         }
         logger.log(System.Logger.Level.INFO, "Room configuration loaded from file " + file.getName());
     }
 
     public String getRoomConfiguration() {
         return toString();
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public String[][] getRoomConfigurationArray() {
+        String[][] room = new String[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                Position pos = new Position(j, i);
+                if (isPositionFree(pos)) {
+                    room[i][j] = "*";
+                } else {
+                    // if obstacle is on position print O
+                    for (Obstacle obstacle : obstacles) {
+                        if (obstacle.getPosition().equals(pos)) {
+                            room[i][j] = "O";
+                            break;
+                        }
+                    }
+                    // if robot is on position print R
+                    for (AbstractRobot robot : robots) {
+                        if (robot.getPosition().equals(pos)) {
+                            if (robot instanceof ManualRobot) {
+                                room[i][j] = "M"; // todo
+                            } else {
+                                room[i][j] = "A"; // todo
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return room;
     }
 }

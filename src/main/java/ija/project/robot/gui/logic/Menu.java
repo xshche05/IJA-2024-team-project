@@ -2,7 +2,6 @@ package ija.project.robot.gui.logic;
 
 import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.gui.controllers.Start;
-import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.logic.room.Room;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -61,4 +60,7 @@ public class Menu {
             logger.log(System.Logger.Level.ERROR, "Error saving file: " + e.getMessage());
         }
     }
+
+
+    public void Help(AnchorPane AnchorPane) {}
 }

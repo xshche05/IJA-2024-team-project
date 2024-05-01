@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ija.project.robot.gui.controllers.Start">
+<AnchorPane fx:id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ija.project.robot.gui.controllers.Start">
    <children>
-      <MenuBar layoutY="1.0" prefHeight="25.0" prefWidth="600.0">
+      <MenuBar layoutY="1.0" prefHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -25,7 +28,29 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button layoutX="238.0" layoutY="105.0" mnemonicParsing="false" onAction="#FileLoad" pickOnBounds="false" prefHeight="69.0" prefWidth="123.0" text="LOAD FROM FILE" />
-      <Button layoutX="238.0" layoutY="221.0" mnemonicParsing="false" pickOnBounds="false" prefHeight="69.0" prefWidth="123.0" text="CREATE NEW" />
+      <VBox alignment="CENTER" layoutX="151.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" prefHeight="93.0" prefWidth="655.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+         <children>
+            <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="300.0" prefHeight="195.0" prefWidth="355.0">
+               <children>
+                  <Button mnemonicParsing="false" pickOnBounds="false" prefHeight="69.0" prefWidth="123.0" text="CREATE NEW">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#FileLoad" pickOnBounds="false" prefHeight="69.0" prefWidth="123.0" text="LOAD FROM FILE" HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
