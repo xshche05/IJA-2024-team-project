@@ -15,9 +15,6 @@ import javafx.scene.layout.GridPane;
 import static ija.project.robot.RobotApp.logger;
 
 public class Playground implements MenuInterface, SceneInterface {
-
-    @FXML
-    private Canvas PlayCanvas;
     @FXML
     public AnchorPane AnchorPane; // fx:id="AnchorPane"
     @FXML
@@ -73,31 +70,4 @@ public class Playground implements MenuInterface, SceneInterface {
         logger.info("Getting playground scene");
         return SceneInterface.getScene(Playground.class, "playground.fxml");
     }
-
-    // Add/Remove obstacles
-    @FXML
-    public void PressToggle() {
-
-    }
-
-    // Obstacles
-    @FXML
-    public void PressButton1() {
-
-    }
-
-    // Manual robot
-    @FXML
-    public void PressButton2() {
-
-    }
-
-    // Automatic robot
-    @FXML
-    public void PressButton3() {
-
-    }
-
-
-
 }

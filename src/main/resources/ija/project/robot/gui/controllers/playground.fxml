@@ -41,10 +41,10 @@
       </VBox>
       <VBox alignment="CENTER" layoutX="361.0" layoutY="34.0" prefHeight="350.0" prefWidth="218.0" spacing="10.0" AnchorPane.bottomAnchor="11.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="36.0">
          <children>
-            <Button fx:id="Button1" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressButton1" prefHeight="26.0" prefWidth="218.0" text="Obstacle" />
-            <Button fx:id="Button2" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressButton2" prefHeight="26.0" prefWidth="218.0" text="Manual Robot" />
-            <Button fx:id="Button3" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressButton3" prefHeight="26.0" prefWidth="218.0" text="Automatic Robot" />
-            <ToggleButton fx:id="Toggle" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressToggle" prefHeight="26.0" prefWidth="214.0" text="Add" />
+            <Button fx:id="obstacleBttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="218.0" text="Obstacle" />
+            <Button fx:id="manualButton" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="218.0" text="Manual Robot" />
+            <Button fx:id="autoBttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="218.0" text="Automatic Robot" />
+            <ToggleButton fx:id="addBttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="214.0" text="Add" />
          </children>
          <padding>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
