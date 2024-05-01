@@ -189,7 +189,7 @@ public class Room {
             }
             loadRoomConfiguration(sb.toString());
         } catch (IOException e) {
-            eprintStackTrace();
+            e.printStackTrace();
         }
         logger.log(System.Logger.Level.INFO, "Room configuration loaded from file " + file.getName());
     }
