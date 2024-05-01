@@ -24,7 +24,7 @@ public class VisualRobot {
         this.visual.setFill(Color.WHITE);
         this.controller.AnchorPane.getChildren().add(this.visual);
         this.visual.setStroke(javafx.scene.paint.Color.BLACK);
-
+        this.visual.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
         this.transition = new TranslateTransition(Duration.seconds(1), this.visual); // 1 second for the transition
         this.transition.setCycleCount(1);
         this.transition.setAutoReverse(false);
