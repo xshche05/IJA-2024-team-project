@@ -33,7 +33,7 @@ public class CreateDialog {
                 return;
             }
             logger.info("Setting room dimensions to " + rows + "x" + cols);
-            Room.getInstance().setDimensions(rows, cols);
+            Room.getInstance().setDimensions(cols, rows);
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
             Stage owner = (Stage) stage.getOwner();

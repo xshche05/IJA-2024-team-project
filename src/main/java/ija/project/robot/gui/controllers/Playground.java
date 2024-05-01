@@ -213,14 +213,40 @@ public class Playground implements MenuInterface, SceneInterface {
         String[][] cells = room.getRoomConfigurationArray();
         for (int i = 0; i < room.getWidth(); i++) {
             for (int j = 0; j < room.getHeight(); j++) {
-                if (cells[i][j].equals("A")) {
-                    placeCanvasCell(i, j, javafx.scene.paint.Color.RED);
-                } else if (cells[i][j].equals("M")) {
-                    placeCanvasCell(i, j, javafx.scene.paint.Color.BLUE);
-                } else if (cells[i][j].equals("O")) {
-                    placeCanvasCell(i, j, javafx.scene.paint.Color.BLACK);
+                switch (cells[j][i]) {
+                    case "A" -> placeCanvasCell(i, j, Color.RED);
+                    case "M" -> placeCanvasCell(i, j, Color.BLUE);
+                    case "O" -> placeCanvasCell(i, j, Color.BLACK);
                 }
             }
+        }
+    }
+
+    public void testTick() {
+        Room.getInstance().tick();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        clearCanvas();
+        drawCanvasRoom();
+        updateCanvasGrid();
+    }
+
+    public void clearCanvas() {
+        int width = Room.getInstance().getWidth();
+        int height = Room.getInstance().getHeight();
+        canvas.getGraphicsContext2D().setFill(javafx.scene.paint.Color.WHITE);
+        canvas.getGraphicsContext2D().fillRect(0, 0, width * gridWidth, height * gridWidth);
+        updateCanvasGrid();
+    }
+
+    public void enableSim() {
+        try {
+            Room.getInstance().runAutomatedRobots();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
