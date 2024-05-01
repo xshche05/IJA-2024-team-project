@@ -6,6 +6,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -40,9 +41,12 @@
                   <HBox alignment="CENTER" prefHeight="97.0" prefWidth="892.0" spacing="5.0">
                      <children>
                         <ToggleButton fx:id="addBttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressAdd" prefHeight="26.0" prefWidth="214.0" text="Add/Remove" />
-                        <ToggleButton fx:id="autoBttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressAutoRobot" prefHeight="26.0" prefWidth="214.0" text="Automatic Robot" />
-                        <ToggleButton fx:id="manualButton" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressManualRobot" prefHeight="26.0" prefWidth="214.0" text="Manual Robot" />
-                        <ToggleButton fx:id="obstacleBttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressObstacle" prefHeight="26.0" prefWidth="214.0" text="Obstacle" />
+                        <ToggleButton fx:id="autoBttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressAutoRobot" prefHeight="26.0" prefWidth="214.0" text="Automatic Robot">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="robot" />
+                           </toggleGroup></ToggleButton>
+                        <ToggleButton fx:id="manualButton" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressManualRobot" prefHeight="26.0" prefWidth="214.0" text="Manual Robot" toggleGroup="$robot" />
+                        <ToggleButton fx:id="obstacleBttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressObstacle" prefHeight="26.0" prefWidth="214.0" text="Obstacle" toggleGroup="$robot" />
                      </children>
                   </HBox>
                </children>

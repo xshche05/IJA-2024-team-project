@@ -105,6 +105,21 @@ public class Room {
         robots.add(robot);
         return robot;
     }
+
+    public void removeFrom(Position pos) {
+        for (AbstractRobot robot : robots) {
+            if (robot.getPosition().equals(pos)) {
+                robots.remove(robot);
+                return;
+            }
+        }
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle.getPosition().equals(pos)) {
+                obstacles.remove(obstacle);
+                return;
+            }
+        }
+    }
     public void addObstacle(Position pos){
         if (!isPositionFree(pos)) {
             throw new IllegalArgumentException("Position is not free");
