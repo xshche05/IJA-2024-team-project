@@ -14,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static ija.project.robot.RobotApp.logger;
@@ -60,17 +61,23 @@ public class Playground implements MenuInterface, SceneInterface {
         Room room = Room.getInstance();
         int width = room.getWidth();
         int height = room.getHeight();
-
+        int max_x = (int) Screen.getPrimary().getBounds().getMaxX();
+        int max_y = (int) Screen.getPrimary().getBounds().getMaxY();
+        logger.info("Max X: " + max_x + " Max Y: " + max_y);
         Canvas Canvas = new Canvas();
-
         Canvas.setWidth(width * gridWidth);
         Canvas.setHeight(height * gridWidth);
-        // Color canvas
-        Canvas.getGraphicsContext2D().setFill(javafx.scene.paint.Color.RED);
-        Canvas.getGraphicsContext2D().fillRect(0, 0, width * gridWidth, height * gridWidth);
-        AnchorPane.setMinHeight(height * gridWidth + 100);
-        AnchorPane.setMinWidth(width * gridWidth + 100);
+        AnchorPane.setMinHeight(height * gridWidth+100);
+        AnchorPane.setMinWidth(width * gridWidth+100);
         HBoxCanvas.getChildren().add(Canvas);
+        Canvas.getGraphicsContext2D().setFill(javafx.scene.paint.Color.BLACK);
+        for (int i = 0; i < width; i++) {
+            Canvas.getGraphicsContext2D().strokeLine(i * gridWidth, 0, i * gridWidth, height * gridWidth);
+        }
+        for (int i = 0; i < height; i++) {
+            Canvas.getGraphicsContext2D().strokeLine(0, i * gridWidth, width * gridWidth, i * gridWidth);
+        }
+        Canvas.getGraphicsContext2D().strokeRect(0, 0, width * gridWidth, height * gridWidth);
         Canvas.setOnMouseClicked(this::CanvasClicked);
     }
 
