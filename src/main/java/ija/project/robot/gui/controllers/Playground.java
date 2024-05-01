@@ -86,4 +86,20 @@ public class Playground implements MenuInterface, SceneInterface {
         logger.info("Getting playground scene");
         return SceneInterface.getScene(Playground.class, "playground.fxml");
     }
+
+    public void PressAdd(){
+
+    }
+
+    public void PressAutoRobot(){
+
+    }
+
+    public void PressManualRobot(){
+
+    }
+
+    public void PressObstacle(){
+
+    }
 }
