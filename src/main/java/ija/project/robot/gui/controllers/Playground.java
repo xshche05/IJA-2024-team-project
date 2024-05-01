@@ -23,6 +23,9 @@ public class Playground implements MenuInterface, SceneInterface {
     public MenuItem MenuFileLoad;
 
     @FXML
+    public Canvas Canvas;
+
+    @FXML
     public void initialize() {
         canvasConstruct();
     }
@@ -48,6 +51,9 @@ public class Playground implements MenuInterface, SceneInterface {
 
     private void canvasConstruct() {
         // add canvas
+
+
+
         logger.info("Constructing grid");
         String[][] room = Room.getInstance().getRoomConfigurationArray();
         GridPane grid = new GridPane();

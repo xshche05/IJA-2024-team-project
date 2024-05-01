@@ -34,7 +34,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Canvas height="200.0" width="200.0" />
+                  <Canvas fx:id="Canvas" height="200.0" width="200.0" />
                </children>
             </HBox>
          </children>
