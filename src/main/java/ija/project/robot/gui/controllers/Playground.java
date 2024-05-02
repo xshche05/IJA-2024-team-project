@@ -6,24 +6,19 @@ import ija.project.robot.gui.logic.Menu;
 import ija.project.robot.gui.visualbuilder.VisualRobot;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +57,11 @@ public class Playground implements MenuInterface, SceneInterface {
     private List<VisualRobot> visualRobots = new ArrayList<>(); // List of robots at the playground
     private VisualRobot selectedRobot = null; // Selected robot at the playground
 
+    /**
+     * Initializes the controller by setting up the UI components, canvas, and initial settings for the game mode.
+     * This method constructs the canvas based on the room dimensions, initializes the toggle buttons,
+     * and sets up the default settings for adding, moving, and controlling robots or obstacles.
+     */
     @FXML
     public void initialize() {
         canvasConstruct();
@@ -84,12 +84,18 @@ public class Playground implements MenuInterface, SceneInterface {
     }
 
 
+    /**
+     * Loads the game configuration from a file into the current session.
+     */
     @Override
     @FXML
     public void FileLoad() {
         new Menu().initialize().FileLoad(AnchorPane);
     }
 
+    /**
+     * Saves the current game configuration to a file.
+     */
     @Override
     @FXML
     public void FileSaveAs() {
@@ -102,6 +108,10 @@ public class Playground implements MenuInterface, SceneInterface {
         new Menu().initialize().Help(AnchorPane);
     }
 
+    /**
+     * Constructs the canvas based on the room's dimensions and prepares it for drawing.
+     * It sets the canvas size to fit the room, fills the background, and prepares the UI to receive mouse events.
+     */
     private void canvasConstruct() {
         // add canvas
         logger.info("Constructing canvas");
@@ -124,6 +134,13 @@ public class Playground implements MenuInterface, SceneInterface {
         updateCanvasGrid();
     }
 
+    /**
+     * Handles mouse click events on the canvas to add, remove, or identify robots and obstacles.
+     * Based on the current mode and whether the simulation is running, this method decides how to respond to clicks,
+     * possibly adding or removing objects or making selections.
+     *
+     * @param e The MouseEvent that triggered this method.
+     */
     public void CanvasClicked(MouseEvent e) {
         logger.info("Canvas clicked");
         logger.info("X: " + e.getX() + " Y: " + e.getY());
@@ -166,13 +183,21 @@ public class Playground implements MenuInterface, SceneInterface {
 
     }
 
+    /**
+     * Gets the scene for the playground.
+     *
+     * @return The scene for the playground.
+     */
     public static Scene getScene() {
         logger.info("Getting playground scene");
         return SceneInterface.getScene(Playground.class, "playground.fxml");
     }
 
-
-    // First buttons row
+    /**
+     * Toggles the add/remove mode in the simulation.
+     * When enabled, users can add robots or obstacles by clicking on the canvas.
+     * When disabled, this method disables buttons, and users can remove robots or obstacles from the canvas.
+     */
     public void PressAdd(){
         add = !addBttn.isSelected();
         if (!add){
@@ -192,6 +217,10 @@ public class Playground implements MenuInterface, SceneInterface {
         }
     }
 
+    /**
+     * Toggles the mode to add automatic robots to the simulation.
+     * This method updates the state to reflect whether automatic robots can currently be added.
+     */
     public void PressAutoRobot(){
         autoRobot = autoBttn.isSelected();
         String mode = autoRobot ? "ENABLED" : "DISABLED";
@@ -199,6 +228,10 @@ public class Playground implements MenuInterface, SceneInterface {
         updatePlaceBttns();
     }
 
+    /**
+     * Toggles the mode to add manual robots to the simulation.
+     * This method updates the state to reflect whether manual robots can currently be added.
+     */
     public void PressManualRobot(){
         manualRobot = manualButton.isSelected();
         String mode = manualRobot ? "ENABLED" : "DISABLED";
@@ -206,6 +239,10 @@ public class Playground implements MenuInterface, SceneInterface {
         updatePlaceBttns();
     }
 
+    /**
+     * Toggles the mode to add obstacles to the simulation.
+     * This method updates the state to reflect whether obstacles can currently be added.
+     */
     public void PressObstacle(){
         obstacle = obstacleBttn.isSelected();
         String mode = obstacle ? "ENABLED" : "DISABLED";
@@ -213,6 +250,11 @@ public class Playground implements MenuInterface, SceneInterface {
         updatePlaceBttns();
     }
 
+    /**
+     * Synchronizes the toggle state of placement buttons with internal state variables.
+     * This method ensures that the toggle states of the buttons for adding robots and obstacles
+     * are consistent with the actual modes active in the simulation.
+     */
     public void updatePlaceBttns(){
         add = !addBttn.isSelected();
         autoRobot = autoBttn.isSelected();
@@ -221,8 +263,11 @@ public class Playground implements MenuInterface, SceneInterface {
         start = strtbttn.isSelected();
     }
 
-    // Second buttons row
-
+    /**
+     * Toggles the start/pause state of the simulation.
+     * When the simulation is started, this method disables editing modes and enables robot movement controls.
+     * When the simulation is paused, it allows editing and disables movement controls.
+     */
     public void PressStartPause(){
         logger.info("Start button pressed");
         start = strtbttn.isSelected();
@@ -262,22 +307,26 @@ public class Playground implements MenuInterface, SceneInterface {
         }
     }
 
-    public void PressLeftRemoveAll(){
-        logger.info("Pause button pressed");
+    public void PressLeft(){
+        logger.info("Left button pressed");
     }
 
     public void PressGO(){
-        logger.info("Pause button pressed");
+        logger.info("GO button pressed");
     }
 
     public void PressRight(){
-        logger.info("Restart button pressed");
+        logger.info("Right button pressed");
     }
 
-
-
-
-
+    /**
+     * Clears a specific cell on the canvas, removing any visual elements from it.
+     * This method is used to reset a cell to its default appearance, typically after a robot or obstacle has been removed.
+     * The method also ensures that the cell removal is reflected in the Room's logical representation.
+     *
+     * @param x The x-coordinate of the cell to clear, based on grid coordinates.
+     * @param y The y-coordinate of the cell to clear, based on grid coordinates.
+     */
     public void clearCanvasCell(int x, int y) {
         Room.getInstance().removeFrom(new Position(x, y));
         canvas.getGraphicsContext2D().setFill(Color.WHITE);
@@ -286,11 +335,17 @@ public class Playground implements MenuInterface, SceneInterface {
         canvas.getGraphicsContext2D().strokeRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
     }
 
-//    public void placeCanvasCell(int x, int y, Color color) {
-//        canvas.getGraphicsContext2D().setFill(color);
-//        canvas.getGraphicsContext2D().fillRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
-//    }
 
+    /**
+     * Draws a ROBOT or OBSTACLE at a specified grid cell with an optional orientation indicator.
+     * To draw a robot, provide a color and orientation. To draw an obstacle, provide a color and set orientation to null.
+     * The robot is drawn as a circle, and if orientation is provided, a small dot indicates the direction the robot is facing.
+     *
+     * @param x The x-coordinate of the grid cell where the object will be placed.
+     * @param y The y-coordinate of the grid cell where the object will be placed.
+     * @param color The {@link Color} to use for the object's body.
+     * @param robotOrientation The orientation of the robot in degrees, where 0 degrees indicates up. Set as null to draw an obstacle.
+     */
     public void placeCanvasCell(int x, int y, Color color, Integer robotOrientation) {
         double centerX = x * gridWidth + gridWidth / 2.0;
         double centerY = y * gridWidth + gridWidth / 2.0;
@@ -319,7 +374,11 @@ public class Playground implements MenuInterface, SceneInterface {
         }
     }
 
-
+    /**
+     * Draws a grid on the canvas based on the dimensions of the room.
+     *
+     * Uses the singleton instance of {@link Room} to determine the grid dimensions.
+     */
     public void updateCanvasGrid() {
         Room room = Room.getInstance();
         int width = room.getWidth();
@@ -334,17 +393,24 @@ public class Playground implements MenuInterface, SceneInterface {
         canvas.getGraphicsContext2D().strokeRect(0, 0, width * gridWidth, height * gridWidth);
     }
 
+    /**
+     * Draws the current state of the room on the canvas based on the room's configuration array.
+     * Automatic robots are red, manual robots are cornflower blue, and obstacles are black.
+     *
+     * This method iterates through each cell in the room and draws
+     * the appropriate visual representation on the canvas using {@link #placeCanvasCell}.
+     *
+     * Uses the singleton instance of {@link Room} to retrieve the current room configuration.
+     */
     public void drawCanvasRoom() {
         Room room = Room.getInstance();
         String[][] cells = room.getRoomConfigurationArray();
         for (int i = 0; i < room.getWidth(); i++) {
             for (int j = 0; j < room.getHeight(); j++) {
-                if (cells[i][j].equals("A")) {
-                    placeCanvasCell(i, j, Color.RED, 0);
-                } else if (cells[i][j].equals("M")) {
-                    placeCanvasCell(i, j, Color.CORNFLOWERBLUE, 0);
-                } else if (cells[i][j].equals("O")) {
-                    placeCanvasCell(i, j, Color.BLACK, null);
+                switch (cells[i][j]) {
+                    case "A" -> placeCanvasCell(i, j, Color.RED, 0);
+                    case "M" -> placeCanvasCell(i, j, Color.CORNFLOWERBLUE, 0);
+                    case "O" -> placeCanvasCell(i, j, Color.BLACK, null);
                 }
             }
         }
