@@ -65,7 +65,7 @@ public class Playground implements MenuInterface, SceneInterface {
         manualRobot = manualButton.isSelected();
         obstacle = obstacleBttn.isSelected();
 
-        start = !strtbttn.isSelected();
+        start = strtbttn.isSelected();
         strtbttn.setText("PAUSE");
         strtbttn.setStyle("-fx-background-color: yellow;");
 
@@ -122,31 +122,34 @@ public class Playground implements MenuInterface, SceneInterface {
         int y = (int) e.getY() / gridWidth;
         logger.info("X: " + x + " Y: " + y);
         // fill cell with green color
-        if (add) {
-            clearCanvasCell(x, y);
-            if (autoRobot) {
-                Room.getInstance().addAutoRobot(new Position(x, y));
-                logger.info("Auto robot added at " + x + " " + y);
-                placeCanvasCell(x, y, javafx.scene.paint.Color.RED);
-            } else if (manualRobot) {
-                Room.getInstance().addManualRobot(new Position(x, y));
-                logger.info("Manual robot added at " + x + " " + y);
-                placeCanvasCell(x, y, javafx.scene.paint.Color.BLUE);
-            } else if (obstacle) {
-                Room.getInstance().addObstacle(new Position(x, y));
-                logger.info("Obstacle added at " + x + " " + y);
-                placeCanvasCell(x, y, javafx.scene.paint.Color.BLACK);
-            }
-        }
-        else {
-            if (Room.getInstance().isPositionFree(new Position(x, y))) {
-                logger.info("Position is free");
-            } else {
-                logger.info("Position is not free");
+        if (!start) {
+            if (add) {
                 clearCanvasCell(x, y);
+                if (autoRobot) {
+                    Room.getInstance().addAutoRobot(new Position(x, y));
+                    logger.info("Auto robot added at " + x + " " + y);
+                    placeCanvasCell(x, y, javafx.scene.paint.Color.RED);
+                } else if (manualRobot) {
+                    Room.getInstance().addManualRobot(new Position(x, y));
+                    logger.info("Manual robot added at " + x + " " + y);
+                    placeCanvasCell(x, y, javafx.scene.paint.Color.BLUE);
+                } else if (obstacle) {
+                    Room.getInstance().addObstacle(new Position(x, y));
+                    logger.info("Obstacle added at " + x + " " + y);
+                    placeCanvasCell(x, y, javafx.scene.paint.Color.BLACK);
+                }
             }
+            else {
+                if (Room.getInstance().isPositionFree(new Position(x, y))) {
+                    logger.info("Position is free");
+                } else {
+                    logger.info("Position is not free");
+                    clearCanvasCell(x, y);
+                }
+            }
+            updateCanvasGrid();
         }
-        updateCanvasGrid();
+
     }
 
     public static Scene getScene() {
@@ -201,15 +204,15 @@ public class Playground implements MenuInterface, SceneInterface {
         autoRobot = autoBttn.isSelected();
         manualRobot = manualButton.isSelected();
         obstacle = obstacleBttn.isSelected();
-        start = !strtbttn.isSelected();
+        start = strtbttn.isSelected();
     }
 
     // Second buttons row
 
     public void PressStartPause(){
         logger.info("Start button pressed");
-        start = !strtbttn.isSelected();
-        if (start){
+        start = strtbttn.isSelected();
+        if (!start){
             strtbttn.setText("PAUSE");
             strtbttn.setStyle("-fx-background-color: yellow;");
             // Enable map editing buttons
