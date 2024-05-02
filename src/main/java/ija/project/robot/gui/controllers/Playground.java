@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
@@ -19,6 +20,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.awt.*;
 
 import static ija.project.robot.RobotApp.logger;
 
@@ -38,13 +41,19 @@ public class Playground implements MenuInterface, SceneInterface {
     public ToggleButton autoBttn;
     public ToggleButton manualButton;
     public ToggleButton obstacleBttn;
+    public ToggleButton strtbttn;
 
     public Canvas canvas;
+    public Button leftbttn;
+    public Button gobttn;
+    public Button rghtbttn;
 
     boolean add;
     boolean autoRobot;
     boolean manualRobot;
     boolean obstacle;
+
+    boolean start;
 
     @FXML
     public void initialize() {
@@ -54,6 +63,10 @@ public class Playground implements MenuInterface, SceneInterface {
         autoRobot = autoBttn.isSelected();
         manualRobot = manualButton.isSelected();
         obstacle = obstacleBttn.isSelected();
+
+        start = strtbttn.isSelected();
+        strtbttn.setText("PAUSE");
+        strtbttn.setStyle("-fx-background-color: yellow;");
     }
 
 
@@ -136,6 +149,8 @@ public class Playground implements MenuInterface, SceneInterface {
         return SceneInterface.getScene(Playground.class, "playground.fxml");
     }
 
+
+    // First buttons row
     public void PressAdd(){
         add = !addBttn.isSelected();
         if (!add){
@@ -180,6 +195,40 @@ public class Playground implements MenuInterface, SceneInterface {
         manualRobot = manualButton.isSelected();
         obstacle = obstacleBttn.isSelected();
     }
+
+    // Second buttons row
+
+    public void PressStartPause(){
+        logger.info("Start button pressed");
+        start = strtbttn.isSelected();
+        if (start){
+            strtbttn.setText("PAUSE");
+            strtbttn.setStyle("-fx-background-color: yellow;");
+            addBttn.setDisable(false);
+
+
+        } else {
+            strtbttn.setText("START");
+            strtbttn.setStyle("-fx-background-color: lightgreen;");
+            addBttn.setDisable(true);
+        }
+    }
+
+    public void PressLeftRemoveAll(){
+        logger.info("Pause button pressed");
+    }
+
+    public void PressGO(){
+        logger.info("Pause button pressed");
+    }
+
+    public void PressRight(){
+        logger.info("Restart button pressed");
+    }
+
+
+
+
 
     public void clearCanvasCell(int x, int y) {
         Room.getInstance().removeFrom(new Position(x, y));

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -47,6 +48,14 @@
                            </toggleGroup></ToggleButton>
                         <ToggleButton fx:id="manualButton" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressManualRobot" prefHeight="26.0" prefWidth="214.0" text="Manual Robot" toggleGroup="$robot" />
                         <ToggleButton fx:id="obstacleBttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressObstacle" prefHeight="26.0" prefWidth="214.0" text="Obstacle" toggleGroup="$robot" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                     <children>
+                        <ToggleButton fx:id="strtbttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressStartPause" prefHeight="26.0" prefWidth="214.0" text="Start/Pause" />
+                        <Button fx:id="leftbttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressLeftRemoveAll" prefHeight="26.0" prefWidth="214.0" text="Left" />
+                        <Button fx:id="gobttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressGO" prefHeight="26.0" prefWidth="214.0" text="Go" />
+                        <Button fx:id="rghtbttn" minHeight="26.0" minWidth="121.0" mnemonicParsing="false" onAction="#PressRight" prefHeight="26.0" prefWidth="214.0" text="Right" />
                      </children>
                   </HBox>
                </children>
