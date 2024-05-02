@@ -24,6 +24,12 @@ import java.util.List;
 
 import static ija.project.robot.RobotApp.logger;
 
+/**
+ * Controller for the playground scene of the application.
+ * This class handles the interactions of the user with the playground.
+ * The playground allows users to add robots and obstacles to the room, start and pause the simulation,
+ * and control the movement of robots.
+ */
 public class Playground implements MenuInterface, SceneInterface {
     @FXML
     public AnchorPane AnchorPane; // fx:id="AnchorPane"

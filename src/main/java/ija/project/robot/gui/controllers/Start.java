@@ -11,6 +11,11 @@ import javafx.scene.layout.AnchorPane;
 
 import static ija.project.robot.RobotApp.logger;
 
+/**
+ * Controller for the start scene of the application.
+ * This class handles the initial interactions of the user with the application's main menu,
+ * including loading files, saving files, accessing help, and creating new projects.
+ */
 public class Start implements MenuInterface, SceneInterface {
     @FXML
     public AnchorPane AnchorPane; // fx:id="AnchorPane"
@@ -21,29 +26,50 @@ public class Start implements MenuInterface, SceneInterface {
     @FXML
     public Button CreateNew;
 
+    /**
+     * Loads a room state from file.txt contains room map into the application.
+     * This method is triggered when the user selects the 'Load File' option from the menu.
+     */
     @Override
     @FXML
     public void FileLoad() {
         new Menu().initialize().FileLoad(AnchorPane);
     }
 
+    /**
+     * Saves the current room state to a file.
+     * This method is triggered when the user selects the 'Save As' option from the menu.
+     */
     @Override
     @FXML
     public void FileSaveAs() {
         new Menu().initialize().FileSaveAs(AnchorPane);
     }
 
+    /**
+     * Displays help information related to the application.
+     * This method is triggered when the user selects the 'Help' option from the menu.
+     */
     @Override
     @FXML
     public void Help() {
         new Menu().initialize().Help(AnchorPane);
     }
 
+    /**
+     * Initiates the manual creation of a new room map by user.
+     * This method is triggered when the user clicks the 'Create New' button.
+     */
     @FXML
     public void CreateNew() {
         new Menu().initialize().CreateNew(AnchorPane);
     }
 
+    /**
+     * Provides the scene for the start screen of the application.
+     *
+     * @return The loaded Scene object for the start screen.
+     */
     public static Scene getScene() {
         logger.info("Getting start scene");
         return SceneInterface.getScene(Start.class,"start.fxml");
