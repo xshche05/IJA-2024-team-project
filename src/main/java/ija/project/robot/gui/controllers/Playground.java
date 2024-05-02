@@ -58,6 +58,7 @@ public class Playground implements MenuInterface, SceneInterface {
     @FXML
     public void initialize() {
         addBttn.setText("ADD MODE");
+        addBttn.setStyle("-fx-background-color: LightBlue;");
         canvasConstruct();
         add = !addBttn.isSelected();
         autoRobot = autoBttn.isSelected();
@@ -159,12 +160,14 @@ public class Playground implements MenuInterface, SceneInterface {
         add = !addBttn.isSelected();
         if (!add){
             addBttn.setText("REMOVE MODE");
+            addBttn.setStyle("-fx-background-color: LightPink;");
             logger.info("Playground REMOVE MODE activated");
             obstacleBttn.setDisable(true);
             autoBttn.setDisable(true);
             manualButton.setDisable(true);
         } else {
             addBttn.setText("ADD MODE");
+            addBttn.setStyle("-fx-background-color: LightBlue;");
             logger.info("Playground ADD MODE activated");
             autoBttn.setDisable(false);
             manualButton.setDisable(false);
@@ -209,7 +212,10 @@ public class Playground implements MenuInterface, SceneInterface {
         if (start){
             strtbttn.setText("PAUSE");
             strtbttn.setStyle("-fx-background-color: yellow;");
+            // Enable map editing buttons
             addBttn.setDisable(false);
+
+            // Disable robot movement buttons
             leftbttn.setDisable(true);
             gobttn.setDisable(true);
             rghtbttn.setDisable(true);
