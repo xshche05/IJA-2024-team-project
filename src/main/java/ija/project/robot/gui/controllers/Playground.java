@@ -52,8 +52,8 @@ public class Playground implements MenuInterface, SceneInterface {
     boolean autoRobot;
     boolean manualRobot;
     boolean obstacle;
-
     boolean start;
+
 
     @FXML
     public void initialize() {
@@ -64,9 +64,13 @@ public class Playground implements MenuInterface, SceneInterface {
         manualRobot = manualButton.isSelected();
         obstacle = obstacleBttn.isSelected();
 
-        start = strtbttn.isSelected();
+        start = !strtbttn.isSelected();
         strtbttn.setText("PAUSE");
         strtbttn.setStyle("-fx-background-color: yellow;");
+
+        leftbttn.setDisable(true);
+        gobttn.setDisable(true);
+        rghtbttn.setDisable(true);
     }
 
 
@@ -194,23 +198,30 @@ public class Playground implements MenuInterface, SceneInterface {
         autoRobot = autoBttn.isSelected();
         manualRobot = manualButton.isSelected();
         obstacle = obstacleBttn.isSelected();
+        start = !strtbttn.isSelected();
     }
 
     // Second buttons row
 
     public void PressStartPause(){
         logger.info("Start button pressed");
-        start = strtbttn.isSelected();
+        start = !strtbttn.isSelected();
         if (start){
             strtbttn.setText("PAUSE");
             strtbttn.setStyle("-fx-background-color: yellow;");
             addBttn.setDisable(false);
+            leftbttn.setDisable(true);
+            gobttn.setDisable(true);
+            rghtbttn.setDisable(true);
 
 
         } else {
             strtbttn.setText("START");
             strtbttn.setStyle("-fx-background-color: lightgreen;");
             addBttn.setDisable(true);
+            leftbttn.setDisable(false);
+            gobttn.setDisable(false);
+            rghtbttn.setDisable(false);
         }
     }
 
