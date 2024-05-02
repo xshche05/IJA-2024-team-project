@@ -3,12 +3,14 @@ package ija.project.robot.gui.controllers;
 import ija.project.robot.gui.interfaces.MenuInterface;
 import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.gui.logic.Menu;
+import ija.project.robot.gui.visualbuilder.VisualRobot;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -22,6 +24,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ija.project.robot.RobotApp.logger;
 
@@ -44,6 +48,7 @@ public class Playground implements MenuInterface, SceneInterface {
     public ToggleButton strtbttn;
 
     public Canvas canvas;
+    public GraphicsContext gc;
     public Button leftbttn;
     public Button gobttn;
     public Button rghtbttn;
@@ -54,12 +59,16 @@ public class Playground implements MenuInterface, SceneInterface {
     boolean obstacle;
     boolean start;
 
+    private List<VisualRobot> visualRobots = new ArrayList<>(); // List of robots at the playground
+    private VisualRobot selectedRobot = null; // Selected robot at the playground
 
     @FXML
     public void initialize() {
+        canvasConstruct();
+        gc = canvas.getGraphicsContext2D();
+
         addBttn.setText("ADD MODE");
         addBttn.setStyle("-fx-background-color: LightBlue;");
-        canvasConstruct();
         add = !addBttn.isSelected();
         autoRobot = autoBttn.isSelected();
         manualRobot = manualButton.isSelected();
@@ -105,7 +114,7 @@ public class Playground implements MenuInterface, SceneInterface {
         canvas = new Canvas();
         canvas.setWidth(width * gridWidth);
         canvas.setHeight(height * gridWidth);
-        canvas.getGraphicsContext2D().setFill(javafx.scene.paint.Color.WHITE);
+        canvas.getGraphicsContext2D().setFill(Color.WHITE);
         canvas.getGraphicsContext2D().fillRect(0, 0, width * gridWidth, height * gridWidth);
         AnchorPane.setMinHeight(height * gridWidth+100);
         AnchorPane.setMinWidth(width * gridWidth+100);
@@ -122,21 +131,24 @@ public class Playground implements MenuInterface, SceneInterface {
         int y = (int) e.getY() / gridWidth;
         logger.info("X: " + x + " Y: " + y);
         // fill cell with green color
-        if (!start) {
+        if (!start) { // If the simulation at the PAUSE mode
             if (add) {
                 clearCanvasCell(x, y);
                 if (autoRobot) {
                     Room.getInstance().addAutoRobot(new Position(x, y));
                     logger.info("Auto robot added at " + x + " " + y);
-                    placeCanvasCell(x, y, javafx.scene.paint.Color.RED);
+                    placeCanvasCell(x, y, Color.RED, 0);
+
                 } else if (manualRobot) {
                     Room.getInstance().addManualRobot(new Position(x, y));
                     logger.info("Manual robot added at " + x + " " + y);
-                    placeCanvasCell(x, y, javafx.scene.paint.Color.BLUE);
+                    //VisualRobot robot = new VisualRobot(x, y, gridWidth, this);
+                    // visualRobots.add(robot);
+                    placeCanvasCell(x, y, Color.CORNFLOWERBLUE, 0);
                 } else if (obstacle) {
                     Room.getInstance().addObstacle(new Position(x, y));
                     logger.info("Obstacle added at " + x + " " + y);
-                    placeCanvasCell(x, y, javafx.scene.paint.Color.BLACK);
+                    placeCanvasCell(x, y, Color.BLACK, null);
                 }
             }
             else {
@@ -148,6 +160,8 @@ public class Playground implements MenuInterface, SceneInterface {
                 }
             }
             updateCanvasGrid();
+        }else {
+            logger.info("Simulation is running");
         }
 
     }
@@ -266,22 +280,51 @@ public class Playground implements MenuInterface, SceneInterface {
 
     public void clearCanvasCell(int x, int y) {
         Room.getInstance().removeFrom(new Position(x, y));
-        canvas.getGraphicsContext2D().setFill(javafx.scene.paint.Color.WHITE);
+        canvas.getGraphicsContext2D().setFill(Color.WHITE);
         canvas.getGraphicsContext2D().fillRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
-        canvas.getGraphicsContext2D().setFill(javafx.scene.paint.Color.BLACK);
+        canvas.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
         canvas.getGraphicsContext2D().strokeRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
     }
 
-    public void placeCanvasCell(int x, int y, Color color) {
-        canvas.getGraphicsContext2D().setFill(color);
-        canvas.getGraphicsContext2D().fillRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
+//    public void placeCanvasCell(int x, int y, Color color) {
+//        canvas.getGraphicsContext2D().setFill(color);
+//        canvas.getGraphicsContext2D().fillRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
+//    }
+
+    public void placeCanvasCell(int x, int y, Color color, Integer robotOrientation) {
+        double centerX = x * gridWidth + gridWidth / 2.0;
+        double centerY = y * gridWidth + gridWidth / 2.0;
+        double radius = gridWidth / 3.0;
+
+        gc.setFill(color);
+
+        if (robotOrientation != null) {
+            // Draw robot as circle
+            gc.fillOval(centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+
+            // Drawing the forward direction indicator (a small dot)
+            double dotRadius = gridWidth / 10.0;
+            double orientationRadians = Math.toRadians(robotOrientation) + Math.PI / 2.0;
+
+            // Calculate the position of the dot
+            double forwardX = centerX + (radius - dotRadius) * Math.cos(orientationRadians);
+            double forwardY = centerY - (radius - dotRadius) * Math.sin(orientationRadians); // Negative because Y is positive downwards
+
+            gc.setFill(Color.BLACK); // Color for direction dot
+            gc.fillOval(forwardX - dotRadius, forwardY - dotRadius, 2 * dotRadius, 2 * dotRadius);
+
+        } else {
+            // Draw obstacle as square
+            gc.fillRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
+        }
     }
+
 
     public void updateCanvasGrid() {
         Room room = Room.getInstance();
         int width = room.getWidth();
         int height = room.getHeight();
-        canvas.getGraphicsContext2D().setFill(javafx.scene.paint.Color.BLACK);
+        canvas.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
         for (int i = 0; i < width; i++) {
             canvas.getGraphicsContext2D().strokeLine(i * gridWidth, 0, i * gridWidth, height * gridWidth);
         }
@@ -297,11 +340,11 @@ public class Playground implements MenuInterface, SceneInterface {
         for (int i = 0; i < room.getWidth(); i++) {
             for (int j = 0; j < room.getHeight(); j++) {
                 if (cells[i][j].equals("A")) {
-                    placeCanvasCell(i, j, javafx.scene.paint.Color.RED);
+                    placeCanvasCell(i, j, Color.RED, 0);
                 } else if (cells[i][j].equals("M")) {
-                    placeCanvasCell(i, j, javafx.scene.paint.Color.BLUE);
+                    placeCanvasCell(i, j, Color.CORNFLOWERBLUE, 0);
                 } else if (cells[i][j].equals("O")) {
-                    placeCanvasCell(i, j, javafx.scene.paint.Color.BLACK);
+                    placeCanvasCell(i, j, Color.BLACK, null);
                 }
             }
         }
