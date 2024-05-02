@@ -214,17 +214,31 @@ public class Playground implements MenuInterface, SceneInterface {
             strtbttn.setStyle("-fx-background-color: yellow;");
             // Enable map editing buttons
             addBttn.setDisable(false);
+            add = !addBttn.isSelected();
+            if(!add){
+                obstacleBttn.setDisable(true);
+                autoBttn.setDisable(true);
+                manualButton.setDisable(true);
+            } else {
+                obstacleBttn.setDisable(false);
+                autoBttn.setDisable(false);
+                manualButton.setDisable(false);
+            }
 
             // Disable robot movement buttons
             leftbttn.setDisable(true);
             gobttn.setDisable(true);
             rghtbttn.setDisable(true);
 
-
         } else {
             strtbttn.setText("START");
             strtbttn.setStyle("-fx-background-color: lightgreen;");
+            // Disable map editing buttons
             addBttn.setDisable(true);
+            autoBttn.setDisable(true);
+            manualButton.setDisable(true);
+            obstacleBttn.setDisable(true);
+            // Enable robot movement buttons
             leftbttn.setDisable(false);
             gobttn.setDisable(false);
             rghtbttn.setDisable(false);
