@@ -9,51 +9,47 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 public abstract class AbstractVisualRobot {
-    private AbstractRobot realRobot;
+    protected AbstractRobot realRobot;
 
-    int x, y;
-    private Playground controller;
-    private TranslateTransition transition;
+    protected int x, y;
+    protected Playground controller;
+    protected TranslateTransition transition;
 
-    private Circle robotVisual;
-    private Circle directionIndicator;
-    private StackPane visual; // Using StackPane to group the robot and its direction indicator
-    private int viewAngle;
+    protected Circle robotVisual;
+    protected Circle directionIndicator;
+    protected StackPane visual; // Using StackPane to group the robot and its direction indicator
+    protected Color color;
 
-    public AbstractVisualRobot(int x, int y, Playground controller) {
+    public AbstractVisualRobot(Playground controller, AbstractRobot Robot) {
+        this.realRobot = Robot;
         this.controller = controller;
+
+
         this.visual = new StackPane();
 
-        // Initialize visual components
-        this.robotVisual = new Circle(controller.gridWidth / 2); // Assuming gridWidth is a static or global value for grid cell size
-        this.directionIndicator = new Circle(controller.gridWidth / 4, Color.BLACK);
+        this.robotVisual = new Circle((int) (controller.gridWidth / 2)); // Assuming gridWidth is a static or global value for grid cell size
+        robotVisual.setStroke(Color.BLACK);
+        robotVisual.setStrokeWidth(1);
+
+        this.directionIndicator = new Circle((int) (controller.gridWidth / 4), Color.BLACK);
+
         this.visual.getChildren().addAll(robotVisual, directionIndicator);
 
         // Initialize the TranslateTransition for smooth movement
+        updatePosition();
+        initializeTransition();
+    }
+
+    private void initializeTransition() {
         this.transition = new TranslateTransition(Duration.seconds(1), this.visual);
         this.transition.setCycleCount(1);
         this.transition.setAutoReverse(false);
-
-        this.visual.setOnMouseClicked(e -> handleRobotClick());
-
-        // updateVisual();
     }
 
-    private void handleRobotClick() {
-        // Inform the controller that this robot has been selected
-        controller.selectRobot(this);
-    }
 
-    public void selectRobot() {
-        // Set the stroke color to red to indicate selection
-        robotVisual.setStroke(Color.RED);
-        robotVisual.setStrokeWidth(3);
-    }
-
-    public void deselectRobot() {
-        // Reset the stroke color to black or whatever the default is
-        robotVisual.setStroke(Color.BLACK);
-        robotVisual.setStrokeWidth(1);
+    protected void updatePosition() {
+        this.x = realRobot.getPosition().x();
+        this.y = realRobot.getPosition().y();
     }
 
     public StackPane getVisual() {
@@ -64,18 +60,7 @@ public abstract class AbstractVisualRobot {
         return realRobot;
     }
 
-    public void setRealRobot(AbstractRobot realRobot) {
-        this.realRobot = realRobot;
-        updateVisual(); // Update visual whenever the real robot changes
-    }
-
-    public void updateVisual() {
-        if (realRobot != null) {
-            updateDirectionIndicator();
-        }
-    }
-
-    protected void updateDirectionIndicator() {
+    protected void updateVisual() {
         if (realRobot != null) {
             int viewAngle = realRobot.getViewAngle();
             double angleRad = Math.toRadians(viewAngle - 90);
@@ -84,8 +69,15 @@ public abstract class AbstractVisualRobot {
             // Calculate the new position of the direction indicator
             directionIndicator.setTranslateX(radius * Math.cos(angleRad));
             directionIndicator.setTranslateY(radius * Math.sin(angleRad));
+
+            playTransition();
         }
     }
 
+    protected void playTransition() {
+        transition.setToX(this.x * controller.gridWidth);
+        transition.setToY(this.y * controller.gridWidth);
+        transition.playFromStart();
+    }
 
 }

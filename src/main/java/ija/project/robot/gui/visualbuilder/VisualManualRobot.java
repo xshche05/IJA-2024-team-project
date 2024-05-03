@@ -1,43 +1,58 @@
 package ija.project.robot.gui.visualbuilder;
 
 import ija.project.robot.gui.controllers.Playground;
+import ija.project.robot.logic.robots.AbstractRobot;
+import ija.project.robot.logic.robots.ManualRobot;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
 
-public class VisualManualRobot {
-    int x, y;
-    private Circle visual;
-    private Playground controller;
-    private TranslateTransition transition;
+public class VisualManualRobot extends AbstractVisualRobot{
 
+    private ManualRobot manualRobot; // Dedicated reference for ManualRobot
 
-    public VisualManualRobot(int x, int y, int size, Playground controller) {
-        this.x = x;
-        this.y = y;
-        this.controller = controller;
-        this.visual = new Circle();
-        this.visual.setCenterX(x);
-        this.visual.setCenterY(y);
-        this.visual.setRadius((int)(size/2));
-        this.visual.setFill(Color.WHITE);
-        this.controller.AnchorPane.getChildren().add(this.visual);
-        this.visual.setStroke(javafx.scene.paint.Color.BLACK);
+    public VisualManualRobot(Playground controller, AbstractRobot robot) {
+        super(controller, robot);
+        if (!(robot instanceof ManualRobot)) {
+            throw new IllegalArgumentException("VisualManualRobot requires a ManualRobot instance");
+        }
+        this.manualRobot = (ManualRobot) robot;
+        this.color = Color.CORNFLOWERBLUE;
 
-        this.transition = new TranslateTransition(Duration.seconds(1), this.visual); // 1 second for the transition
-        this.transition.setCycleCount(1);
-        this.transition.setAutoReverse(false);
+        this.visual.setOnMouseClicked(e -> handleRobotClick());
+        updateVisual();
+    }
 
-        this.visual.setOnMouseClicked(e -> selectRobot());
+    protected void handleRobotClick() {
+        // Inform the controller that this robot has been selected
+        controller.selectRobot(this);
     }
 
     public void selectRobot() {
-        this.visual.setFill(Color.RED);
+        // Set the stroke color to red to indicate selection
+        robotVisual.setStroke(Color.RED);
+        robotVisual.setStrokeWidth(3);
     }
 
-    public Circle getVisual() {
-        return visual;
+    public void deselectRobot() {
+        // Reset the stroke color to black or whatever the default is
+        robotVisual.setStroke(Color.BLACK);
+        robotVisual.setStrokeWidth(1);
     }
 
+    public void move() {
+        realRobot.move();
+        updatePosition();
+    }
+
+    public void turnLeft() {
+        manualRobot.rotateLeft();
+        updateVisual();
+    }
+
+    public void turnRight() {
+        manualRobot.rotateRight();
+        updateVisual();
+    }
 }

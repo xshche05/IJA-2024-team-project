@@ -3,8 +3,7 @@ package ija.project.robot.gui.controllers;
 import ija.project.robot.gui.interfaces.MenuInterface;
 import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.gui.logic.Menu;
-import ija.project.robot.gui.visualbuilder.AbstractVisualRobot;
-import ija.project.robot.gui.visualbuilder.VisualManualRobot;
+import ija.project.robot.gui.visualbuilder.*;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
 import javafx.fxml.FXML;
@@ -37,7 +36,7 @@ public class Playground implements MenuInterface, SceneInterface {
     @FXML
     public MenuItem MenuFileLoad;
 
-    public static final int gridWidth = 25;
+    public static final int gridWidth = 20;
     @FXML
     public HBox HBoxCanvas;
     @FXML
@@ -61,8 +60,8 @@ public class Playground implements MenuInterface, SceneInterface {
     boolean obstacle;
     boolean start;
 
-    private List<VisualManualRobot> visualRobots = new ArrayList<>(); // List of robots at the playground
-    private AbstractVisualRobot selectedRobot = null; // Selected robot at the playground
+    private List<AbstractVisualRobot> visualRobots = new ArrayList<>(); // List of robots at the playground
+    private VisualManualRobot selectedRobot = null; // Selected robot at the playground
 
     /**
      * Initializes the controller by setting up the UI components, canvas, and initial settings for the game mode.
@@ -324,6 +323,7 @@ public class Playground implements MenuInterface, SceneInterface {
                 if (autoRobot) {
                     Room.getInstance().addAutoRobot(new Position(x, y));
                     logger.info("Auto robot added at " + x + " " + y);
+
                     placeAutoRobot(x, y, 0);
 
                 } else if (manualRobot) {
