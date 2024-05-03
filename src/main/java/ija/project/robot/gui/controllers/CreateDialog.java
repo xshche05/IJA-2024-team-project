@@ -12,6 +12,14 @@ import javafx.stage.Stage;
 
 import static ija.project.robot.RobotApp.logger;
 
+/**
+ * Controller class for the room creation dialog.
+ * This class handles the input the dimensions of a room.
+ * It provides methods to react to user actions (e.g., clicking OK or Cancel).
+ *
+ * The user must enter positive integers for both rows and columns to proceed.
+ * Error messages are displayed if the inputs are invalid.
+ */
 public class CreateDialog extends Dialog {
     @FXML
     public TextField rowsInput;

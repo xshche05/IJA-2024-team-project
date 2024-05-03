@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import static ija.project.robot.RobotApp.logger;
 
+
 public class Menu {
     private final FileChooser fileChooser = new FileChooser();
 

@@ -17,6 +17,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -311,11 +312,14 @@ public class Playground implements MenuInterface, SceneInterface {
                     robot.setSpeed(RobotDialog.Speed);
                     robot.setAngle(RobotDialog.Angle);
                 }
+
             }
             if (((ToggleButton)addGroup.get(3)).isSelected()) {
                 logger.info("Grid cell clicked in add mode, adding obstacle");
                 Room.getInstance().addObstacle(new Position(x, y));
             }
+
+            drawRoom();
         } else {
             logger.info("Grid cell clicked in remove mode, removing object");
             Room.getInstance().removeFrom(new Position(x, y));
@@ -355,6 +359,37 @@ public class Playground implements MenuInterface, SceneInterface {
         HBoxGrid.getChildren().add(grid);
         AnchorPane.setMinHeight(height * gridWidth + 100);
         AnchorPane.setMinWidth(width * gridWidth + 100);
-        // todo  build room;
+        drawRoom();
+    }
+
+    private void drawRoom() {
+        logger.info("Drawing room");
+        Room room = Room.getInstance();
+        //grid.getChildren().clear();
+        for (int i = 0; i < room.getWidth(); i++) {
+            for (int j = 0; j < room.getHeight(); j++) {
+                if (!room.isPositionFree(new Position(i, j))){
+                    var object = room.getObjectAt(new Position(i, j));
+
+                    if (object instanceof ManualRobot) {
+
+                        Circle circle = new Circle(gridWidth / 2);
+                        circle.setStyle("-fx-fill: red;");
+                        grid.add(circle, i, j);
+
+                    } else if (object instanceof AutomatedRobot) {
+                        Circle circle = new Circle(gridWidth / 2);
+                        circle.setStyle("-fx-fill: blue;");
+                        grid.add(circle, i, j);
+
+                    } else {
+                        Circle circle = new Circle(gridWidth / 2);
+                        circle.setStyle("-fx-fill: black;");
+                        grid.add(circle, i, j);
+                    }
+                }
+
+            }
+        }
     }
 }
