@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="250.0" maxWidth="300.0" minHeight="240.0" minWidth="300.0" prefHeight="240.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ija.project.robot.gui.controllers.CreateDialog">
+   <children>
+      <TextField fx:id="speedInput" layoutX="70.0" layoutY="65.0" prefHeight="26.0" prefWidth="160.0" promptText="Speed" AnchorPane.topAnchor="56.0" />
+      <TextField fx:id="angleInput1" layoutX="70.0" layoutY="91.0" prefHeight="26.0" prefWidth="160.0" promptText="Angle" AnchorPane.topAnchor="98.0" />
+      <TextField fx:id="distInput" layoutX="70.0" layoutY="149.0" prefHeight="26.0" prefWidth="160.0" promptText="Detection dist." AnchorPane.topAnchor="140.0" />
+      <Label alignment="CENTER" layoutX="67.0" layoutY="28.0" prefHeight="26.0" prefWidth="165.0" text="Add Robot:" AnchorPane.topAnchor="14.0">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Button fx:id="okButton" layoutX="170.0" layoutY="200.0" minWidth="60.0" mnemonicParsing="false" onAction="#Ok" prefHeight="25.0" prefWidth="55.0" text="OK" AnchorPane.bottomAnchor="14.0" />
+      <Button fx:id="cancelButton" layoutX="80.0" layoutY="156.0" minWidth="60.0" mnemonicParsing="false" onAction="#Cancel" prefHeight="25.0" prefWidth="55.0" text="Cancel" AnchorPane.bottomAnchor="14.0" />
+      <Label fx:id="errorLabel" alignment="CENTER" layoutX="10.0" layoutY="174.0" prefHeight="17.0" prefWidth="279.0" textFill="#db0d0d" AnchorPane.bottomAnchor="48.0" />
+   </children>
+</AnchorPane>
