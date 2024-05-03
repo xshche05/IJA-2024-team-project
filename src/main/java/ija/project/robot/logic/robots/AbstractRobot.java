@@ -27,9 +27,9 @@ public abstract class AbstractRobot extends AbstractRoomObject {
         if (this.currentAngle % 90 == 0) {
             return true;
         }
-        Position p1 = new Position(this.pos.y(), newPos.x());
-        Position p2 = new Position(newPos.y(), this.pos.x());
-        return Room.getInstance().isPositionFree(p1) || Room.getInstance().isPositionFree(p2);
+        Position p1 = new Position(this.pos.x(), newPos.y());
+        Position p2 = new Position(newPos.x(), this.pos.y());
+        return Room.getInstance().isPositionFree(p1) && Room.getInstance().isPositionFree(p2);
     }
     protected void rotate(int angle) {
         this.currentAngle = (this.currentAngle + angle) % 360;
