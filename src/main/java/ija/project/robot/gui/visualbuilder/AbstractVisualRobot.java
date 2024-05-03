@@ -45,7 +45,15 @@ public abstract class AbstractVisualRobot {
     }
 
     public void selectRobot() {
-        robotVisual.setFill(Color.RED);
+        // Set the stroke color to red to indicate selection
+        robotVisual.setStroke(Color.RED);
+        robotVisual.setStrokeWidth(3);
+    }
+
+    public void deselectRobot() {
+        // Reset the stroke color to black or whatever the default is
+        robotVisual.setStroke(Color.BLACK);
+        robotVisual.setStrokeWidth(1);
     }
 
     public StackPane getVisual() {
