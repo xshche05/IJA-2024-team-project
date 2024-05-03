@@ -45,13 +45,13 @@ public class RobotDialog extends Dialog {
                 return;
             }
             logger.info("Setting robot parameters to speed: " + Speed + ", angle: " + Angle + ", distance: " + Distance);
-            validData = true;
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
         } catch (NumberFormatException e) {
             errorLabel.setText("Speed, angle and distance must be positive integers!");
             logger.warning("Speed, angle and distance must be positive integers!");
         }
+        validData = true;
     }
 
     public static Scene getScene() {

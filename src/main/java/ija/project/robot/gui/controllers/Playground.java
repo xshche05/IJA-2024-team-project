@@ -17,7 +17,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ public class Playground implements MenuInterface, SceneInterface {
     public MenuItem MenuFileLoad;
 
     public static final int gridWidth = 28;
+    public static final int tickPeriod = 1000; // in milliseconds
     public GridPane grid;
     @FXML
     public HBox HBoxGrid;
@@ -50,6 +50,11 @@ public class Playground implements MenuInterface, SceneInterface {
     private final List<Node> removeGroup = new ArrayList<>();
     private final List<Node> startGroup = new ArrayList<>();
     private final List<Node> pauseGroup = new ArrayList<>();
+
+    private String currentMode = "ADD";
+    private String lastEditMode = "ADD";
+
+
 
     /**
      * Initializes the controller by setting up the UI components, canvas, and initial settings for the game mode.
@@ -119,6 +124,8 @@ public class Playground implements MenuInterface, SceneInterface {
         }
 
         HBoxBttnUp.getChildren().addAll(addGroup);
+        currentMode = "ADD";
+        lastEditMode = "ADD";
         HBoxBttnDown.getChildren().addAll(pauseGroup);
     }
 
@@ -159,19 +166,22 @@ public class Playground implements MenuInterface, SceneInterface {
     public void RemoveAllAction() {
         logger.info("Remove all button pressed");
         Room room = Room.getInstance();
-        room.clear();
+        room.removeAll();
+//        drawRoom();
     }
 
     public void RemoveObstaclesAction() {
         logger.info("Remove obstacles button pressed");
         Room room = Room.getInstance();
         room.removeObstacles();
+//        drawRoom();
     }
 
     public void RemoveRobotsAction() {
         logger.info("Remove robots button pressed");
         Room room = Room.getInstance();
         room.removeRobots();
+//        drawRoom();
     }
 
 
@@ -184,12 +194,16 @@ public class Playground implements MenuInterface, SceneInterface {
         ToggleButton addBttn = (ToggleButton) addGroup.get(0);
         if (addBttn.isSelected()){
             addBttn.setText("REMOVE MODE");
+            currentMode = "REMOVE";
+            lastEditMode = "REMOVE";
             addBttn.setStyle("-fx-background-color: LightPink;");
             logger.info("Playground REMOVE MODE activated");
             HBoxBttnUp.getChildren().clear();
             HBoxBttnUp.getChildren().addAll(removeGroup);
         } else {
             addBttn.setText("ADD MODE");
+            currentMode = "ADD";
+            lastEditMode = "ADD";
             addBttn.setStyle("-fx-background-color: LightBlue;");
             logger.info("Playground ADD MODE activated");
             HBoxBttnUp.getChildren().clear();
@@ -237,12 +251,14 @@ public class Playground implements MenuInterface, SceneInterface {
         ToggleButton strtbttn = (ToggleButton) startGroup.get(0);
         if (!strtbttn.isSelected()){
             strtbttn.setText("PAUSE");
+            currentMode = lastEditMode;
             strtbttn.setStyle("-fx-background-color: yellow;");
             HBoxBttnDown.getChildren().clear();
             HBoxBttnDown.getChildren().addAll(pauseGroup);
             HBoxBttnUp.getChildren().addAll(addGroup);
         } else {
             strtbttn.setText("START");
+            currentMode = "START";
             strtbttn.setStyle("-fx-background-color: lightgreen;");
             HBoxBttnDown.getChildren().clear();
             HBoxBttnDown.getChildren().addAll(startGroup);
@@ -270,16 +286,10 @@ public class Playground implements MenuInterface, SceneInterface {
         int x = (int) e.getX() / gridWidth;
         int y = (int) e.getY() / gridWidth;
         logger.info("Grid cell clicked: (" + x + ", " + y + ")");
-        if (((ToggleButton)startGroup.get(0)).isSelected()) {
+        if (currentMode.equals("START")) {
             logger.info("Grid cell clicked in start mode, selecting robot");
-            boolean selected = ControlledRobot.getInstance().setRobot(new Position(x, y));
-            if (selected) {
-                logger.info("Manual robot selected at position: (" + x + ", " + y + ")");
-            } else {
-                logger.info("No manual robot at position: (" + x + ", " + y + ")");
-            }
-        }
-        if (!((ToggleButton)addGroup.get(0)).isSelected()) {
+            ControlledRobot.getInstance().setRobot(new Position(x, y));
+        } else if (currentMode.equals("ADD")) {
             if (((ToggleButton)addGroup.get(1)).isSelected()) {
                 logger.info("Grid cell clicked in add mode, adding auto robot");
                 createRequest = "AUTO";
@@ -291,9 +301,9 @@ public class Playground implements MenuInterface, SceneInterface {
                 if (RobotDialog.validData) {
                     logger.info("Adding auto robot at position: (" + x + ", " + y + ")");
                     logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle + ", distance: " + RobotDialog.Distance);
-                    AutomatedRobot robot = new AutomatedRobot(new Position(x, y));
+                    AutomatedRobot robot = Room.getInstance().addAutoRobot(new Position(x, y));
                     robot.setSpeed(RobotDialog.Speed);
-                    robot.setAngle(RobotDialog.Angle);
+                    robot.setStepAngle(RobotDialog.Angle);
                     robot.setDistance(RobotDialog.Distance);
                 }
             }
@@ -310,19 +320,23 @@ public class Playground implements MenuInterface, SceneInterface {
                     logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle);
                     ManualRobot robot = Room.getInstance().addManualRobot(new Position(x, y));
                     robot.setSpeed(RobotDialog.Speed);
-                    robot.setAngle(RobotDialog.Angle);
+                    robot.setStepAngle(RobotDialog.Angle);
                 }
-
             }
             if (((ToggleButton)addGroup.get(3)).isSelected()) {
                 logger.info("Grid cell clicked in add mode, adding obstacle");
+                if (Room.getInstance().getObjectAt(new Position(x, y)) != null) {
+                    logger.warning("Cannot add obstacle to occupied cell");
+                    return;
+                }
+                logger.info("Adding obstacle at position: (" + x + ", " + y + ")");
                 Room.getInstance().addObstacle(new Position(x, y));
             }
-
-            drawRoom();
-        } else {
+        } else if (currentMode.equals("REMOVE")) {
             logger.info("Grid cell clicked in remove mode, removing object");
             Room.getInstance().removeFrom(new Position(x, y));
+        } else {
+            logger.finest("Grid cell clicked in unknown mode!!!!!!!!!!!!!");
         }
     }
 
@@ -335,7 +349,7 @@ public class Playground implements MenuInterface, SceneInterface {
         Scene robotDialog = RobotDialog.getScene();
         dialog.setScene(robotDialog);
         dialog.setResizable(false);
-        dialog.show();
+        dialog.showAndWait();
     }
 
     private void gridPaneConstruct() {
@@ -348,7 +362,6 @@ public class Playground implements MenuInterface, SceneInterface {
         grid.setMinSize(width * gridWidth, height * gridWidth);
         grid.setMaxSize(width * gridWidth, height * gridWidth);
         grid.setStyle("-fx-background-color: #FFFFFF;");
-        grid.setGridLinesVisible(true);
         for (int i = 0; i < width; i++) {
             grid.getColumnConstraints().add(new ColumnConstraints(gridWidth));
         }
@@ -359,37 +372,8 @@ public class Playground implements MenuInterface, SceneInterface {
         HBoxGrid.getChildren().add(grid);
         AnchorPane.setMinHeight(height * gridWidth + 100);
         AnchorPane.setMinWidth(width * gridWidth + 100);
-        drawRoom();
-    }
-
-    private void drawRoom() {
-        logger.info("Drawing room");
-        Room room = Room.getInstance();
-        //grid.getChildren().clear();
-        for (int i = 0; i < room.getWidth(); i++) {
-            for (int j = 0; j < room.getHeight(); j++) {
-                if (!room.isPositionFree(new Position(i, j))){
-                    var object = room.getObjectAt(new Position(i, j));
-
-                    if (object instanceof ManualRobot) {
-
-                        Circle circle = new Circle(gridWidth / 2);
-                        circle.setStyle("-fx-fill: red;");
-                        grid.add(circle, i, j);
-
-                    } else if (object instanceof AutomatedRobot) {
-                        Circle circle = new Circle(gridWidth / 2);
-                        circle.setStyle("-fx-fill: blue;");
-                        grid.add(circle, i, j);
-
-                    } else {
-                        Circle circle = new Circle(gridWidth / 2);
-                        circle.setStyle("-fx-fill: black;");
-                        grid.add(circle, i, j);
-                    }
-                }
-
-            }
-        }
+        room.setGrid(grid);
+        room.initGrid();
+        grid.setGridLinesVisible(true);
     }
 }

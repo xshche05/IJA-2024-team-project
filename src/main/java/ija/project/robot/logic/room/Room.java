@@ -1,11 +1,15 @@
 package ija.project.robot.logic.room;
 
+import ija.project.robot.gui.logic.ControlledRobot;
 import ija.project.robot.logic.common.AbstractRoomObject;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.robots.AbstractRobot;
 import ija.project.robot.logic.robots.AutomatedRobot;
 import ija.project.robot.logic.robots.ManualRobot;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +21,8 @@ public class Room {
     private final List<AbstractRobot> robots = new ArrayList<>();
     private final List<Obstacle> obstacles = new ArrayList<>();
     private final System.Logger logger;
-
     private static Room instance = null;
+    private GridPane grid;
 
     private Room() {
         logger = System.getLogger("Room");
@@ -43,6 +47,25 @@ public class Room {
                 "Room dimensions set to " + width + "x" + height);
     }
 
+    public void setGrid(GridPane grid) {
+        this.grid = grid;
+    }
+
+    public void initGrid() {
+        grid.getChildren().clear();
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                Position pos = new Position(j, i);
+                if (isPositionFree(pos)) continue;
+                logger.log(System.Logger.Level.INFO,
+                        "Object added to grid at " + pos);
+                AbstractRoomObject obj = getObjectAt(pos);
+                ImageView imageView = obj.getImageView();
+                grid.add(imageView, j, i);
+            }
+        }
+    }
+
     public void clear() {
         robots.clear();
         obstacles.clear();
@@ -61,7 +84,6 @@ public class Room {
     public boolean isPositionInRoom(Position pos) {
         return pos.x() >= 0 && pos.x() < width && pos.y() >= 0 && pos.y() < height;
     }
-
     public boolean isPositionFree(Position pos) {
         for (AbstractRobot robot : robots) {
             if (robot.getPosition().equals(pos)) {
@@ -96,6 +118,7 @@ public class Room {
         }
         AutomatedRobot robot = new AutomatedRobot(pos);
         robots.add(robot);
+        grid.add(robot.getImageView(), pos.x(), pos.y());
         return robot;
     }
     public ManualRobot addManualRobot(Position pos) {
@@ -104,25 +127,87 @@ public class Room {
         }
         ManualRobot robot = new ManualRobot(pos);
         robots.add(robot);
+        grid.add(robot.getImageView(), pos.x(), pos.y());
         return robot;
+    }
+
+    public void removeAll() {
+        removeObstacles();
+        removeRobots();
     }
 
     public void removeObstacles() {
         logger.log(System.Logger.Level.INFO,
                 "Obstacles removed from room");
+        List<ImageView> obstaclesImageViews = new ArrayList<>();
+        List<Position> obstaclesPositions = new ArrayList<>();
+        for (Obstacle obstacle : obstacles) {
+            obstaclesPositions.add(obstacle.getPosition());
+        }
+        for (int i = 0; i < grid.getChildren().size(); i++) {
+            if (grid.getChildren().get(i) instanceof ImageView) {
+                obstaclesImageViews.add((ImageView) grid.getChildren().get(i));
+            }
+        }
+        for (ImageView iv : obstaclesImageViews) {
+            int x = GridPane.getColumnIndex(iv);
+            int y = GridPane.getRowIndex(iv);
+            Position pos = new Position(x, y);
+            if (obstaclesPositions.contains(pos)) {
+                grid.getChildren().remove(iv);
+            }
+        }
         obstacles.clear();
     }
 
     public void removeRobots() {
         logger.log(System.Logger.Level.INFO,
                 "Robots removed from room");
+        List<ImageView> robotImageViews = new ArrayList<>();
+        List<Position> robotPositions = new ArrayList<>();
+        for (AbstractRobot robot : robots) {
+            robotPositions.add(robot.getPosition());
+            if (robot instanceof ManualRobot) {
+                ControlledRobot.getInstance().notifyRemovedRobot((ManualRobot) robot);
+            }
+        }
+        for (int i = 0; i < grid.getChildren().size(); i++) {
+            if (grid.getChildren().get(i) instanceof ImageView) {
+                robotImageViews.add((ImageView) grid.getChildren().get(i));
+            }
+        }
+        for (ImageView iv : robotImageViews) {
+            int x = GridPane.getColumnIndex(iv);
+            int y = GridPane.getRowIndex(iv);
+            Position pos = new Position(x, y);
+            if (robotPositions.contains(pos)) {
+                grid.getChildren().remove(iv);
+            }
+        }
         robots.clear();
     }
 
     public void removeFrom(Position pos) {
+        List<ImageView> imageViews = new ArrayList<>();
+        for (int i = 0; i < grid.getChildren().size(); i++) {
+            if (grid.getChildren().get(i) instanceof ImageView) {
+                imageViews.add((ImageView) grid.getChildren().get(i));
+            }
+        }
+        for (ImageView iv : imageViews) {
+            int x = GridPane.getColumnIndex(iv);
+            int y = GridPane.getRowIndex(iv);
+            if (x == pos.x() && y == pos.y()) {
+                grid.getChildren().remove(iv);
+                break;
+            }
+        }
         for (AbstractRobot robot : robots) {
             if (robot.getPosition().equals(pos)) {
                 robots.remove(robot);
+                if (robot instanceof ManualRobot) {
+                    ControlledRobot.getInstance().notifyRemovedRobot((ManualRobot) robot);
+                }
                 return;
             }
         }
@@ -152,7 +237,9 @@ public class Room {
         if (!isPositionFree(pos)) {
             throw new IllegalArgumentException("Position is not free");
         }
-        obstacles.add(new Obstacle(pos));
+        Obstacle obstacle = new Obstacle(pos);
+        obstacles.add(obstacle);
+        grid.add(obstacle.getImageView(), pos.x(), pos.y());
         logger.log(System.Logger.Level.INFO,
                 "Obstacle added to room");
     }
@@ -247,6 +334,29 @@ public class Room {
 
     public int getHeight() {
         return height;
+    }
+
+    public void updateViewAt(Position pos) {
+        AbstractRoomObject obj = getObjectAt(pos);
+        if (obj == null) {
+            return;
+        }
+        ImageView imageView = obj.getImageView();
+        List<ImageView> imageViews = new ArrayList<>();
+        for (int i = 0; i < grid.getChildren().size(); i++) {
+            if (grid.getChildren().get(i) instanceof ImageView) {
+                imageViews.add((ImageView) grid.getChildren().get(i));
+            }
+        }
+        for (ImageView iv : imageViews) {
+            int x = GridPane.getColumnIndex(iv);
+            int y = GridPane.getRowIndex(iv);
+            if (x == pos.x() && y == pos.y()) {
+                grid.getChildren().remove(iv);
+                break;
+            }
+        }
+        grid.add(imageView, pos.x(), pos.y());
     }
 
     public String[][] getRoomConfigurationArray() {
