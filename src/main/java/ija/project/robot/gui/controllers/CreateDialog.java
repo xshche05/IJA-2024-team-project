@@ -32,8 +32,8 @@ public class CreateDialog {
                 logger.warning("Rows and cols must be positive!");
                 return;
             }
-            logger.info("Setting room dimensions to " + rows + "x" + cols);
-            Room.getInstance().setDimensions(rows, cols);
+            logger.info("Setting room dimensions to " + cols + "x" + rows);
+            Room.getInstance().setDimensions(cols, rows);
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
             Stage owner = (Stage) stage.getOwner();
