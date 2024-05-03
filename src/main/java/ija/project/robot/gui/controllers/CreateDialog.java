@@ -1,5 +1,6 @@
 package ija.project.robot.gui.controllers;
 
+import ija.project.robot.gui.interfaces.Dialog;
 import ija.project.robot.logic.room.Room;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -10,7 +11,7 @@ import javafx.stage.Stage;
 
 import static ija.project.robot.RobotApp.logger;
 
-public class CreateDialog {
+public class CreateDialog implements Dialog {
     @FXML
     public TextField rowsInput;
     @FXML
