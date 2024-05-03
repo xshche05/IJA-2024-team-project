@@ -106,6 +106,18 @@ public class Room {
         return robot;
     }
 
+    public void removeObstacles() {
+        logger.log(System.Logger.Level.INFO,
+                "Obstacles removed from room");
+        obstacles.clear();
+    }
+
+    public void removeRobots() {
+        logger.log(System.Logger.Level.INFO,
+                "Robots removed from room");
+        robots.clear();
+    }
+
     public void removeFrom(Position pos) {
         for (AbstractRobot robot : robots) {
             if (robot.getPosition().equals(pos)) {
