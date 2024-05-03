@@ -6,14 +6,14 @@ import javafx.scene.shape.Circle;
 import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
 
-public class VisualRobot {
+public class VisualManualRobot {
     int x, y;
     private Circle visual;
     private Playground controller;
     private TranslateTransition transition;
 
 
-    public VisualRobot(int x, int y, int size, Playground controller) {
+    public VisualManualRobot(int x, int y, int size, Playground controller) {
         this.x = x;
         this.y = y;
         this.controller = controller;

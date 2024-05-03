@@ -3,21 +3,20 @@ package ija.project.robot.gui.controllers;
 import ija.project.robot.gui.interfaces.MenuInterface;
 import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.gui.logic.Menu;
-import ija.project.robot.gui.visualbuilder.VisualRobot;
+import ija.project.robot.gui.visualbuilder.AbstractVisualRobot;
+import ija.project.robot.gui.visualbuilder.VisualManualRobot;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Screen;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class Playground implements MenuInterface, SceneInterface {
     @FXML
     public MenuItem MenuFileLoad;
 
-    private static final int gridWidth = 25;
+    public static final int gridWidth = 25;
     @FXML
     public HBox HBoxCanvas;
     @FXML
@@ -48,8 +47,10 @@ public class Playground implements MenuInterface, SceneInterface {
     public ToggleButton obstacleBttn;
     public ToggleButton strtbttn;
 
-    public Canvas canvas;
-    public GraphicsContext gc;
+    // public Canvas canvas;
+    //public GraphicsContext gc;
+
+    public GridPane grid;
     public Button leftbttn;
     public Button gobttn;
     public Button rghtbttn;
@@ -60,8 +61,8 @@ public class Playground implements MenuInterface, SceneInterface {
     boolean obstacle;
     boolean start;
 
-    private List<VisualRobot> visualRobots = new ArrayList<>(); // List of robots at the playground
-    private VisualRobot selectedRobot = null; // Selected robot at the playground
+    private List<VisualManualRobot> visualRobots = new ArrayList<>(); // List of robots at the playground
+    private AbstractVisualRobot selectedRobot = null; // Selected robot at the playground
 
     /**
      * Initializes the controller by setting up the UI components, canvas, and initial settings for the game mode.
@@ -70,8 +71,8 @@ public class Playground implements MenuInterface, SceneInterface {
      */
     @FXML
     public void initialize() {
-        canvasConstruct();
-        gc = canvas.getGraphicsContext2D();
+
+        gridPaneConstruct();
 
         addBttn.setText("ADD MODE");
         addBttn.setStyle("-fx-background-color: LightBlue;");
@@ -114,80 +115,66 @@ public class Playground implements MenuInterface, SceneInterface {
         new Menu().initialize().Help(AnchorPane);
     }
 
-    /**
-     * Constructs the canvas based on the room's dimensions and prepares it for drawing.
-     * It sets the canvas size to fit the room, fills the background, and prepares the UI to receive mouse events.
-     */
-    private void canvasConstruct() {
-        // add canvas
-        logger.info("Constructing canvas");
+
+    private void gridPaneConstruct() {
+        logger.info("Constructing GridPane");
         Room room = Room.getInstance();
         int width = room.getWidth();
         int height = room.getHeight();
-        int max_x = (int) Screen.getPrimary().getBounds().getMaxX();
-        int max_y = (int) Screen.getPrimary().getBounds().getMaxY();
-        logger.info("Max X: " + max_x + " Max Y: " + max_y);
-        canvas = new Canvas();
-        canvas.setWidth(width * gridWidth);
-        canvas.setHeight(height * gridWidth);
-        canvas.getGraphicsContext2D().setFill(Color.WHITE);
-        canvas.getGraphicsContext2D().fillRect(0, 0, width * gridWidth, height * gridWidth);
-        AnchorPane.setMinHeight(height * gridWidth+100);
-        AnchorPane.setMinWidth(width * gridWidth+100);
-        HBoxCanvas.getChildren().add(canvas);
-        canvas.setOnMouseClicked(this::CanvasClicked);
-        drawCanvasRoom();
-        updateCanvasGrid();
-    }
 
-    /**
-     * Handles mouse click events on the canvas to add, remove, or identify robots and obstacles.
-     * Based on the current mode and whether the simulation is running, this method decides how to respond to clicks,
-     * possibly adding or removing objects or making selections.
-     *
-     * @param e The MouseEvent that triggered this method.
-     */
-    public void CanvasClicked(MouseEvent e) {
-        logger.info("Canvas clicked");
-        logger.info("X: " + e.getX() + " Y: " + e.getY());
-        int x = (int) e.getX() / gridWidth;
-        int y = (int) e.getY() / gridWidth;
-        logger.info("X: " + x + " Y: " + y);
-        // fill cell with green color
-        if (!start) { // If the simulation at the PAUSE mode
-            if (add) {
-                clearCanvasCell(x, y);
-                if (autoRobot) {
-                    Room.getInstance().addAutoRobot(new Position(x, y));
-                    logger.info("Auto robot added at " + x + " " + y);
-                    placeCanvasCell(x, y, Color.RED, 0);
+        // Create a new GridPane
+        GridPane grid = new GridPane();
+        grid.setPrefSize(width * gridWidth, height * gridWidth);
+        grid.setGridLinesVisible(true);  // Optionally make grid lines visible
 
-                } else if (manualRobot) {
-                    Room.getInstance().addManualRobot(new Position(x, y));
-                    logger.info("Manual robot added at " + x + " " + y);
-                    //VisualRobot robot = new VisualRobot(x, y, gridWidth, this);
-                    // visualRobots.add(robot);
-                    placeCanvasCell(x, y, Color.CORNFLOWERBLUE, 0);
-                } else if (obstacle) {
-                    Room.getInstance().addObstacle(new Position(x, y));
-                    logger.info("Obstacle added at " + x + " " + y);
-                    placeCanvasCell(x, y, Color.BLACK, null);
-                }
+        // Initialize the grid cells with default empty cells (could be empty Rectangles or similar)
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                Rectangle rect = new Rectangle(gridWidth, gridWidth);
+                GridPane.setConstraints(rect, i, j);
+                grid.getChildren().add(rect);
             }
-            else {
-                if (Room.getInstance().isPositionFree(new Position(x, y))) {
-                    logger.info("Position is free");
-                } else {
-                    logger.info("Position is not free");
-                    clearCanvasCell(x, y);
-                }
-            }
-            updateCanvasGrid();
-        }else {
-            logger.info("Simulation is running");
         }
 
+
+        // Set minimum size for the AnchorPane
+        AnchorPane.setMinHeight(height * gridWidth + 100);
+        AnchorPane.setMinWidth(width * gridWidth + 100);
+
+        // Add the grid to your layout container
+        HBoxCanvas.getChildren().add(grid);
+
+
+        // Draw the room and update the grid based on current room state
+        drawGridRoom();
     }
+
+    public void drawGridRoom() {
+        Room room = Room.getInstance();
+        String[][] cells = room.getRoomConfigurationArray();
+        grid.getChildren().clear(); // Clear existing content
+
+        for (int i = 0; i < room.getHeight(); i++) {
+            for (int j = 0; j < room.getWidth(); j++) {
+                switch (cells[i][j]) {
+                    case "A":
+                        placeAutoRobot(x, y, 0);
+                        break;
+                    case "M":
+                        placeManualRobot(x, y, 0);
+                        break;
+                    case "O":
+                        placeObstacle(x, y);
+                        break;
+                    default:
+                        // Optionally add a default look for empty cells or just leave them empty
+                        clearGridCell(x, y);
+                        break;
+                }
+            }
+        }
+    }
+
 
     /**
      * Gets the scene for the playground.
@@ -325,100 +312,47 @@ public class Playground implements MenuInterface, SceneInterface {
         logger.info("Right button pressed");
     }
 
-    /**
-     * Clears a specific cell on the canvas, removing any visual elements from it.
-     * This method is used to reset a cell to its default appearance, typically after a robot or obstacle has been removed.
-     * The method also ensures that the cell removal is reflected in the Room's logical representation.
-     *
-     * @param x The x-coordinate of the cell to clear, based on grid coordinates.
-     * @param y The y-coordinate of the cell to clear, based on grid coordinates.
-     */
-    public void clearCanvasCell(int x, int y) {
-        Room.getInstance().removeFrom(new Position(x, y));
-        canvas.getGraphicsContext2D().setFill(Color.WHITE);
-        canvas.getGraphicsContext2D().fillRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
-        canvas.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
-        canvas.getGraphicsContext2D().strokeRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
-    }
+    public void dridCellClicked(MouseEvent e) {
+
+        int x = (int) e.getX() / gridWidth;
+        int y = (int) e.getY() / gridWidth;
+        logger.info("Grid cell clicked: (" + x + ", " + y + ")");
 
 
-    /**
-     * Draws a ROBOT or OBSTACLE at a specified grid cell with an optional orientation indicator.
-     * To draw a robot, provide a color and orientation. To draw an obstacle, provide a color and set orientation to null.
-     * The robot is drawn as a circle, and if orientation is provided, a small dot indicates the direction the robot is facing.
-     *
-     * @param x The x-coordinate of the grid cell where the object will be placed.
-     * @param y The y-coordinate of the grid cell where the object will be placed.
-     * @param color The {@link Color} to use for the object's body.
-     * @param robotOrientation The orientation of the robot in degrees, where 0 degrees indicates up. Set as null to draw an obstacle.
-     */
-    public void placeCanvasCell(int x, int y, Color color, Integer robotOrientation) {
-        double centerX = x * gridWidth + gridWidth / 2.0;
-        double centerY = y * gridWidth + gridWidth / 2.0;
-        double radius = gridWidth / 3.0;
+        if (!start) { // If the simulation at the PAUSE mode
+            if (add) {
+                if (autoRobot) {
+                    Room.getInstance().addAutoRobot(new Position(x, y));
+                    logger.info("Auto robot added at " + x + " " + y);
+                    placeAutoRobot(x, y, 0);
 
-        gc.setFill(color);
-
-        if (robotOrientation != null) {
-            // Draw robot as circle
-            gc.fillOval(centerX - radius, centerY - radius, 2 * radius, 2 * radius);
-
-            // Drawing the forward direction indicator (a small dot)
-            double dotRadius = gridWidth / 10.0;
-            double orientationRadians = Math.toRadians(robotOrientation) + Math.PI / 2.0;
-
-            // Calculate the position of the dot
-            double forwardX = centerX + (radius - dotRadius) * Math.cos(orientationRadians);
-            double forwardY = centerY - (radius - dotRadius) * Math.sin(orientationRadians); // Negative because Y is positive downwards
-
-            gc.setFill(Color.BLACK); // Color for direction dot
-            gc.fillOval(forwardX - dotRadius, forwardY - dotRadius, 2 * dotRadius, 2 * dotRadius);
-
-        } else {
-            // Draw obstacle as square
-            gc.fillRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
-        }
-    }
-
-    /**
-     * Draws a grid on the canvas based on the dimensions of the room.
-     *
-     * Uses the singleton instance of {@link Room} to determine the grid dimensions.
-     */
-    public void updateCanvasGrid() {
-        Room room = Room.getInstance();
-        int width = room.getWidth();
-        int height = room.getHeight();
-        canvas.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
-        for (int i = 0; i < width; i++) {
-            canvas.getGraphicsContext2D().strokeLine(i * gridWidth, 0, i * gridWidth, height * gridWidth);
-        }
-        for (int i = 0; i < height; i++) {
-            canvas.getGraphicsContext2D().strokeLine(0, i * gridWidth, width * gridWidth, i * gridWidth);
-        }
-        canvas.getGraphicsContext2D().strokeRect(0, 0, width * gridWidth, height * gridWidth);
-    }
-
-    /**
-     * Draws the current state of the room on the canvas based on the room's configuration array.
-     * Automatic robots are red, manual robots are cornflower blue, and obstacles are black.
-     *
-     * This method iterates through each cell in the room and draws
-     * the appropriate visual representation on the canvas using {@link #placeCanvasCell}.
-     *
-     * Uses the singleton instance of {@link Room} to retrieve the current room configuration.
-     */
-    public void drawCanvasRoom() {
-        Room room = Room.getInstance();
-        String[][] cells = room.getRoomConfigurationArray();
-        for (int i = 0; i < room.getWidth(); i++) {
-            for (int j = 0; j < room.getHeight(); j++) {
-                switch (cells[i][j]) {
-                    case "A" -> placeCanvasCell(i, j, Color.RED, 0);
-                    case "M" -> placeCanvasCell(i, j, Color.CORNFLOWERBLUE, 0);
-                    case "O" -> placeCanvasCell(i, j, Color.BLACK, null);
+                } else if (manualRobot) {
+                    Room.getInstance().addManualRobot(new Position(x, y));
+                    logger.info("Manual robot added at " + x + " " + y);
+                    //VisualRobot robot = new VisualRobot(x, y, gridWidth, this);
+                    // visualRobots.add(robot);
+                    placeManualRobot(x, y, 0);
+                } else if (obstacle) {
+                    Room.getInstance().addObstacle(new Position(x, y));
+                    logger.info("Obstacle added at " + x + " " + y);
+                    placeObstacle(x, y);
                 }
             }
+            else {
+                if (Room.getInstance().isPositionFree(new Position(x, y))) {
+                    logger.info("Position is free");
+                } else {
+                    logger.info("Position is not free");
+                    clearGridCell(x, y);
+                }
+            }
+        }else {
+            logger.info("Simulation is running");
         }
+    }
+
+
+    public void selectRobot(AbstractVisualRobot abstractVisualRobot) {
+        this.selectedRobot = abstractVisualRobot;
     }
 }
