@@ -36,4 +36,8 @@ public class VisualRobot {
         this.visual.setFill(Color.RED);
     }
 
+    public Circle getVisual() {
+        return visual;
+    }
+
 }
