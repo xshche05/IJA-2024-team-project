@@ -73,7 +73,7 @@ public class Menu {
         dialog.initOwner(AnchorPane.getScene().getWindow());
         dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
         dialog.setTitle("New room");
-        Scene dialogScene = SceneInterface.getScene(CreateDialog.class, "create_dialog.fxml");
+        Scene dialogScene = CreateDialog.getScene();
         dialog.setScene(dialogScene);
         dialog.setResizable(false);
         dialog.show();

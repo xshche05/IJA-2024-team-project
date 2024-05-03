@@ -26,7 +26,7 @@ public class AutomatedRobot extends AbstractRobot {
         return path;
     }
 
-    public void setView_distance(int view_distance) {
+    public void setDistance(int view_distance) {
         this.view_distance = view_distance;
         logger.info("AutomatedRobot ("+this.id+") view distance set to " + view_distance);
     }

@@ -2,8 +2,11 @@ package ija.project.robot.gui.controllers;
 
 import ija.project.robot.gui.interfaces.MenuInterface;
 import ija.project.robot.gui.interfaces.SceneInterface;
+import ija.project.robot.gui.logic.ControlledRobot;
 import ija.project.robot.gui.logic.Menu;
-import ija.project.robot.gui.visualbuilder.*;
+import ija.project.robot.logic.common.Position;
+import ija.project.robot.logic.robots.AutomatedRobot;
+import ija.project.robot.logic.robots.ManualRobot;
 import ija.project.robot.logic.room.Room;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -14,6 +17,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +44,11 @@ public class Playground implements MenuInterface, SceneInterface {
     public HBox HBoxGrid;
     public HBox HBoxBttnDown;
     public HBox HBoxBttnUp;
-
-    private List<Node> addGroup = new ArrayList<>();
-    private List<Node> removeGroup = new ArrayList<>();
-    private List<Node> startGroup = new ArrayList<>();
-    private List<Node> pauseGroup = new ArrayList<>();
+    public static String createRequest;
+    private final List<Node> addGroup = new ArrayList<>();
+    private final List<Node> removeGroup = new ArrayList<>();
+    private final List<Node> startGroup = new ArrayList<>();
+    private final List<Node> pauseGroup = new ArrayList<>();
 
     /**
      * Initializes the controller by setting up the UI components, canvas, and initial settings for the game mode.
@@ -53,8 +57,8 @@ public class Playground implements MenuInterface, SceneInterface {
      */
     @FXML
     public void initialize() {
+        createRequest = "NONE";
         gridPaneConstruct();
-
         ToggleButton addOrRemove = new ToggleButton("ADD MODE");
         addOrRemove.setStyle("-fx-background-color: LightBlue;");
         addOrRemove.setOnAction(e -> AddOreRemoveAction());
@@ -247,14 +251,17 @@ public class Playground implements MenuInterface, SceneInterface {
 
     public void LeftAction(){
         logger.info("Left button pressed");
+        ControlledRobot.getInstance().turnLeft();
     }
 
     public void GoAction(){
         logger.info("GO button pressed");
+        ControlledRobot.getInstance().moveForward();
     }
 
     public void RightAction(){
         logger.info("Right button pressed");
+        ControlledRobot.getInstance().turnRight();
     }
 
     public void gridClicked(MouseEvent e) {
@@ -262,6 +269,69 @@ public class Playground implements MenuInterface, SceneInterface {
         int x = (int) e.getX() / gridWidth;
         int y = (int) e.getY() / gridWidth;
         logger.info("Grid cell clicked: (" + x + ", " + y + ")");
+        if (((ToggleButton)startGroup.get(0)).isSelected()) {
+            logger.info("Grid cell clicked in start mode, selecting robot");
+            boolean selected = ControlledRobot.getInstance().setRobot(new Position(x, y));
+            if (selected) {
+                logger.info("Manual robot selected at position: (" + x + ", " + y + ")");
+            } else {
+                logger.info("No manual robot at position: (" + x + ", " + y + ")");
+            }
+        }
+        if (!((ToggleButton)addGroup.get(0)).isSelected()) {
+            if (((ToggleButton)addGroup.get(1)).isSelected()) {
+                logger.info("Grid cell clicked in add mode, adding auto robot");
+                createRequest = "AUTO";
+                if (Room.getInstance().getObjectAt(new Position(x, y)) != null) {
+                    logger.warning("Cannot add robot to occupied cell");
+                    return;
+                }
+                OpenDialog();
+                if (RobotDialog.validData) {
+                    logger.info("Adding auto robot at position: (" + x + ", " + y + ")");
+                    logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle + ", distance: " + RobotDialog.Distance);
+                    AutomatedRobot robot = new AutomatedRobot(new Position(x, y));
+                    robot.setSpeed(RobotDialog.Speed);
+                    robot.setAngle(RobotDialog.Angle);
+                    robot.setDistance(RobotDialog.Distance);
+                }
+            }
+            if (((ToggleButton)addGroup.get(2)).isSelected()) {
+                logger.info("Grid cell clicked in add mode, adding manual robot");
+                createRequest = "MANUAL";
+                if (Room.getInstance().getObjectAt(new Position(x, y)) != null) {
+                    logger.warning("Cannot add robot to occupied cell");
+                    return;
+                }
+                OpenDialog();
+                if (RobotDialog.validData) {
+                    logger.info("Adding manual robot at position: (" + x + ", " + y + ")");
+                    logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle);
+                    ManualRobot robot = Room.getInstance().addManualRobot(new Position(x, y));
+                    robot.setSpeed(RobotDialog.Speed);
+                    robot.setAngle(RobotDialog.Angle);
+                }
+            }
+            if (((ToggleButton)addGroup.get(3)).isSelected()) {
+                logger.info("Grid cell clicked in add mode, adding obstacle");
+                Room.getInstance().addObstacle(new Position(x, y));
+            }
+        } else {
+            logger.info("Grid cell clicked in remove mode, removing object");
+            Room.getInstance().removeFrom(new Position(x, y));
+        }
+    }
+
+    private void OpenDialog() {
+        logger.info("Opening robot dialog");
+        Stage dialog = new Stage();
+        dialog.initOwner(AnchorPane.getScene().getWindow());
+        dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        dialog.setTitle("Robot parameters");
+        Scene robotDialog = RobotDialog.getScene();
+        dialog.setScene(robotDialog);
+        dialog.setResizable(false);
+        dialog.show();
     }
 
     private void gridPaneConstruct() {

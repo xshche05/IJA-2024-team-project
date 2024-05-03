@@ -1,5 +1,6 @@
 package ija.project.robot.logic.room;
 
+import ija.project.robot.logic.common.AbstractRoomObject;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.robots.AbstractRobot;
 import ija.project.robot.logic.robots.AutomatedRobot;
@@ -132,6 +133,21 @@ public class Room {
             }
         }
     }
+
+    public AbstractRoomObject getObjectAt(Position pos) {
+        for (AbstractRobot robot : robots) {
+            if (robot.getPosition().equals(pos)) {
+                return robot;
+            }
+        }
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle.getPosition().equals(pos)) {
+                return obstacle;
+            }
+        }
+        return null;
+    }
+
     public void addObstacle(Position pos){
         if (!isPositionFree(pos)) {
             throw new IllegalArgumentException("Position is not free");

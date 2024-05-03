@@ -16,7 +16,7 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
-    public void setRotate_angle(int rotate_angle) {
+    public void setAngle(int rotate_angle) {
         this.rotate_angle = rotate_angle;
     }
     public int getViewAngle() {
