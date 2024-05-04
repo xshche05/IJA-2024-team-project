@@ -56,7 +56,7 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="45.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#Ok" prefHeight="25.0" prefWidth="55.0" text="Close" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#Cancel" prefHeight="25.0" prefWidth="55.0" text="Close" />
                </children>
             </HBox>
          </children>

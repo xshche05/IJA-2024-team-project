@@ -18,16 +18,13 @@ import javafx.scene.control.Button;
  */
 public class AboutDialog extends Dialog {
 
-    @FXML
-    public Button cancelButton;
-
     /**
      * Invoked when the Close button is clicked. This method overloads the abstract {@code Ok}
      * method from the {@link Dialog} class.
      */
     @Override
     public void Ok() {
-        Cancel();
+        return;
     }
 
     /**
