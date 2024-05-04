@@ -1,7 +1,11 @@
 module ija.project.robot {
+    requires javafx.graphics;
     requires javafx.controls;
-    requires javafx.fxml;
+    requires javafx.media;
+    requires javafx.base;
     requires javafx.web;
+    requires javafx.swing;
+    requires javafx.fxml;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
@@ -15,9 +19,6 @@ module ija.project.robot {
     requires com.google.gson;
 
     opens ija.project.robot to javafx.fxml;
-    exports ija.project.robot;
-    exports ija.project.robot.gui;
-    exports ija.project.robot.gui.interfaces;
-    exports ija.project.robot.gui.controllers;
     exports ija.project.robot.maps to com.google.gson;
+    exports ija.project.robot to javafx.graphics;
 }
