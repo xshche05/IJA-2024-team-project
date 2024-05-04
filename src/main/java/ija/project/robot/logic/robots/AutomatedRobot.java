@@ -153,4 +153,8 @@ public class AutomatedRobot extends AbstractRobot {
         moving = false;
         logger.info("AutomatedRobot (" + this.id + ") stopped moving");
     }
+
+    public int getViewDistance() {
+        return viewDistance;
+    }
 }

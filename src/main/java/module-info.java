@@ -12,10 +12,12 @@ module ija.project.robot {
     requires com.almasb.fxgl.all;
     requires java.logging;
     requires java.desktop;
+    requires com.google.gson;
 
     opens ija.project.robot to javafx.fxml;
     exports ija.project.robot;
     exports ija.project.robot.gui;
     exports ija.project.robot.gui.interfaces;
     exports ija.project.robot.gui.controllers;
+    exports ija.project.robot.maps to com.google.gson;
 }

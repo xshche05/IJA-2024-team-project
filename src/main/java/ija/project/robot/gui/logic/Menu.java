@@ -5,6 +5,7 @@ import ija.project.robot.gui.controllers.CreateDialog;
 import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.gui.controllers.Start;
 import ija.project.robot.logic.room.Room;
+import ija.project.robot.maps.MapLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -21,7 +22,7 @@ public class Menu {
     private final FileChooser fileChooser = new FileChooser();
 
     public Menu initialize() {
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
         fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")));
         return this;
     }
@@ -36,8 +37,7 @@ public class Menu {
             logger.log(System.Logger.Level.INFO, "No file selected");
             return;
         }
-        Room.getInstance().clear();
-        Room.getInstance().loadRoomConfiguration(file);
+        MapLoader.getInstance().loadMap(file);
         Scene playGround = Playground.getScene();
         Stage stage = (Stage) AnchorPane.getScene().getWindow();
         stage.setScene(playGround);
@@ -55,7 +55,7 @@ public class Menu {
         }
         try {
             BufferedWriter writer = new BufferedWriter(new java.io.FileWriter(file));
-            writer.write(Room.getInstance().getRoomConfiguration());
+            writer.write(Room.getInstance().toString());
             writer.close();
             logger.log(System.Logger.Level.INFO, "ROOM CONFIGURATION File saved");
         } catch (IOException e) {

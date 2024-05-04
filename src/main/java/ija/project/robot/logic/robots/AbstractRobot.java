@@ -101,4 +101,16 @@ public abstract class AbstractRobot extends AbstractRoomObject {
             currentAngle = playBackAngle;
         }).start();
     }
+
+    public void setStartAngle(int startAngle) {
+        this.currentAngle = startAngle;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public int getStepAngle() {
+        return stepAngle;
+    }
 }

@@ -6,6 +6,7 @@ import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.robots.AbstractRobot;
 import ija.project.robot.logic.robots.AutomatedRobot;
 import ija.project.robot.logic.robots.ManualRobot;
+import ija.project.robot.maps.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
@@ -112,7 +113,7 @@ public class Room {
         }
         AutomatedRobot robot = new AutomatedRobot(pos);
         robots.add(robot);
-        grid.add(robot.getImageView(), pos.x(), pos.y());
+        if (grid != null) grid.add(robot.getImageView(), pos.x(), pos.y());
         return robot;
     }
     public ManualRobot addManualRobot(Position pos) {
@@ -121,7 +122,7 @@ public class Room {
         }
         ManualRobot robot = new ManualRobot(pos);
         robots.add(robot);
-        grid.add(robot.getImageView(), pos.x(), pos.y());
+        if (grid != null) grid.add(robot.getImageView(), pos.x(), pos.y());
         return robot;
     }
     public void removeAll() {
@@ -188,14 +189,9 @@ public class Room {
         }
         Obstacle obstacle = new Obstacle(pos);
         obstacles.add(obstacle);
-        grid.add(obstacle.getImageView(), pos.x(), pos.y());
+        if (grid != null) grid.add(obstacle.getImageView(), pos.x(), pos.y());
         logger.log(System.Logger.Level.INFO,
                 "Obstacle added to room");
-    }
-    @Override
-    public String toString() {
-        // todo
-        return "Room configuration";
     }
     public void loadRoomConfiguration(File file) {
         // todo
@@ -236,5 +232,92 @@ public class Room {
         for (AbstractRobot robot : robots) {
             robot.playBackTransition();
         }
+    }
+    public void fromJsonRoom(JsonRoom room) {
+        setDimensions(room.cols, room.rows);
+        for (JsonObstacle jsonObstacle : room.obstacles) {
+            Position pos = new Position(jsonObstacle.position.x, jsonObstacle.position.y);
+            if (!isPositionFree(pos)) {
+                logger.log(System.Logger.Level.WARNING,"Something at " + pos + " already exists");
+                continue;
+            }
+            obstacles.add(new Obstacle(pos));
+        }
+        for (JsonManualRobot jsonRobot : room.manual_robots) {
+            Position pos = new Position(jsonRobot.position.x, jsonRobot.position.y);
+            if (!isPositionFree(pos)) {
+                logger.log(System.Logger.Level.WARNING,"Something at " + pos + " already exists");
+                continue;
+            }
+            ManualRobot mr = new ManualRobot(pos);
+            mr.setSpeed(jsonRobot.speed);
+            mr.setStartAngle(jsonRobot.start_angle);
+            mr.setStepAngle(jsonRobot.rotation_angle);
+            robots.add(mr);
+        }
+        for (JsonAutoRobot jsonRobot : room.auto_robots) {
+            Position pos = new Position(jsonRobot.position.x, jsonRobot.position.y);
+            if (!isPositionFree(pos)) {
+                logger.log(System.Logger.Level.WARNING,"Something at " + pos + " already exists");
+                continue;
+            }
+            AutomatedRobot ar = new AutomatedRobot(pos);
+            ar.setSpeed(jsonRobot.speed);
+            ar.setStartAngle(jsonRobot.start_angle);
+            if (jsonRobot.rotation_direction.equals("cw")) {
+                ar.setStepAngle(-jsonRobot.rotation_angle);
+            } else {
+                ar.setStepAngle(jsonRobot.rotation_angle);
+            }
+            ar.setViewDistance(jsonRobot.view_distance);
+            robots.add(ar);
+        }
+    }
+    public JsonRoom getJsonRoom() {
+        JsonRoom jsonRoom = new JsonRoom();
+        jsonRoom.rows = height;
+        jsonRoom.cols = width;
+        for (AbstractRobot robot : robots) {
+            if (robot instanceof ManualRobot) {
+                JsonManualRobot jsonRobot = new JsonManualRobot();
+                jsonRobot.position = new JsonPosition();
+                jsonRobot.position.x = robot.getPosition().x();
+                jsonRobot.position.y = robot.getPosition().y();
+                jsonRobot.speed = robot.getSpeed();
+                jsonRobot.start_angle = robot.getCurrentAngle();
+                jsonRobot.rotation_angle = robot.getStepAngle();
+                jsonRoom.manual_robots.add(jsonRobot);
+            } else if (robot instanceof AutomatedRobot) {
+                JsonAutoRobot jsonRobot = new JsonAutoRobot();
+                jsonRobot.position = new JsonPosition();
+                jsonRobot.position.x = robot.getPosition().x();
+                jsonRobot.position.y = robot.getPosition().y();
+                jsonRobot.speed = robot.getSpeed();
+                jsonRobot.start_angle = robot.getCurrentAngle();
+                jsonRobot.rotation_angle = robot.getStepAngle();
+                jsonRobot.view_distance = ((AutomatedRobot) robot).getViewDistance();
+                if (robot.getStepAngle() < 0) {
+                    jsonRobot.rotation_direction = "cw";
+                } else {
+                    jsonRobot.rotation_direction = "ccw";
+                }
+                jsonRoom.auto_robots.add(jsonRobot);
+            }
+        }
+        for (Obstacle obstacle : obstacles) {
+            JsonObstacle jsonObstacle = new JsonObstacle();
+            jsonObstacle.position = new JsonPosition();
+            jsonObstacle.position.x = obstacle.getPosition().x();
+            jsonObstacle.position.y = obstacle.getPosition().y();
+            jsonRoom.obstacles.add(jsonObstacle);
+        }
+        return jsonRoom;
+    }
+    public String getJsonRoomString() {
+        JsonRoom jsonRoom = getJsonRoom();
+        return jsonRoom.toString();
+    }
+    public String toString() {
+        return getJsonRoomString();
     }
 }
