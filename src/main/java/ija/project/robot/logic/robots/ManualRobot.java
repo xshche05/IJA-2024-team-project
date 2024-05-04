@@ -18,7 +18,7 @@ public class ManualRobot extends AbstractRobot {
 
     private final ImageView imageView;
 
-    private final Semaphore rotateSemaphore = new Semaphore(1);
+    private final Semaphore semaphore = new Semaphore(1);
 
     public ManualRobot(Position pos) {
         super(pos);
@@ -44,7 +44,7 @@ public class ManualRobot extends AbstractRobot {
         int x = this.pos.x();
 
         switch (currentAngle) {
-            case 0: y--; break;          // Up
+            case 0: y--; break;             // Up
             case 45: x++; y--; break;
             case 90: x++; break;          // Right
             case 135: x++; y++; break;
@@ -63,7 +63,7 @@ public class ManualRobot extends AbstractRobot {
     }
 
     public void rotateLeft() {
-        rotateSemaphore.acquireUninterruptibly();
+        semaphore.acquireUninterruptibly();
         rotate(-this.stepAngle);
         RotateTransition rt = new RotateTransition(Duration.millis((double) Playground.tickPeriod / speed), getImageView());
         rt.setByAngle(-this.stepAngle);
@@ -71,13 +71,13 @@ public class ManualRobot extends AbstractRobot {
         rt.setAutoReverse(true);
         rt.play();
         rt.setOnFinished(event -> {
-            rotateSemaphore.release();
+            semaphore.release();
             logger.info("ManualRobot ("+this.id+") rotated left");
         });
     }
 
     public void rotateRight() {
-        rotateSemaphore.acquireUninterruptibly();
+        semaphore.acquireUninterruptibly();
         rotate(this.stepAngle);
         RotateTransition rt = new RotateTransition(Duration.millis((double) Playground.tickPeriod / speed), getImageView());
         rt.setByAngle(this.stepAngle);
@@ -86,7 +86,7 @@ public class ManualRobot extends AbstractRobot {
         rt.play();
         rt.setOnFinished(event ->
         {
-            rotateSemaphore.release();
+            semaphore.release();
             logger.info("ManualRobot ("+this.id+") rotated right");
         });
     }
@@ -94,12 +94,12 @@ public class ManualRobot extends AbstractRobot {
     @Override
     public boolean move() {
         for (int i = 0; i < speed; i++) {
-            rotateSemaphore.acquireUninterruptibly();
+            semaphore.acquireUninterruptibly();
             Position prevPos = this.pos;
             Position newPos = canMove();
             if (newPos == null) {
                 logger.warning("ManualRobot ("+this.id+") cannot move forward, there is an obstacle on the way");
-                rotateSemaphore.release();
+                semaphore.release();
                 return false;
             }
             this.pos = newPos;
@@ -112,10 +112,14 @@ public class ManualRobot extends AbstractRobot {
             tt.setInterpolator(Interpolator.LINEAR);
             tt.play();
             tt.setOnFinished(event -> {
-                rotateSemaphore.release();
+                semaphore.release();
                 logger.info("ManualRobot ("+this.id+") moved to " + this.pos);
             });
         }
         return true;
+    }
+
+    public Semaphore getSemaphore() {
+        return semaphore;
     }
 }

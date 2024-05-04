@@ -35,6 +35,12 @@ public class ControlledRobot {
         AbstractRoomObject obj = Room.getInstance().getObjectAt(pos);
         if (obj instanceof ManualRobot) {
             ManualRobot prev = robot;
+            if (prev != null) {
+                if (prev.getSemaphore().availablePermits() == 0) {
+                    logger.warning("Robot is currently moving, cannot be changed to another robot");
+                    return;
+                }
+            }
             robot = (ManualRobot) obj;
             if (prev == robot) {
                 robot = null;
@@ -56,6 +62,8 @@ public class ControlledRobot {
             imageView.setRotate(robot.getCurrentAngle());
             logger.info("Robot controller is now linked to robot (" + robot.getId() + ")");
             Room.getInstance().updateViewAt(pos);
+        } else {
+            logger.info("No manual robot found at position (" + pos + ")");
         }
     }
 
@@ -73,6 +81,8 @@ public class ControlledRobot {
     public void notifyRemovedRobot(ManualRobot robot) {
         if (this.robot == robot) {
             this.robot = null;
+            imageView.setImage(null);
+            imageView = null;
             logger.info("Robot controller is now unlinked from robot (" + robot.getId() + ")");
         }
     }
@@ -84,7 +94,6 @@ public class ControlledRobot {
         logger.info("Robot controller got request to move forward");
         new Thread(() -> {
             robot.move();
-            logger.info("Controlled robot moved forward, current position: " + robot.getPosition());
         }).start();
     }
 
@@ -95,7 +104,6 @@ public class ControlledRobot {
         logger.info("Robot controller got request to turn left");
         new Thread(() -> {
             robot.rotateLeft();
-            logger.info("Controlled robot turned left, current angle: " + robot.getCurrentAngle());
         }).start();
     }
 
@@ -106,7 +114,6 @@ public class ControlledRobot {
         logger.info("Robot controller got request to turn right");
         new Thread(() -> {
             robot.rotateRight();
-            logger.info("Controlled robot turned right, current angle: " + robot.getCurrentAngle());
         }).start();
     }
 }
