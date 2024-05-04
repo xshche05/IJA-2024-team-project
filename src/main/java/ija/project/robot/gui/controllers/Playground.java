@@ -4,7 +4,9 @@ import ija.project.robot.gui.interfaces.MenuInterface;
 import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.gui.logic.ControlledRobot;
 import ija.project.robot.gui.logic.Menu;
+import ija.project.robot.logic.common.AbstractRoomObject;
 import ija.project.robot.logic.common.Position;
+import ija.project.robot.logic.robots.AbstractRobot;
 import ija.project.robot.logic.robots.AutomatedRobot;
 import ija.project.robot.logic.robots.ManualRobot;
 import ija.project.robot.logic.room.Obstacle;
@@ -59,8 +61,6 @@ public class Playground implements MenuInterface, SceneInterface {
 
     private String currentMode = "ADD";
     private String lastEditMode = "ADD";
-
-
 
     /**
      * Initializes the controller by setting up the UI components, canvas, and initial settings for the game mode.
@@ -165,11 +165,21 @@ public class Playground implements MenuInterface, SceneInterface {
         new Menu().initialize().FileSaveAs(AnchorPane);
     }
 
+    /**
+     * Displays information about the application.
+     */
     @Override
     @FXML
-    public void Help() {
+    public void About() {
         new Menu().initialize().Help(AnchorPane);
     }
+
+    @Override
+    @FXML
+    public void Preset1() {
+        new Menu().initialize().Preset1(AnchorPane);
+    }
+
 
     /**
      * Gets the scene for the playground.
@@ -181,18 +191,27 @@ public class Playground implements MenuInterface, SceneInterface {
         return SceneInterface.getScene(Playground.class, "playground.fxml");
     }
 
+    /**
+     * Removes all {@link AbstractRoomObject} instances from the {@link Room}.
+     */
     public void RemoveAllAction() {
         logger.info("Remove all button pressed");
         Room room = Room.getInstance();
         room.removeAll();
     }
 
+    /**
+     * Removes all {@link Obstacle} instances from the  {@link Room}.
+     */
     public void RemoveObstaclesAction() {
         logger.info("Remove obstacles button pressed");
         Room room = Room.getInstance();
         room.removeObstacles();
     }
 
+    /**
+     * Removes all {@link AbstractRobot} instances from the {@link Room}.
+     */
     public void RemoveRobotsAction() {
         logger.info("Remove robots button pressed");
         Room room = Room.getInstance();
@@ -283,21 +302,37 @@ public class Playground implements MenuInterface, SceneInterface {
         }
     }
 
+    /**
+     * Turns the Controlled Robot to the left.
+     */
     public void LeftAction(){
         logger.info("Left button pressed");
         ControlledRobot.getInstance().turnLeft();
     }
 
+    /**
+     * Moves the Controlled Robot forward.
+     */
     public void GoAction(){
         logger.info("GO button pressed");
         ControlledRobot.getInstance().moveForward();
     }
 
+    /**
+     * Turns the Controlled Robot to the right.
+     */
     public void RightAction(){
         logger.info("Right button pressed");
         ControlledRobot.getInstance().turnRight();
     }
 
+    /**
+     * Handles the click event on the grid.
+     * This method determines the mouse button that was clicked
+     * and performs the appropriate action based on the current mode.
+     *
+     * @param e The mouse event that triggered the click.
+     */
     public void gridClicked(MouseEvent e) {
         logger.info("Grid cell clicked px cords: (" + e.getX() + ", " + e.getY() + ")");
         int x = (int) e.getX() / gridWidth;
@@ -307,17 +342,16 @@ public class Playground implements MenuInterface, SceneInterface {
         if (e.getButton() == MouseButton.SECONDARY) {  // clicked the right mouse button
             logger.info("Right mouse button clicked");
             handleRightClick(x, y);
-            return;
         }
-        else if (e.getButton() == MouseButton.PRIMARY){
+        else if (e.getButton() == MouseButton.PRIMARY){ // clicked the left mouse button
             logger.info("Left mouse button clicked");
             handleLeftClick(x, y);
         }
         else {
             logger.warning("Unknown mouse button clicked");
         }
-
     }
+
 
     private void handleLeftClick(int x, int y){
         if (currentMode.equals("START")) {

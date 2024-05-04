@@ -5,6 +5,7 @@ import ija.project.robot.gui.interfaces.SceneInterface;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
 /**
  * Represents the About dialog for the application.
@@ -17,6 +18,25 @@ import javafx.scene.control.Button;
  * hence the re-use of the {@link #Cancel()} method.
  */
 public class AboutDialog extends Dialog {
+
+    @FXML
+    public Label aboutLabel;
+
+    /**
+     * Initializes the About dialog with the appropriate information.
+     */
+    public void initialize() {
+        aboutLabel.setText(
+                "Project within the university subject \"IJA\".\n\n" +
+
+                "Built on May 5, 2024\n" +
+                "For educational use only.\n\n" +
+
+                "Authors:\n" +
+                "Kirill Shchetiniuk (xshche05)\n" +
+                "Artur Sultanov (xsulta01)\n"
+                );
+    }
 
     /**
      * Invoked when the Close button is clicked. This method overloads the abstract {@code Ok}

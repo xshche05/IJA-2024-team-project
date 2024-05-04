@@ -32,6 +32,11 @@ public class CreateDialog extends Dialog {
     @FXML
     public Label errorLabel;
 
+    /**
+     * Invoked when the OK button is clicked.
+     * This method sets the dimensions of the room based on the user input.
+     * If the input is invalid, an error message is displayed.
+     */
     public void Ok() {
         errorLabel.setText("");
         try {
@@ -56,6 +61,13 @@ public class CreateDialog extends Dialog {
         }
     }
 
+    /**
+     * Retrieves and returns the scene for the room creation dialog using the {@link SceneInterface}.
+     * This method facilitates the loading of the appropriate FXML file for the room creation dialog and
+     * is typically called to initialize the dialog in the UI.
+     *
+     * @return The loaded {@link Scene} for the room creation dialog.
+     */
     public static Scene getScene() {
         return SceneInterface.getScene(CreateDialog.class, "create_dialog.fxml");
     }

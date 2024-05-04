@@ -30,21 +30,24 @@ public class Menu {
 
     // Load room configuration from file
     public void FileLoad(AnchorPane AnchorPane) {
-        System.Logger logger = System.getLogger(Start.class.getName());
-        logger.log(System.Logger.Level.INFO, "File Opened");
-        File file = fileChooser.showOpenDialog(AnchorPane.getScene().getWindow());
-        if (file != null) {
-            logger.log(System.Logger.Level.INFO, "File selected: " + file.getAbsolutePath());
-        } else {
-            logger.log(System.Logger.Level.INFO, "No file selected");
-            return;
-        }
-        Room.getInstance().clear();
-        Room.getInstance().loadRoomConfiguration(file);
-        Scene playGround = Playground.getScene();
-        Stage stage = (Stage) AnchorPane.getScene().getWindow();
-        stage.setScene(playGround);
+//        System.Logger logger = System.getLogger(Start.class.getName());
+//        logger.log(System.Logger.Level.INFO, "File Opened");
+//        File file = fileChooser.showOpenDialog(AnchorPane.getScene().getWindow());
+//        if (file != null) {
+//            logger.log(System.Logger.Level.INFO, "File selected: " + file.getAbsolutePath());
+//        } else {
+//            logger.log(System.Logger.Level.INFO, "No file selected");
+//            return;
+//        }
+//        Room.getInstance().clear();
+//        Room.getInstance().loadRoomConfiguration(file);
+//        Scene playGround = Playground.getScene();
+//        Stage stage = (Stage) AnchorPane.getScene().getWindow();
+//        stage.setScene(playGround);
+        new FileLoader().initialize().FileLoad(AnchorPane);
+
     }
+
 
     // Save room configuration to file
     public void FileSaveAs(AnchorPane AnchorPane) {
@@ -82,6 +85,7 @@ public class Menu {
     }
 
 
+
     public void Help(AnchorPane AnchorPane) {
         logger.info("Help opened");
         Stage dialog = new Stage();
@@ -92,5 +96,10 @@ public class Menu {
         dialog.setScene(dialogScene);
         dialog.setResizable(false);
         dialog.show();
+    }
+
+    public void Preset1(AnchorPane AnchorPane) {
+        logger.info("Creating new room from preset 1");
+        new FileLoader().initialize().Preset1(AnchorPane);
     }
 }

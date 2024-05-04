@@ -16,6 +16,11 @@
          <menus>
             <Menu mnemonicParsing="false" text="File">
                <items>
+                  <Menu mnemonicParsing="false" text="Load preset">
+                     <items>
+                        <MenuItem fx:id="preset1" mnemonicParsing="false" onAction="#Preset1" text="Preset 1" />
+                     </items>
+                  </Menu>
                   <MenuItem fx:id="MenuNewFile" mnemonicParsing="false" onAction="#CreateNew" text="Create new" />
                   <MenuItem fx:id="MenuFileLoad" mnemonicParsing="false" onAction="#FileLoad" text="Load File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -47,6 +52,5 @@
             </VBox>
          </children>
       </VBox>
-      <Button fx:id="playback" mnemonicParsing="false" onAction="#PlayBack" text="PlayBack" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="1.0" />
    </children>
 </AnchorPane>

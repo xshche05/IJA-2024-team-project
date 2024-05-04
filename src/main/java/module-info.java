@@ -12,6 +12,7 @@ module ija.project.robot {
     requires com.almasb.fxgl.all;
     requires java.logging;
     requires java.desktop;
+    requires com.fasterxml.jackson.databind;
 
     opens ija.project.robot to javafx.fxml;
     exports ija.project.robot;

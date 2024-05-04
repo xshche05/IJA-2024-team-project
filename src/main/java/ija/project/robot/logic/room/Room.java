@@ -13,6 +13,9 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.InputStream;
 
 public class Room {
 
@@ -280,48 +283,66 @@ public class Room {
         return sb.toString();
     }
 
-    public void loadRoomConfiguration(String configuration) {
-        List<String[]> linesList = new ArrayList<>();
-        String[] lines = configuration.split("\n");
-        int len_x = -1;
-        for (int i = 0; i < lines.length; i++) {
-            linesList.add(lines[i].split(" "));
-            if (len_x == -1) {
-                len_x = linesList.get(i).length;
-            } else if (len_x != linesList.get(i).length) {
-                throw new IllegalArgumentException("Invalid room configuration");
-            }
-        }
-        int x_dim = linesList.get(0).length;
-        int y_dim = linesList.size();
-        setDimensions(x_dim, y_dim);
+//    public void loadRoomConfiguration(String configuration) {
+//        List<String[]> linesList = new ArrayList<>();
+//        String[] lines = configuration.split("\n");
+//        int len_x = -1;
+//        for (int i = 0; i < lines.length; i++) {
+//            linesList.add(lines[i].split(" "));
+//            if (len_x == -1) {
+//                len_x = linesList.get(i).length;
+//            } else if (len_x != linesList.get(i).length) {
+//                throw new IllegalArgumentException("Invalid room configuration");
+//            }
+//        }
+//        int x_dim = linesList.get(0).length;
+//        int y_dim = linesList.size();
+//        setDimensions(x_dim, y_dim);
+//
+//        for (int i = 0; i < y_dim; i++) {
+//            for (int j = 0; j < x_dim; j++) {
+//                switch (linesList.get(i)[j]) {
+//                    case "O" -> addObstacle(new Position(j, i));
+//                    case "M" -> addManualRobot(new Position(j, i));
+//                    case "A" -> addAutoRobot(new Position(j, i));
+//                    case "*" -> {}
+//                    default -> throw new IllegalArgumentException("Invalid room configuration");
+//                }
+//            }
+//        }
+//    }
 
-        for (int i = 0; i < y_dim; i++) {
-            for (int j = 0; j < x_dim; j++) {
-                switch (linesList.get(i)[j]) {
-                    case "O" -> addObstacle(new Position(j, i));
-                    case "M" -> addManualRobot(new Position(j, i));
-                    case "A" -> addAutoRobot(new Position(j, i));
-                    case "*" -> {}
-                    default -> throw new IllegalArgumentException("Invalid room configuration");
-                }
-            }
-        }
-    }
+//    public void loadRoomConfiguration(File file) {
+//        try {
+//            BufferedReader reader = new BufferedReader(new FileReader(file));
+//            StringBuilder sb = new StringBuilder();
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                sb.append(line).append("\n");
+//            }
+//            loadRoomConfiguration(sb.toString());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        logger.log(System.Logger.Level.INFO, "Room configuration loaded from file " + file.getName());
+//    }
 
-    public void loadRoomConfiguration(File file) {
+    public void loadRoomConfiguration(InputStream inputStream) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            loadRoomConfiguration(sb.toString());
+
+            ObjectMapper mapper = new ObjectMapper();
+            // Read the root of the JSON tree
+            JsonNode rootNode = mapper.readTree(inputStream);
+
+            // Now you can navigate through the tree
+            JsonNode mapSizeNode = rootNode.path("map_size");
+            int rows = mapSizeNode.path("rows").asInt();
+            int cols = mapSizeNode.path("cols").asInt();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        logger.log(System.Logger.Level.INFO, "Room configuration loaded from file " + file.getName());
+        logger.log(System.Logger.Level.INFO, "Room configuration loaded from file ");
     }
 
     public String getRoomConfiguration() {

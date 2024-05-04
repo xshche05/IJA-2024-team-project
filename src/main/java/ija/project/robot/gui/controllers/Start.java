@@ -3,6 +3,7 @@ package ija.project.robot.gui.controllers;
 import ija.project.robot.gui.interfaces.MenuInterface;
 import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.gui.logic.Menu;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -54,7 +55,7 @@ public class Start implements MenuInterface, SceneInterface {
      */
     @Override
     @FXML
-    public void Help() {
+    public void About() {
         new Menu().initialize().Help(AnchorPane);
     }
 
@@ -76,4 +77,11 @@ public class Start implements MenuInterface, SceneInterface {
         logger.info("Getting start scene");
         return SceneInterface.getScene(Start.class,"start.fxml");
     }
+
+    @Override
+    @FXML
+    public void Preset1() {
+        new Menu().initialize().Preset1(AnchorPane);
+    }
+
 }
