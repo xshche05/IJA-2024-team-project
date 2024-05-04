@@ -309,10 +309,20 @@ public class Playground implements MenuInterface, SceneInterface {
 
         if (e.getButton() == MouseButton.SECONDARY) {  // clicked the right mouse button
             logger.info("Right mouse button clicked");
-            handleRobotRightClick(x, y);
+            handleRightClick(x, y);
             return;
         }
+        else if (e.getButton() == MouseButton.PRIMARY){
+            logger.info("Left mouse button clicked");
+            handleLeftClick(x, y);
+        }
+        else {
+            logger.warning("Unknown mouse button clicked");
+        }
 
+    }
+
+    private void handleLeftClick(int x, int y){
         if (currentMode.equals("START")) {
             logger.info("Grid cell clicked in start mode, selecting robot");
             ControlledRobot.getInstance().setRobot(new Position(x, y));
@@ -367,7 +377,7 @@ public class Playground implements MenuInterface, SceneInterface {
         }
     }
 
-    private void handleRobotRightClick(int x, int y){
+    private void handleRightClick(int x, int y){
         var object = Room.getInstance().getObjectAt(new Position(x, y));
 
         if (object == null || (object instanceof Obstacle)) {
