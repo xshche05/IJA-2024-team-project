@@ -380,10 +380,7 @@ public class Playground implements MenuInterface, SceneInterface {
     private void handleRightClick(int x, int y){
         var object = Room.getInstance().getObjectAt(new Position(x, y));
 
-        if (object == null || (object instanceof Obstacle)) {
-            logger.info("The cell is empty.");
-            return;
-        } else if (object instanceof AutomatedRobot) {
+        if (object instanceof AutomatedRobot) {
             logger.info("Right clicked on auto robot");
             createRequest = "AUTO";
             AutomatedRobot robot = (AutomatedRobot) object;
