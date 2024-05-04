@@ -44,6 +44,7 @@ public class ControlledRobot {
             robot = (ManualRobot) obj;
             if (prev == robot) {
                 robot = null;
+                imageView.setImage(null);
                 Room.getInstance().updateViewAt(pos);
                 logger.info("Robot controller is now unlinked from robot (" + prev.getId() + ")");
                 return;

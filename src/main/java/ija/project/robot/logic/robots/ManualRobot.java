@@ -6,6 +6,7 @@ import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,10 +15,11 @@ import javafx.util.Duration;
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
+import static ija.project.robot.RobotApp.logger;
+
 public class ManualRobot extends AbstractRobot {
 
     private final ImageView imageView;
-
     private final Semaphore semaphore = new Semaphore(1);
 
     public ManualRobot(Position pos) {
@@ -62,6 +64,35 @@ public class ManualRobot extends AbstractRobot {
         return null;
     }
 
+    @Override
+    public boolean move() {
+        for (int i = 0; i < speed; i++) {
+            semaphore.acquireUninterruptibly();
+            Position prevPos = this.pos;
+            Position newPos = canMove();
+            if (newPos == null) {
+                logger.warning("ManualRobot (" + this.id + ") cannot move forward, there is an obstacle on the way");
+                semaphore.release();
+                return false;
+            }
+            this.pos = newPos;
+            // Make translate transition
+            TranslateTransition tt = new TranslateTransition(Duration.millis((double) Playground.tickPeriod / speed), getImageView());
+            tt.setByX((newPos.x() - prevPos.x()) * Playground.gridWidth);
+            tt.setByY((newPos.y() - prevPos.y()) * Playground.gridWidth);
+            tt.setCycleCount(1);
+            tt.setAutoReverse(true);
+            tt.setInterpolator(Interpolator.LINEAR);
+            tt.play();
+            tt.setOnFinished(event -> {
+                semaphore.release();
+                logger.info("ManualRobot (" + this.id + ") moved to " + this.pos);
+                addToBackTransition(tt);
+            });
+        }
+        return true;
+    }
+
     public void rotateLeft() {
         semaphore.acquireUninterruptibly();
         rotate(-this.stepAngle);
@@ -69,6 +100,7 @@ public class ManualRobot extends AbstractRobot {
         rt.setByAngle(-this.stepAngle);
         rt.setCycleCount(1);
         rt.setAutoReverse(true);
+        rt.setInterpolator(Interpolator.LINEAR);
         rt.play();
         rt.setOnFinished(event -> {
             semaphore.release();
@@ -88,35 +120,8 @@ public class ManualRobot extends AbstractRobot {
         {
             semaphore.release();
             logger.info("ManualRobot ("+this.id+") rotated right");
+            addToBackTransition(rt);
         });
-    }
-
-    @Override
-    public boolean move() {
-        for (int i = 0; i < speed; i++) {
-            semaphore.acquireUninterruptibly();
-            Position prevPos = this.pos;
-            Position newPos = canMove();
-            if (newPos == null) {
-                logger.warning("ManualRobot ("+this.id+") cannot move forward, there is an obstacle on the way");
-                semaphore.release();
-                return false;
-            }
-            this.pos = newPos;
-            // Make translate transition
-            TranslateTransition tt = new TranslateTransition(Duration.millis((double) Playground.tickPeriod / speed), getImageView());
-            tt.setByX((newPos.x() - prevPos.x()) * Playground.gridWidth);
-            tt.setByY((newPos.y() - prevPos.y()) * Playground.gridWidth);
-            tt.setCycleCount(1);
-            tt.setAutoReverse(true);
-            tt.setInterpolator(Interpolator.LINEAR);
-            tt.play();
-            tt.setOnFinished(event -> {
-                semaphore.release();
-                logger.info("ManualRobot ("+this.id+") moved to " + this.pos);
-            });
-        }
-        return true;
     }
 
     public Semaphore getSemaphore() {

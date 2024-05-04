@@ -47,6 +47,7 @@
             </VBox>
          </children>
       </VBox>
-      <Button fx:id="playback" mnemonicParsing="false" onAction="#PlayBack" text="PlayBack" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="1.0" />
+      <Button fx:id="playback" mnemonicParsing="false" onAction="#StartPlayBack" text="PlayBack" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="1.0" />
+      <Button fx:id="tick" mnemonicParsing="false" onAction="#tick" text="Tick" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="1.0" />
    </children>
 </AnchorPane>

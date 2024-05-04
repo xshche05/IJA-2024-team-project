@@ -7,15 +7,13 @@ import java.util.logging.Logger;
 public abstract class AbstractRoomObject {
     protected Position pos;
     protected int id;
+    protected ImageView imageView;
     private static int id_counter = 0;
-    protected static final Logger logger = Logger.getLogger(AbstractRoomObject.class.getName());
 
     public AbstractRoomObject(Position pos) {
         this.pos = pos;
         this.id = id_counter++;
     }
-
-    abstract public ImageView getImageView();
 
     public int getId() {
         return this.id;
@@ -25,7 +23,14 @@ public abstract class AbstractRoomObject {
         return this.pos;
     }
 
-    public void setPosition(Position pos) {
-        this.pos = pos;
+    public ImageView removeImageView() {
+        ImageView iv = this.imageView;
+        if (this.imageView != null) {
+            this.imageView.setImage(null);
+        }
+        this.imageView = null;
+        return iv;
     }
+
+    abstract public ImageView getImageView();
 }

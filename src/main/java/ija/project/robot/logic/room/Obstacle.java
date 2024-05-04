@@ -8,23 +8,21 @@ import javafx.scene.image.ImageView;
 
 import java.util.Objects;
 
-public class Obstacle extends AbstractRoomObject {
+import static ija.project.robot.RobotApp.logger;
 
-    private final System.Logger logger;
+public class Obstacle extends AbstractRoomObject {
 
     public Obstacle(Position pos) {
         super(pos);
-        logger = System.getLogger("Obstacle id: " + this.id);
-        logger.log(System.Logger.Level.INFO,
-                "Obstacle created on " + pos);
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("wall.png")));
+        imageView = new ImageView(image);
+        imageView.setFitHeight(Playground.gridWidth);
+        imageView.setFitWidth(Playground.gridWidth);
+        logger.info("Obstacle (" + this.id + ") created at " + pos);
     }
 
     @Override
     public ImageView getImageView() {
-        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("wall.png")));
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(Playground.gridWidth);
-        imageView.setFitWidth(Playground.gridWidth);
         return imageView;
     }
 }

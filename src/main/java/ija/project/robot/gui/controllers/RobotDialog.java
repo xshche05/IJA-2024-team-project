@@ -39,7 +39,7 @@ public class RobotDialog extends Dialog {
             } else {
                 Distance = Integer.parseInt(distInput.getText());
             }
-            if (Speed < 1 || Angle < 0 || Angle > 360 || Distance < 1) {
+            if (Speed < 0 || Distance < 1) {
                 errorLabel.setText("Speed must be positive, angle must be between 0 and 360, distance must be positive!");
                 logger.warning("Speed must be positive, angle must be between 0 and 360, distance must be positive!");
                 return;

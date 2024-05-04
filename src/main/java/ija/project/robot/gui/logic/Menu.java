@@ -4,7 +4,6 @@ import ija.project.robot.gui.controllers.AboutDialog;
 import ija.project.robot.gui.controllers.CreateDialog;
 import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.gui.controllers.Start;
-import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.logic.room.Room;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -21,14 +20,12 @@ import static ija.project.robot.RobotApp.logger;
 public class Menu {
     private final FileChooser fileChooser = new FileChooser();
 
-    // Initialize file chooser
     public Menu initialize() {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
         fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")));
         return this;
     }
 
-    // Load room configuration from file
     public void FileLoad(AnchorPane AnchorPane) {
         System.Logger logger = System.getLogger(Start.class.getName());
         logger.log(System.Logger.Level.INFO, "File Opened");
@@ -46,7 +43,6 @@ public class Menu {
         stage.setScene(playGround);
     }
 
-    // Save room configuration to file
     public void FileSaveAs(AnchorPane AnchorPane) {
         System.Logger logger = System.getLogger(Start.class.getName());
         logger.log(System.Logger.Level.INFO, "File save as window opened");
@@ -67,7 +63,6 @@ public class Menu {
         }
     }
 
-
     public void CreateNew(AnchorPane AnchorPane) {
         logger.info("Creating new room");
         Room.getInstance().clear();
@@ -81,8 +76,7 @@ public class Menu {
         dialog.show();
     }
 
-
-    public void Help(AnchorPane AnchorPane) {
+    public void About(AnchorPane AnchorPane) {
         logger.info("Help opened");
         Stage dialog = new Stage();
         dialog.initOwner(AnchorPane.getScene().getWindow());

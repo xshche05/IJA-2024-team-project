@@ -54,8 +54,8 @@ public class Start implements MenuInterface, SceneInterface {
      */
     @Override
     @FXML
-    public void Help() {
-        new Menu().initialize().Help(AnchorPane);
+    public void About() {
+        new Menu().initialize().About(AnchorPane);
     }
 
     /**

@@ -19,5 +19,5 @@ public interface MenuInterface {
     /**
      * Initiates the process to display help information related to the application.
      */
-    void Help();
+    void About();
 }

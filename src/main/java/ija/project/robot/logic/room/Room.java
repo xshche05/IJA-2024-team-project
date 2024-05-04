@@ -75,8 +75,10 @@ public class Room {
 
     public void tick() {
         for (AbstractRobot robot : robots) {
-            if (robot instanceof AutomatedRobot) {
-                ((AutomatedRobot) robot).tick();
+            if (robot instanceof AutomatedRobot automatedRobot) {
+                new Thread(automatedRobot::tick).start();
+                logger.log(System.Logger.Level.INFO,
+                        "Send tick to " + robot.getId());
             }
         }
     }
@@ -97,18 +99,10 @@ public class Room {
         }
         return isPositionInRoom(pos);
     }
-    public void runAutomatedRobots() throws InterruptedException {
+    public void runAutomatedRobots() {
         for (AbstractRobot robot : robots) {
             if (robot instanceof AutomatedRobot) {
                 ((AutomatedRobot) robot).startMoving();
-                // run robot in separate thread
-                new Thread(() -> {
-                    try {
-                        ((AutomatedRobot) robot).run();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
             }
         }
     }
@@ -130,95 +124,51 @@ public class Room {
         grid.add(robot.getImageView(), pos.x(), pos.y());
         return robot;
     }
-
     public void removeAll() {
         removeObstacles();
         removeRobots();
     }
-
     public void removeObstacles() {
         logger.log(System.Logger.Level.INFO,
                 "Obstacles removed from room");
-        List<ImageView> obstaclesImageViews = new ArrayList<>();
-        List<Position> obstaclesPositions = new ArrayList<>();
         for (Obstacle obstacle : obstacles) {
-            obstaclesPositions.add(obstacle.getPosition());
-        }
-        for (int i = 0; i < grid.getChildren().size(); i++) {
-            if (grid.getChildren().get(i) instanceof ImageView) {
-                obstaclesImageViews.add((ImageView) grid.getChildren().get(i));
-            }
-        }
-        for (ImageView iv : obstaclesImageViews) {
-            int x = GridPane.getColumnIndex(iv);
-            int y = GridPane.getRowIndex(iv);
-            Position pos = new Position(x, y);
-            if (obstaclesPositions.contains(pos)) {
-                grid.getChildren().remove(iv);
-            }
+            grid.getChildren().remove(obstacle.removeImageView());
         }
         obstacles.clear();
     }
-
+    public void stopSimulation() {
+        for (AbstractRobot robot : robots) {
+            if (robot instanceof AutomatedRobot) {
+                ((AutomatedRobot) robot).stopMoving();
+            }
+        }
+    }
+    public void startSimulation() {
+        runAutomatedRobots();
+    }
     public void removeRobots() {
         logger.log(System.Logger.Level.INFO,
                 "Robots removed from room");
-        List<ImageView> robotImageViews = new ArrayList<>();
-        List<Position> robotPositions = new ArrayList<>();
         for (AbstractRobot robot : robots) {
-            robotPositions.add(robot.getPosition());
+            grid.getChildren().remove(robot.removeImageView());
             if (robot instanceof ManualRobot) {
                 ControlledRobot.getInstance().notifyRemovedRobot((ManualRobot) robot);
             }
         }
-        for (int i = 0; i < grid.getChildren().size(); i++) {
-            if (grid.getChildren().get(i) instanceof ImageView) {
-                robotImageViews.add((ImageView) grid.getChildren().get(i));
-            }
-        }
-        for (ImageView iv : robotImageViews) {
-            int x = GridPane.getColumnIndex(iv);
-            int y = GridPane.getRowIndex(iv);
-            Position pos = new Position(x, y);
-            if (robotPositions.contains(pos)) {
-                grid.getChildren().remove(iv);
-            }
-        }
         robots.clear();
     }
-
     public void removeFrom(Position pos) {
-        List<ImageView> imageViews = new ArrayList<>();
-        for (int i = 0; i < grid.getChildren().size(); i++) {
-            if (grid.getChildren().get(i) instanceof ImageView) {
-                imageViews.add((ImageView) grid.getChildren().get(i));
-            }
+        AbstractRoomObject obj = getObjectAt(pos);
+        if (obj == null) {
+            return;
         }
-        for (ImageView iv : imageViews) {
-            int x = GridPane.getColumnIndex(iv);
-            int y = GridPane.getRowIndex(iv);
-            if (x == pos.x() && y == pos.y()) {
-                grid.getChildren().remove(iv);
-                break;
-            }
+        if (obj instanceof AbstractRobot) {
+            robots.remove(obj);
+        } else if (obj instanceof Obstacle){
+            obstacles.remove(obj);
         }
-        for (AbstractRobot robot : robots) {
-            if (robot.getPosition().equals(pos)) {
-                robots.remove(robot);
-                if (robot instanceof ManualRobot) {
-                    ControlledRobot.getInstance().notifyRemovedRobot((ManualRobot) robot);
-                }
-                return;
-            }
-        }
-        for (Obstacle obstacle : obstacles) {
-            if (obstacle.getPosition().equals(pos)) {
-                obstacles.remove(obstacle);
-                return;
-            }
-        }
+        grid.getChildren().remove(obj.getImageView());
     }
-
     public AbstractRoomObject getObjectAt(Position pos) {
         for (AbstractRobot robot : robots) {
             if (robot.getPosition().equals(pos)) {
@@ -232,7 +182,6 @@ public class Room {
         }
         return null;
     }
-
     public void addObstacle(Position pos){
         if (!isPositionFree(pos)) {
             throw new IllegalArgumentException("Position is not free");
@@ -243,99 +192,24 @@ public class Room {
         logger.log(System.Logger.Level.INFO,
                 "Obstacle added to room");
     }
-    public List<AbstractRobot> getRobots() {
-        return robots;
-    }
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                Position pos = new Position(j, i);
-                if (isPositionFree(pos)) {
-                    sb.append("*");
-                } else {
-                    // if obstacle is on position print O
-                    for (Obstacle obstacle : obstacles) {
-                        if (obstacle.getPosition().equals(pos)) {
-                            sb.append("O");
-                            break;
-                        }
-                    }
-                    // if robot is on position print R
-                    for (AbstractRobot robot : robots) {
-                        if (robot.getPosition().equals(pos)) {
-                            if (robot instanceof ManualRobot) {
-                                sb.append("M"); // todo
-                            } else {
-                                sb.append("A"); // todo
-                            }
-                        }
-                    }
-                }
-                if (j != width - 1) sb.append(" ");
-            }
-            if (i != height - 1) sb.append("\n");
-        }
-        return sb.toString();
+        // todo
+        return "Room configuration";
     }
-
-    public void loadRoomConfiguration(String configuration) {
-        List<String[]> linesList = new ArrayList<>();
-        String[] lines = configuration.split("\n");
-        int len_x = -1;
-        for (int i = 0; i < lines.length; i++) {
-            linesList.add(lines[i].split(" "));
-            if (len_x == -1) {
-                len_x = linesList.get(i).length;
-            } else if (len_x != linesList.get(i).length) {
-                throw new IllegalArgumentException("Invalid room configuration");
-            }
-        }
-        int x_dim = linesList.get(0).length;
-        int y_dim = linesList.size();
-        setDimensions(x_dim, y_dim);
-
-        for (int i = 0; i < y_dim; i++) {
-            for (int j = 0; j < x_dim; j++) {
-                switch (linesList.get(i)[j]) {
-                    case "O" -> addObstacle(new Position(j, i));
-                    case "M" -> addManualRobot(new Position(j, i));
-                    case "A" -> addAutoRobot(new Position(j, i));
-                    case "*" -> {}
-                    default -> throw new IllegalArgumentException("Invalid room configuration");
-                }
-            }
-        }
-    }
-
     public void loadRoomConfiguration(File file) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            loadRoomConfiguration(sb.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // todo
         logger.log(System.Logger.Level.INFO, "Room configuration loaded from file " + file.getName());
     }
-
     public String getRoomConfiguration() {
         return toString();
     }
-
     public int getWidth() {
         return width;
     }
-
     public int getHeight() {
         return height;
     }
-
     public void updateViewAt(Position pos) {
         AbstractRoomObject obj = getObjectAt(pos);
         if (obj == null) {
@@ -358,35 +232,9 @@ public class Room {
         }
         grid.add(imageView, pos.x(), pos.y());
     }
-
-    public String[][] getRoomConfigurationArray() {
-        String[][] room = new String[height][width];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                Position pos = new Position(j, i);
-                if (isPositionFree(pos)) {
-                    room[i][j] = "*";
-                } else {
-                    // if obstacle is on position print O
-                    for (Obstacle obstacle : obstacles) {
-                        if (obstacle.getPosition().equals(pos)) {
-                            room[i][j] = "O";
-                            break;
-                        }
-                    }
-                    // if robot is on position print R
-                    for (AbstractRobot robot : robots) {
-                        if (robot.getPosition().equals(pos)) {
-                            if (robot instanceof ManualRobot) {
-                                room[i][j] = "M"; // todo
-                            } else {
-                                room[i][j] = "A"; // todo
-                            }
-                        }
-                    }
-                }
-            }
+    public void playBackTransition() {
+        for (AbstractRobot robot : robots) {
+            robot.playBackTransition();
         }
-        return room;
     }
 }
