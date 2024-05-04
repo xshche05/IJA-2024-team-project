@@ -380,10 +380,9 @@ public class Playground implements MenuInterface, SceneInterface {
     private void handleRightClick(int x, int y){
         var object = Room.getInstance().getObjectAt(new Position(x, y));
 
-        if (object instanceof AutomatedRobot) {
+        if (object instanceof AutomatedRobot robot) {
             logger.info("Right clicked on auto robot");
             createRequest = "AUTO";
-            AutomatedRobot robot = (AutomatedRobot) object;
 
             OpenDialog();
             if (RobotDialog.validData) {
@@ -394,10 +393,9 @@ public class Playground implements MenuInterface, SceneInterface {
                 robot.setDistance(RobotDialog.Distance);
             }
 
-        } else if (object instanceof ManualRobot) {
+        } else if (object instanceof ManualRobot robot) {
             logger.info("Right clicked on manual robot");
             createRequest = "MANUAL";
-            ManualRobot robot = (ManualRobot) object;
 
             OpenDialog();
             if (RobotDialog.validData) {
