@@ -24,7 +24,7 @@
       "view_distance": 1,
       "start_angle": 0,
       "rotation_angle": 45,
-      "rotation_dirrection": "clw"
+      "rotation_direction": "clw"
     },
     {
       "position": {
@@ -35,7 +35,7 @@
       "view_distance": 1,
       "start_angle": 45,
       "rotation_angle": 45,
-      "rotation_dirrection": "uclw"
+      "rotation_direction": "uclw"
     }
   ],
   "obstacles": [

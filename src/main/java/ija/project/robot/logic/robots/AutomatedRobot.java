@@ -22,6 +22,7 @@ public class AutomatedRobot extends AbstractRobot {
 
     private final ImageView imageView;
 
+    private int RotationDirection = 1;
 
     public AutomatedRobot(Position pos) {
         super(pos);
@@ -84,8 +85,19 @@ public class AutomatedRobot extends AbstractRobot {
         return dstPos;
     }
 
+    public void setRotationDirection(String direction) {
+        if (direction.equals("clw")) {
+            RotationDirection = -1;
+        } else if (direction.equals("uclw")) {
+            RotationDirection = 1;
+        } else {
+            RotationDirection = 0;
+        }
+
+    }
+
     public void rotate() {
-        super.rotate(stepAngle);
+        super.rotate(RotationDirection * stepAngle);
         logger.info("AutomatedRobot (" + this.id + ") rotated");
         imageView.setRotate(this.currentAngle);
         path.add("rotate " + this.stepAngle);

@@ -283,61 +283,109 @@ public class Room {
         return sb.toString();
     }
 
-//    public void loadRoomConfiguration(String configuration) {
-//        List<String[]> linesList = new ArrayList<>();
-//        String[] lines = configuration.split("\n");
-//        int len_x = -1;
-//        for (int i = 0; i < lines.length; i++) {
-//            linesList.add(lines[i].split(" "));
-//            if (len_x == -1) {
-//                len_x = linesList.get(i).length;
-//            } else if (len_x != linesList.get(i).length) {
-//                throw new IllegalArgumentException("Invalid room configuration");
-//            }
-//        }
-//        int x_dim = linesList.get(0).length;
-//        int y_dim = linesList.size();
-//        setDimensions(x_dim, y_dim);
-//
-//        for (int i = 0; i < y_dim; i++) {
-//            for (int j = 0; j < x_dim; j++) {
-//                switch (linesList.get(i)[j]) {
-//                    case "O" -> addObstacle(new Position(j, i));
-//                    case "M" -> addManualRobot(new Position(j, i));
-//                    case "A" -> addAutoRobot(new Position(j, i));
-//                    case "*" -> {}
-//                    default -> throw new IllegalArgumentException("Invalid room configuration");
-//                }
-//            }
-//        }
-//    }
+    public void loadRoomConfiguration(String configuration) {
+        List<String[]> linesList = new ArrayList<>();
+        String[] lines = configuration.split("\n");
+        int len_x = -1;
+        for (int i = 0; i < lines.length; i++) {
+            linesList.add(lines[i].split(" "));
+            if (len_x == -1) {
+                len_x = linesList.get(i).length;
+            } else if (len_x != linesList.get(i).length) {
+                throw new IllegalArgumentException("Invalid room configuration");
+            }
+        }
+        int x_dim = linesList.get(0).length;
+        int y_dim = linesList.size();
+        setDimensions(x_dim, y_dim);
 
-//    public void loadRoomConfiguration(File file) {
-//        try {
-//            BufferedReader reader = new BufferedReader(new FileReader(file));
-//            StringBuilder sb = new StringBuilder();
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                sb.append(line).append("\n");
-//            }
-//            loadRoomConfiguration(sb.toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        logger.log(System.Logger.Level.INFO, "Room configuration loaded from file " + file.getName());
-//    }
+        for (int i = 0; i < y_dim; i++) {
+            for (int j = 0; j < x_dim; j++) {
+                switch (linesList.get(i)[j]) {
+                    case "O" -> addObstacle(new Position(j, i));
+                    case "M" -> addManualRobot(new Position(j, i));
+                    case "A" -> addAutoRobot(new Position(j, i));
+                    case "*" -> {}
+                    default -> throw new IllegalArgumentException("Invalid room configuration");
+                }
+            }
+        }
+    }
+
+    public void loadRoomConfiguration(File file) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            loadRoomConfiguration(sb.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        logger.log(System.Logger.Level.INFO, "Room configuration loaded from file " + file.getName());
+    }
 
     public void loadRoomConfiguration(InputStream inputStream) {
         try {
+            this.clear();
 
             ObjectMapper mapper = new ObjectMapper();
-            // Read the root of the JSON tree
             JsonNode rootNode = mapper.readTree(inputStream);
 
-            // Now you can navigate through the tree
-            JsonNode mapSizeNode = rootNode.path("map_size");
-            int rows = mapSizeNode.path("rows").asInt();
-            int cols = mapSizeNode.path("cols").asInt();
+            int rows = rootNode.path("map_size").path("rows").asInt();
+            int cols = rootNode.path("map_size").path("cols").asInt();
+
+            this.setDimensions(cols, rows);  // Set the dimensions of the room
+
+            // Load obstacles
+            for (JsonNode node : rootNode.path("obstacles")) {
+                int x = node.path("position").path("x").asInt();
+                int y = node.path("position").path("y").asInt();
+                this.addObstacle(new Position(x, y));
+            }
+
+            // Load automatic robots
+            for (JsonNode node : rootNode.path("automatic_robots")) {
+
+                int x = node.path("position").path("x").asInt();
+                int y = node.path("position").path("y").asInt();
+                int speed = node.path("speed").asInt();
+                int viewAngle = node.path("start_angle").asInt();
+                int rotationAngle = node.path("rotation_angle").asInt();
+                int checkDistance = node.path("view_distance").asInt();
+                String rotationDirection = node.path("rotation_direction").asText();
+
+                AutomatedRobot robot = new AutomatedRobot(new Position(x, y));
+
+                robot.setSpeed(speed);
+                robot.setCurrentAngle(viewAngle);
+                robot.setStepAngle(rotationAngle);
+                robot.setDistance(checkDistance);
+
+                robot.setRotationDirection(rotationDirection);
+                this.robots.add(robot);
+            }
+
+            // Load manual robots
+            for (JsonNode node : rootNode.path("manual_robots")) {
+                int x = node.path("position").path("x").asInt();
+                int y = node.path("position").path("y").asInt();
+                int speed = node.path("speed").asInt();
+                int viewAngle = node.path("start_angle").asInt();
+                int rotationAngle = node.path("rotation_angle").asInt();
+
+                ManualRobot robot = new ManualRobot(new Position(x, y));
+
+                robot.setSpeed(speed);
+                robot.setCurrentAngle(viewAngle);
+                robot.setStepAngle(rotationAngle);
+
+
+                this.robots.add(robot);
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();

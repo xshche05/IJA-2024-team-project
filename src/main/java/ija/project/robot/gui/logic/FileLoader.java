@@ -62,6 +62,7 @@ public class FileLoader {
             // Assuming room1.json is directly under resources folder
             InputStream inputStream = getClass().getResourceAsStream("room1.json");
 
+
             Room.getInstance().clear();
             Room.getInstance().loadRoomConfiguration(inputStream); // Adjust this method to accept RoomConfiguration
             Scene playGround = Playground.getScene();

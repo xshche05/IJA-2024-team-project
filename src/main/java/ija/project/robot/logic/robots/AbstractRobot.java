@@ -19,6 +19,9 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     public void setStepAngle(int rotate_angle) {
         this.stepAngle = rotate_angle;
     }
+    public void setCurrentAngle(int angle) {
+        this.currentAngle = angle;
+    }
     public int getCurrentAngle() {
         return this.currentAngle;
     }
