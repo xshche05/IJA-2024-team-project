@@ -185,21 +185,18 @@ public class Playground implements MenuInterface, SceneInterface {
         logger.info("Remove all button pressed");
         Room room = Room.getInstance();
         room.removeAll();
-//        drawRoom();
     }
 
     public void RemoveObstaclesAction() {
         logger.info("Remove obstacles button pressed");
         Room room = Room.getInstance();
         room.removeObstacles();
-//        drawRoom();
     }
 
     public void RemoveRobotsAction() {
         logger.info("Remove robots button pressed");
         Room room = Room.getInstance();
         room.removeRobots();
-//        drawRoom();
     }
 
 
