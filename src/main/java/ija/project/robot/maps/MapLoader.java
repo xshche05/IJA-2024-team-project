@@ -6,6 +6,8 @@ import ija.project.robot.logic.room.Room;
 import java.io.*;
 import java.util.Objects;
 
+import static ija.project.robot.RobotApp.logger;
+
 public class MapLoader {
 
     private static MapLoader instance = null;
@@ -21,13 +23,14 @@ public class MapLoader {
     }
 
     public void loadMap(File jsonFile) {
-        InputStream inputStream = null;
+        InputStream inputStream;
         try {
             inputStream = new FileInputStream(jsonFile);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            logger.warning("File not found: " + jsonFile.getAbsolutePath());
+            return;
         }
-        JsonRoom room = null;
+        JsonRoom room;
         try {
             String json = new String(Objects.requireNonNull(inputStream).readAllBytes());
             Gson gson = new Gson();
@@ -35,7 +38,7 @@ public class MapLoader {
             Room.getInstance().clear();
             Room.getInstance().fromJsonRoom(room);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.warning("Error reading file: " + jsonFile.getAbsolutePath());
         }
     }
 

@@ -115,6 +115,7 @@ public class ManualRobot extends AbstractRobot {
         rt.setByAngle(this.stepAngle);
         rt.setCycleCount(1);
         rt.setAutoReverse(true);
+        rt.setInterpolator(Interpolator.LINEAR);
         rt.play();
         rt.setOnFinished(event ->
         {
