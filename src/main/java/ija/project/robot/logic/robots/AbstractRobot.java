@@ -3,7 +3,6 @@ package ija.project.robot.logic.robots;
 import ija.project.robot.logic.common.AbstractRoomObject;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
-import javafx.scene.image.ImageView;
 
 public abstract class AbstractRobot extends AbstractRoomObject {
     protected int currentAngle;

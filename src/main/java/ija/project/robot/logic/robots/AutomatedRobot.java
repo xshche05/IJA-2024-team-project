@@ -3,10 +3,8 @@ package ija.project.robot.logic.robots;
 import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
-import javafx.animation.RotateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 
 import java.util.LinkedList;
 import java.util.Objects;

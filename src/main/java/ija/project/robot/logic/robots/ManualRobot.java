@@ -9,7 +9,6 @@ import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.Objects;
