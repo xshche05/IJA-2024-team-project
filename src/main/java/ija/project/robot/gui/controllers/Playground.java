@@ -50,6 +50,7 @@ public class Playground implements MenuInterface, SceneInterface {
     private final List<Node> removeGroup = new ArrayList<>();
     private final List<Node> startGroup = new ArrayList<>();
     private final List<Node> pauseGroup = new ArrayList<>();
+    private final List<Node> moveGroup = new ArrayList<>();
 
     private String currentMode = "ADD";
     private String lastEditMode = "ADD";
@@ -85,20 +86,20 @@ public class Playground implements MenuInterface, SceneInterface {
         addGroup.add(obstacle);
 
 
-        ToggleButton startPause = new ToggleButton("PAUSE");
+        ToggleButton startPause = new ToggleButton("START");
         startPause.setOnAction(e -> StartPauseAction());
-        startPause.setStyle("-fx-background-color: yellow;");
+        startPause.setStyle("-fx-background-color: lightgreen;");
         startGroup.add(startPause);
         pauseGroup.add(startPause);
         Button left = new Button("LEFT");
         left.setOnAction(e -> LeftAction());
-        startGroup.add(left);
+        moveGroup.add(left);
         Button go = new Button("GO");
         go.setOnAction(e -> GoAction());
-        startGroup.add(go);
+        moveGroup.add(go);
         Button right = new Button("RIGHT");
         right.setOnAction(e -> RightAction());
-        startGroup.add(right);
+        moveGroup.add(right);
 
         Button removeAll = new Button("REMOVE ALL");
         removeAll.setOnAction(e -> RemoveAllAction());
@@ -120,6 +121,9 @@ public class Playground implements MenuInterface, SceneInterface {
             ((Region) node).setMinSize(100, 30);
         }
         for (Node node : pauseGroup) {
+            ((Region) node).setMinSize(100, 30);
+        }
+        for (Node node : moveGroup) {
             ((Region) node).setMinSize(100, 30);
         }
 
@@ -250,19 +254,21 @@ public class Playground implements MenuInterface, SceneInterface {
         logger.info("Start button pressed");
         ToggleButton strtbttn = (ToggleButton) startGroup.get(0);
         if (!strtbttn.isSelected()){
-            strtbttn.setText("PAUSE");
             currentMode = lastEditMode;
-            strtbttn.setStyle("-fx-background-color: yellow;");
+            strtbttn.setText("START");
+            strtbttn.setStyle("-fx-background-color: lightgreen;");
             HBoxBttnDown.getChildren().clear();
+            HBoxBttnUp.getChildren().clear();
             HBoxBttnDown.getChildren().addAll(pauseGroup);
             HBoxBttnUp.getChildren().addAll(addGroup);
         } else {
-            strtbttn.setText("START");
             currentMode = "START";
-            strtbttn.setStyle("-fx-background-color: lightgreen;");
+            strtbttn.setText("PAUSE");
+            strtbttn.setStyle("-fx-background-color: yellow;");
             HBoxBttnDown.getChildren().clear();
-            HBoxBttnDown.getChildren().addAll(startGroup);
             HBoxBttnUp.getChildren().clear();
+            HBoxBttnDown.getChildren().addAll(startGroup);
+            HBoxBttnUp.getChildren().addAll(moveGroup);
         }
     }
 
