@@ -15,6 +15,7 @@
          <menus>
             <Menu mnemonicParsing="false" text="File">
                <items>
+                  <MenuItem fx:id="MenuNewFile" mnemonicParsing="false" onAction="#CreateNew" text="Create new" />
                   <MenuItem fx:id="MenuFileLoad" mnemonicParsing="false" onAction="#FileLoad" text="Load File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="MenuFileSaveAs" mnemonicParsing="false" onAction="#FileSaveAs" text="Save As" />
@@ -22,7 +23,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
-                  <MenuItem mnemonicParsing="false" text="About" />
+                  <MenuItem fx:id="about" mnemonicParsing="false" onAction="#Help" text="About" />
                </items>
             </Menu>
          </menus>

@@ -16,8 +16,8 @@
          </font>
       </Label>
       <TextField fx:id="colsInput" layoutX="168.0" layoutY="76.0" prefHeight="25.0" prefWidth="50.0" promptText="cols" />
-      <Button fx:id="okButton" layoutX="165.0" layoutY="123.0" mnemonicParsing="false" onAction="#Ok" prefHeight="25.0" prefWidth="55.0" text="OK" />
-      <Button fx:id="cancelButton" layoutX="79.0" layoutY="123.0" mnemonicParsing="false" onAction="#Cancel" prefHeight="25.0" prefWidth="55.0" text="Cancel" />
+      <Button fx:id="okButton" layoutX="165.0" layoutY="123.0" minWidth="59.0" mnemonicParsing="false" onAction="#Ok" prefHeight="25.0" prefWidth="59.0" text="OK" />
+      <Button fx:id="cancelButton" layoutX="79.0" layoutY="123.0" minWidth="59.0" mnemonicParsing="false" onAction="#Cancel" prefHeight="25.0" prefWidth="59.0" text="Cancel" />
       <Text layoutX="146.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X" />
       <Label fx:id="errorLabel" alignment="CENTER" layoutX="10.0" layoutY="160.0" prefHeight="17.0" prefWidth="279.0" textFill="#db0d0d" />
    </children>

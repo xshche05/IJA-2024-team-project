@@ -7,6 +7,7 @@ import ija.project.robot.gui.logic.Menu;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.robots.AutomatedRobot;
 import ija.project.robot.logic.robots.ManualRobot;
+import ija.project.robot.logic.room.Obstacle;
 import ija.project.robot.logic.room.Room;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -37,19 +39,23 @@ public class Playground implements MenuInterface, SceneInterface {
     public MenuItem MenuFileSaveAs;
     @FXML
     public MenuItem MenuFileLoad;
-
-    public static final int gridWidth = 28;
-    public static final int tickPeriod = 1000; // in milliseconds
-    public GridPane grid;
+    @FXML
+    public MenuItem MenuNewFile;
     @FXML
     public HBox HBoxGrid;
     public HBox HBoxBttnDown;
     public HBox HBoxBttnUp;
+
+    public static final int gridWidth = 28;
+    public static final int tickPeriod = 1000; // in milliseconds
+    public GridPane grid;
+
     public static String createRequest;
     private final List<Node> addGroup = new ArrayList<>();
     private final List<Node> removeGroup = new ArrayList<>();
     private final List<Node> startGroup = new ArrayList<>();
     private final List<Node> pauseGroup = new ArrayList<>();
+    private final List<Node> moveGroup = new ArrayList<>();
 
     private String currentMode = "ADD";
     private String lastEditMode = "ADD";
@@ -85,20 +91,20 @@ public class Playground implements MenuInterface, SceneInterface {
         addGroup.add(obstacle);
 
 
-        ToggleButton startPause = new ToggleButton("PAUSE");
+        ToggleButton startPause = new ToggleButton("START");
         startPause.setOnAction(e -> StartPauseAction());
-        startPause.setStyle("-fx-background-color: yellow;");
+        startPause.setStyle("-fx-background-color: lightgreen;");
         startGroup.add(startPause);
         pauseGroup.add(startPause);
         Button left = new Button("LEFT");
         left.setOnAction(e -> LeftAction());
-        startGroup.add(left);
+        moveGroup.add(left);
         Button go = new Button("GO");
         go.setOnAction(e -> GoAction());
-        startGroup.add(go);
+        moveGroup.add(go);
         Button right = new Button("RIGHT");
         right.setOnAction(e -> RightAction());
-        startGroup.add(right);
+        moveGroup.add(right);
 
         Button removeAll = new Button("REMOVE ALL");
         removeAll.setOnAction(e -> RemoveAllAction());
@@ -122,11 +128,23 @@ public class Playground implements MenuInterface, SceneInterface {
         for (Node node : pauseGroup) {
             ((Region) node).setMinSize(100, 30);
         }
+        for (Node node : moveGroup) {
+            ((Region) node).setMinSize(100, 30);
+        }
 
         HBoxBttnUp.getChildren().addAll(addGroup);
         currentMode = "ADD";
         lastEditMode = "ADD";
         HBoxBttnDown.getChildren().addAll(pauseGroup);
+    }
+
+    /**
+     * Initiates the manual creation of a new room map by user.
+     * This method is triggered when the user clicks the 'Create New' button.
+     */
+    @FXML
+    public void CreateNew() {
+        new Menu().initialize().CreateNew(AnchorPane);
     }
 
     /**
@@ -250,19 +268,21 @@ public class Playground implements MenuInterface, SceneInterface {
         logger.info("Start button pressed");
         ToggleButton strtbttn = (ToggleButton) startGroup.get(0);
         if (!strtbttn.isSelected()){
-            strtbttn.setText("PAUSE");
             currentMode = lastEditMode;
-            strtbttn.setStyle("-fx-background-color: yellow;");
+            strtbttn.setText("START");
+            strtbttn.setStyle("-fx-background-color: lightgreen;");
             HBoxBttnDown.getChildren().clear();
+            HBoxBttnUp.getChildren().clear();
             HBoxBttnDown.getChildren().addAll(pauseGroup);
             HBoxBttnUp.getChildren().addAll(addGroup);
         } else {
-            strtbttn.setText("START");
             currentMode = "START";
-            strtbttn.setStyle("-fx-background-color: lightgreen;");
+            strtbttn.setText("PAUSE");
+            strtbttn.setStyle("-fx-background-color: yellow;");
             HBoxBttnDown.getChildren().clear();
-            HBoxBttnDown.getChildren().addAll(startGroup);
             HBoxBttnUp.getChildren().clear();
+            HBoxBttnDown.getChildren().addAll(startGroup);
+            HBoxBttnUp.getChildren().addAll(moveGroup);
         }
     }
 
@@ -286,6 +306,23 @@ public class Playground implements MenuInterface, SceneInterface {
         int x = (int) e.getX() / gridWidth;
         int y = (int) e.getY() / gridWidth;
         logger.info("Grid cell clicked: (" + x + ", " + y + ")");
+
+        if (e.getButton() == MouseButton.SECONDARY) {  // clicked the right mouse button
+            logger.info("Right mouse button clicked");
+            handleRightClick(x, y);
+            return;
+        }
+        else if (e.getButton() == MouseButton.PRIMARY){
+            logger.info("Left mouse button clicked");
+            handleLeftClick(x, y);
+        }
+        else {
+            logger.warning("Unknown mouse button clicked");
+        }
+
+    }
+
+    private void handleLeftClick(int x, int y){
         if (currentMode.equals("START")) {
             logger.info("Grid cell clicked in start mode, selecting robot");
             ControlledRobot.getInstance().setRobot(new Position(x, y));
@@ -337,6 +374,36 @@ public class Playground implements MenuInterface, SceneInterface {
             Room.getInstance().removeFrom(new Position(x, y));
         } else {
             logger.finest("Grid cell clicked in unknown mode!!!!!!!!!!!!!");
+        }
+    }
+
+    private void handleRightClick(int x, int y){
+        var object = Room.getInstance().getObjectAt(new Position(x, y));
+
+        if (object instanceof AutomatedRobot robot) {
+            logger.info("Right clicked on auto robot");
+            createRequest = "AUTO";
+
+            OpenDialog();
+            if (RobotDialog.validData) {
+                logger.info("Adding auto robot at position: (" + x + ", " + y + ")");
+                logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle + ", distance: " + RobotDialog.Distance);
+                robot.setSpeed(RobotDialog.Speed);
+                robot.setStepAngle(RobotDialog.Angle);
+                robot.setDistance(RobotDialog.Distance);
+            }
+
+        } else if (object instanceof ManualRobot robot) {
+            logger.info("Right clicked on manual robot");
+            createRequest = "MANUAL";
+
+            OpenDialog();
+            if (RobotDialog.validData) {
+                logger.info("Adding manual robot at position: (" + x + ", " + y + ")");
+                logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle);
+                robot.setSpeed(RobotDialog.Speed);
+                robot.setStepAngle(RobotDialog.Angle);
+            }
         }
     }
 

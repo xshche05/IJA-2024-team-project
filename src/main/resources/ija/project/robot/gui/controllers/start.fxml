@@ -16,6 +16,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
+                  <MenuItem fx:id="MenuNewFile" mnemonicParsing="false" onAction="#CreateNew" text="Create new" />
               <MenuItem fx:id="MenuFileLoad" mnemonicParsing="false" onAction="#FileLoad" text="Load File" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="MenuFileSaveAs" mnemonicParsing="false" onAction="#FileSaveAs" text="Save As" />
@@ -23,7 +24,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="about" mnemonicParsing="false" onAction="#Help" text="About" />
             </items>
           </Menu>
         </menus>
@@ -32,7 +33,7 @@
          <children>
             <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="300.0" prefHeight="195.0" prefWidth="355.0">
                <children>
-                  <Button fx:id="CreateNew" mnemonicParsing="false" onAction="#CreateNew" pickOnBounds="false" prefHeight="69.0" prefWidth="123.0" text="CREATE NEW">
+                  <Button fx:id="CreateNew" minHeight="35.0" minWidth="124.0" mnemonicParsing="false" onAction="#CreateNew" pickOnBounds="false" prefHeight="68.0" prefWidth="124.0" text="CREATE NEW">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
@@ -40,7 +41,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#FileLoad" pickOnBounds="false" prefHeight="69.0" prefWidth="123.0" text="LOAD FROM FILE" HBox.hgrow="ALWAYS">
+                  <Button minHeight="35.0" minWidth="124.0" mnemonicParsing="false" onAction="#FileLoad" pickOnBounds="false" prefHeight="68.0" prefWidth="124.0" text="LOAD FROM FILE" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
