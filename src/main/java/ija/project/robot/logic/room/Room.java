@@ -331,6 +331,7 @@ public class Room {
         try {
             this.clear();
 
+
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(inputStream);
 
