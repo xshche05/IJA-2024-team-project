@@ -1,5 +1,7 @@
 package ija.project.robot.logic.common;
 
+import javafx.scene.image.ImageView;
+
 import java.util.logging.Logger;
 
 public abstract class AbstractRoomObject {
@@ -12,6 +14,8 @@ public abstract class AbstractRoomObject {
         this.pos = pos;
         this.id = id_counter++;
     }
+
+    abstract public ImageView getImageView();
 
     public int getId() {
         return this.id;

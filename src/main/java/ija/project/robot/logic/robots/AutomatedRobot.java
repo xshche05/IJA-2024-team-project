@@ -1,9 +1,13 @@
 package ija.project.robot.logic.robots;
 
+import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
@@ -16,17 +20,30 @@ public class AutomatedRobot extends AbstractRobot {
 
     private final Semaphore semaphore = new Semaphore(0);
 
+    private final ImageView imageView;
+
 
     public AutomatedRobot(Position pos) {
         super(pos);
         logger.info("AutomatedRobot ("+this.id+") created at " + pos);
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("auto_robot.png")));
+        imageView = new ImageView(image);
+        imageView.setFitHeight(Playground.gridWidth);
+        imageView.setFitWidth(Playground.gridWidth);
+    }
+
+    @Override
+    public ImageView getImageView() {
+        // read image from resources
+        imageView.setRotate(this.currentAngle);
+        return imageView;
     }
 
     public Queue<String> getPath() {
         return path;
     }
 
-    public void setView_distance(int view_distance) {
+    public void setDistance(int view_distance) {
         this.view_distance = view_distance;
         logger.info("AutomatedRobot ("+this.id+") view distance set to " + view_distance);
     }
@@ -34,7 +51,7 @@ public class AutomatedRobot extends AbstractRobot {
     public Position _canMoveFrom(Position pos) {
         int y = pos.y();
         int x = pos.x();
-        switch (view_angle) {
+        switch (currentAngle) {
             case 0: y--; break;          // Up
             case 45: x++; y--; break;
             case 90: x++; break;          // Right
@@ -43,7 +60,7 @@ public class AutomatedRobot extends AbstractRobot {
             case 225: x--; y++; break;
             case 270: x--; break;         // Left
             case 315: x--; y--; break;
-            default: return null;           // TODO: throw exception
+            default: return null;         // TODO: throw exception
         }
         Position position = new Position(x, y);
         if (Room.getInstance().isPositionFree(position) && _checkDiagonals(position)) {
@@ -68,9 +85,10 @@ public class AutomatedRobot extends AbstractRobot {
     }
 
     public void rotate() {
-        super.rotate(rotate_angle);
+        super.rotate(stepAngle);
         logger.info("AutomatedRobot (" + this.id + ") rotated");
-        path.add("rotate " + this.rotate_angle);
+        imageView.setRotate(this.currentAngle);
+        path.add("rotate " + this.stepAngle);
     }
     @Override
     public boolean move() {

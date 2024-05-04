@@ -1,5 +1,7 @@
 package ija.project.robot.gui.controllers;
 
+import ija.project.robot.gui.interfaces.Dialog;
+import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.logic.room.Room;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -10,7 +12,15 @@ import javafx.stage.Stage;
 
 import static ija.project.robot.RobotApp.logger;
 
-public class CreateDialog {
+/**
+ * Controller class for the room creation dialog.
+ * This class handles the input the dimensions of a room.
+ * It provides methods to react to user actions (e.g., clicking OK or Cancel).
+ *
+ * The user must enter positive integers for both rows and columns to proceed.
+ * Error messages are displayed if the inputs are invalid.
+ */
+public class CreateDialog extends Dialog {
     @FXML
     public TextField rowsInput;
     @FXML
@@ -32,7 +42,7 @@ public class CreateDialog {
                 logger.warning("Rows and cols must be positive!");
                 return;
             }
-            logger.info("Setting room dimensions to " + rows + "x" + cols);
+            logger.info("Setting room dimensions to " + cols + "x" + rows);
             Room.getInstance().setDimensions(cols, rows);
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
@@ -46,10 +56,7 @@ public class CreateDialog {
         }
     }
 
-    public void Cancel() {
-        logger.info("Room creation cancelled");
-        // close dialog
-        Stage stage = (Stage) cancelButton.getScene().getWindow();
-        stage.close();
+    public static Scene getScene() {
+        return SceneInterface.getScene(CreateDialog.class, "create_dialog.fxml");
     }
 }
