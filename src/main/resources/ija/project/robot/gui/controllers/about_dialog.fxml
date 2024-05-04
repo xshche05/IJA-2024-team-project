@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="320.0" maxWidth="480.0" minHeight="200.0" minWidth="300.0" prefHeight="320.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ija.project.robot.gui.controllers.CreateDialog">
+<AnchorPane maxHeight="320.0" maxWidth="480.0" minHeight="200.0" minWidth="300.0" prefHeight="320.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ija.project.robot.gui.controllers.AboutDialog">
    <children>
       <ImageView fitHeight="120.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="5.0">
          <image>
@@ -24,7 +24,7 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Robot application 1.0">
+                        <Label text="Robot simulation 1.0">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -36,7 +36,7 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="355.0" prefWidth="480.0">
                      <children>
-                        <TextArea prefHeight="190.0" prefWidth="200.0" text="Project within the university subject &quot;IJA&quot;.&#10;&#10;&#10;built on May 5, 2024&#10;For educational use only.&#10;&#10;&#10;Authors:&#10;Kirill Shchetiniuk (xshche05)&#10;Artur Sultanov (xsulta01)" wrapText="true">
+                        <TextArea editable="false" prefHeight="190.0" prefWidth="200.0" text="Project within the university subject &quot;IJA&quot;.&#10;&#10;&#10;Built on May 5, 2024&#10;For educational use only.&#10;&#10;&#10;Authors:&#10;Kirill Shchetiniuk (xshche05)&#10;Artur Sultanov (xsulta01)" wrapText="true">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
@@ -56,7 +56,7 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="45.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="CloseButton" mnemonicParsing="false" onAction="#Close" prefHeight="25.0" prefWidth="55.0" text="Close" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#Ok" prefHeight="25.0" prefWidth="55.0" text="Close" />
                </children>
             </HBox>
          </children>
