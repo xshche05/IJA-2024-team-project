@@ -1,6 +1,7 @@
 package ija.project.robot.maps;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import ija.project.robot.logic.room.Room;
 
 import java.io.*;
@@ -22,13 +23,13 @@ public class MapLoader {
         return instance;
     }
 
-    public void loadMap(File jsonFile) {
+    public boolean loadMap(File jsonFile) {
         InputStream inputStream;
         try {
             inputStream = new FileInputStream(jsonFile);
         } catch (FileNotFoundException e) {
             logger.warning("File not found: " + jsonFile.getAbsolutePath());
-            return;
+            return false;
         }
         JsonRoom room;
         try {
@@ -37,9 +38,13 @@ public class MapLoader {
             room = gson.fromJson(json, JsonRoom.class);
             Room.getInstance().clear();
             Room.getInstance().fromJsonRoom(room);
+            return true;
         } catch (IOException e) {
             logger.warning("Error reading file: " + jsonFile.getAbsolutePath());
+        } catch (JsonSyntaxException e) {
+            logger.warning("Error parsing JSON: " + jsonFile.getAbsolutePath());
         }
+        return false;
     }
 
     public void loadPredefinedMap1() { // todo link to menu

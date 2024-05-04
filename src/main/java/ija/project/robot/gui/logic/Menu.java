@@ -37,10 +37,14 @@ public class Menu {
             logger.log(System.Logger.Level.INFO, "No file selected");
             return;
         }
-        MapLoader.getInstance().loadMap(file);
-        Scene playGround = Playground.getScene();
-        Stage stage = (Stage) AnchorPane.getScene().getWindow();
-        stage.setScene(playGround);
+        if (MapLoader.getInstance().loadMap(file)) {
+            Scene playGround = Playground.getScene();
+            Stage stage = (Stage) AnchorPane.getScene().getWindow();
+            stage.setScene(playGround);
+            logger.log(System.Logger.Level.INFO, "ROOM CONFIGURATION loaded");
+        } else {
+            logger.log(System.Logger.Level.ERROR, "Error loading file");
+        }
     }
 
     public void FileSaveAs(AnchorPane AnchorPane) {
