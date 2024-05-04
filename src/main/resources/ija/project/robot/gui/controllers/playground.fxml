@@ -24,7 +24,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
-                  <MenuItem fx:id="about" mnemonicParsing="false" onAction="#Help" text="About" />
+                  <MenuItem fx:id="about" mnemonicParsing="false" onAction="#About" text="About" />
                </items>
             </Menu>
          </menus>
@@ -47,6 +47,6 @@
             </VBox>
          </children>
       </VBox>
-      <Button fx:id="tickBttn" mnemonicParsing="false" onAction="#tick" text="Button" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="1.0" />
+      <Button fx:id="playback" mnemonicParsing="false" onAction="#PlayBack" text="PlayBack" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="1.0" />
    </children>
 </AnchorPane>
