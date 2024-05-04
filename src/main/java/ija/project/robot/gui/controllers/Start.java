@@ -25,6 +25,8 @@ public class Start implements MenuInterface, SceneInterface {
     public MenuItem MenuFileSaveAs; // fx:id="MenuFileSaveAs"
     @FXML
     public Button CreateNew;
+    @FXML
+    public MenuItem MenuNewFile;
 
     /**
      * Loads a room state from file.txt contains room map into the application.

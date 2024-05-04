@@ -7,6 +7,7 @@ import ija.project.robot.gui.logic.Menu;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.robots.AutomatedRobot;
 import ija.project.robot.logic.robots.ManualRobot;
+import ija.project.robot.logic.room.Obstacle;
 import ija.project.robot.logic.room.Room;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -37,14 +39,17 @@ public class Playground implements MenuInterface, SceneInterface {
     public MenuItem MenuFileSaveAs;
     @FXML
     public MenuItem MenuFileLoad;
-
-    public static final int gridWidth = 28;
-    public static final int tickPeriod = 1000; // in milliseconds
-    public GridPane grid;
+    @FXML
+    public MenuItem MenuNewFile;
     @FXML
     public HBox HBoxGrid;
     public HBox HBoxBttnDown;
     public HBox HBoxBttnUp;
+
+    public static final int gridWidth = 28;
+    public static final int tickPeriod = 1000; // in milliseconds
+    public GridPane grid;
+
     public static String createRequest;
     private final List<Node> addGroup = new ArrayList<>();
     private final List<Node> removeGroup = new ArrayList<>();
@@ -131,6 +136,15 @@ public class Playground implements MenuInterface, SceneInterface {
         currentMode = "ADD";
         lastEditMode = "ADD";
         HBoxBttnDown.getChildren().addAll(pauseGroup);
+    }
+
+    /**
+     * Initiates the manual creation of a new room map by user.
+     * This method is triggered when the user clicks the 'Create New' button.
+     */
+    @FXML
+    public void CreateNew() {
+        new Menu().initialize().CreateNew(AnchorPane);
     }
 
     /**
@@ -292,6 +306,13 @@ public class Playground implements MenuInterface, SceneInterface {
         int x = (int) e.getX() / gridWidth;
         int y = (int) e.getY() / gridWidth;
         logger.info("Grid cell clicked: (" + x + ", " + y + ")");
+
+        if (e.getButton() == MouseButton.SECONDARY) {  // clicked the right mouse button
+            logger.info("Right mouse button clicked");
+            handleRobotRightClick(x, y);
+            return;
+        }
+
         if (currentMode.equals("START")) {
             logger.info("Grid cell clicked in start mode, selecting robot");
             ControlledRobot.getInstance().setRobot(new Position(x, y));
@@ -343,6 +364,41 @@ public class Playground implements MenuInterface, SceneInterface {
             Room.getInstance().removeFrom(new Position(x, y));
         } else {
             logger.finest("Grid cell clicked in unknown mode!!!!!!!!!!!!!");
+        }
+    }
+
+    private void handleRobotRightClick(int x, int y){
+        var object = Room.getInstance().getObjectAt(new Position(x, y));
+
+        if (object == null || (object instanceof Obstacle)) {
+            logger.info("The cell is empty.");
+            return;
+        } else if (object instanceof AutomatedRobot) {
+            logger.info("Right clicked on auto robot");
+            createRequest = "AUTO";
+            AutomatedRobot robot = (AutomatedRobot) object;
+
+            OpenDialog();
+            if (RobotDialog.validData) {
+                logger.info("Adding auto robot at position: (" + x + ", " + y + ")");
+                logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle + ", distance: " + RobotDialog.Distance);
+                robot.setSpeed(RobotDialog.Speed);
+                robot.setStepAngle(RobotDialog.Angle);
+                robot.setDistance(RobotDialog.Distance);
+            }
+
+        } else if (object instanceof ManualRobot) {
+            logger.info("Right clicked on manual robot");
+            createRequest = "MANUAL";
+            ManualRobot robot = (ManualRobot) object;
+
+            OpenDialog();
+            if (RobotDialog.validData) {
+                logger.info("Adding manual robot at position: (" + x + ", " + y + ")");
+                logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle);
+                robot.setSpeed(RobotDialog.Speed);
+                robot.setStepAngle(RobotDialog.Angle);
+            }
         }
     }
 
