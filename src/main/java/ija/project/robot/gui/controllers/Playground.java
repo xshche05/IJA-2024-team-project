@@ -8,6 +8,8 @@ import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.robots.AutomatedRobot;
 import ija.project.robot.logic.robots.ManualRobot;
 import ija.project.robot.logic.room.Room;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -17,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,7 @@ public class Playground implements MenuInterface, SceneInterface {
 
     public static final int gridWidth = 28;
     public static final int tickPeriod = 1000; // in milliseconds
+    private Timeline timeline;
     public GridPane grid;
 
     public static String createRequest;
@@ -141,6 +145,8 @@ public class Playground implements MenuInterface, SceneInterface {
         currentMode = "ADD";
         lastEditMode = "ADD";
         HBoxBttnDown.getChildren().addAll(pauseGroup);
+
+        setupTimeline();
     }
 
     /**
@@ -219,6 +225,10 @@ public class Playground implements MenuInterface, SceneInterface {
         room.removeRobots();
     }
 
+    private void setupTimeline() {
+        timeline = new Timeline(new KeyFrame(Duration.millis(tickPeriod), e -> tick()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+    }
 
     /**
      * Toggles the add/remove mode in the simulation.
@@ -284,6 +294,7 @@ public class Playground implements MenuInterface, SceneInterface {
     public void StartPauseAction(){
         ToggleButton strtbttn = (ToggleButton) startGroup.get(0);
         if (!strtbttn.isSelected()){
+            timeline.stop();
             currentMode = lastEditMode;
             strtbttn.setText("START");
             Room.getInstance().stopSimulation();
@@ -296,6 +307,7 @@ public class Playground implements MenuInterface, SceneInterface {
             else if (lastEditMode.equals("REMOVE"))
                 HBoxBttnUp.getChildren().addAll(removeGroup);
         } else {
+            timeline.play();
             currentMode = "START";
             Room.getInstance().startSimulation();
             strtbttn.setText("PAUSE");
