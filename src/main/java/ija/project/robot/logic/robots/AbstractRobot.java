@@ -1,5 +1,6 @@
 package ija.project.robot.logic.robots;
 
+import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.logic.common.AbstractRoomObject;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
@@ -7,6 +8,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     protected int playBackAngle;
     protected final Semaphore resourceSemaphore = new Semaphore(1);
 
-    protected boolean backPlayed = false;
+    public boolean backPlayed = false;
     public AbstractRobot(Position pos) {
         super(pos);
         this.currentAngle = 0;
@@ -66,7 +68,7 @@ public abstract class AbstractRobot extends AbstractRoomObject {
             back_rt.setAutoReverse(true);
             back_rt.setInterpolator(Interpolator.LINEAR);
             back_rt.setDuration(rt.getDuration());
-            back_rt.setNode(rt.getNode());
+            back_rt.setNode(getSelfImageView()); // todo
             play_back_transition.push(back_rt);
         } else if (transition instanceof TranslateTransition tt) {
             TranslateTransition back_tt = new TranslateTransition();
@@ -76,8 +78,10 @@ public abstract class AbstractRobot extends AbstractRoomObject {
             back_tt.setAutoReverse(true);
             back_tt.setInterpolator(Interpolator.LINEAR);
             back_tt.setDuration(tt.getDuration());
-            back_tt.setNode(tt.getNode());
+            back_tt.setNode(getSelfImageView()); // todo
             play_back_transition.push(back_tt);
+        } else {
+            play_back_transition.push(transition);
         }
         resourceSemaphore.release();
     }
@@ -113,4 +117,6 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     public int getStepAngle() {
         return stepAngle;
     }
+
+    abstract public void tick();
 }

@@ -2,8 +2,6 @@ package ija.project.robot.logic.common;
 
 import javafx.scene.image.ImageView;
 
-import java.util.logging.Logger;
-
 public abstract class AbstractRoomObject {
     protected Position pos;
     protected int id;
@@ -33,4 +31,8 @@ public abstract class AbstractRoomObject {
     }
 
     abstract public ImageView getImageView();
+
+    public ImageView getSelfImageView() {
+        return this.imageView;
+    }
 }

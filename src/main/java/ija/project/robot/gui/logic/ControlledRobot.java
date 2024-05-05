@@ -34,38 +34,31 @@ public class ControlledRobot {
     public void setRobot(Position pos) {
         AbstractRoomObject obj = Room.getInstance().getObjectAt(pos);
         if (obj instanceof ManualRobot) {
-            ManualRobot prev = robot;
-            if (prev != null) {
-                if (prev.getSemaphore().availablePermits() == 0) {
-                    logger.warning("Robot is currently moving, cannot be changed to another robot");
-                    return;
-                }
+            ManualRobot new_robot = (ManualRobot) obj;
+            ManualRobot old_robot = this.robot;
+            if (old_robot != null) {
+                old_robot.unsetControlled();
             }
-            robot = (ManualRobot) obj;
-            if (prev == robot) {
-                robot = null;
-                imageView.setImage(null);
-                Room.getInstance().updateViewAt(pos);
-                logger.info("Robot controller is now unlinked from robot (" + prev.getId() + ")");
+            if (new_robot == old_robot) {
+                this.robot = null;
+                this.imageView = null;
+                logger.info("Robot controller is now unlinked from robot (" + old_robot.getId() + ")");
                 return;
             }
-            if (prev != null) {
-                Room.getInstance().updateViewAt(prev.getPosition());
-                logger.info("Robot controller is now unlinked from robot (" + prev.getId() + ")");
-            }
-            if (imageView != null) {
-                imageView.setImage(null);
-            }
-            Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("selected_robot.png")));
-            imageView = new ImageView(image);
-            imageView.setFitHeight(Playground.gridWidth);
-            imageView.setFitWidth(Playground.gridWidth);
-            imageView.setRotate(robot.getCurrentAngle());
-            logger.info("Robot controller is now linked to robot (" + robot.getId() + ")");
-            Room.getInstance().updateViewAt(pos);
+            new_robot.setControlled();
+            this.robot = new_robot;
+            this.imageView = robot.getImageView();
+            logger.info("Robot controller is now linked to robot (" + new_robot.getId() + ")");
         } else {
             logger.info("No manual robot found at position (" + pos + ")");
         }
+    }
+
+    public void unselectRobot() {
+        if (robot == null) {
+            return;
+        }
+        setRobot(robot.getPosition());
     }
 
     public ImageView getImageView() {

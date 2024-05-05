@@ -12,13 +12,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 import static ija.project.robot.RobotApp.logger;
+import static ija.project.robot.gui.controllers.Playground.playSemaphore;
 
 public class ManualRobot extends AbstractRobot {
     private final Semaphore semaphore = new Semaphore(1);
+
+    private final Queue<String> queue = new LinkedList<>();
+
+    private final Semaphore tickSemaphore = new Semaphore(1);
 
     public ManualRobot(Position pos) {
         super(pos);
@@ -31,11 +39,17 @@ public class ManualRobot extends AbstractRobot {
 
     @Override
     public ImageView getImageView() {
-        if (ControlledRobot.getInstance().getRobot() == this) {
-            return ControlledRobot.getInstance().getImageView();
-        }
-        imageView.setRotate(this.currentAngle);
         return imageView;
+    }
+
+    public void setControlled() {
+        Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("selected_robot.png")));
+        imageView.setImage(image);
+    }
+
+    public void unsetControlled() {
+        Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("robot.png")));
+        imageView.setImage(image);
     }
 
     @Override
@@ -62,8 +76,7 @@ public class ManualRobot extends AbstractRobot {
         return null;
     }
 
-    @Override
-    public boolean move() {
+    public boolean Go() {
         for (int i = 0; i < speed; i++) {
             semaphore.acquireUninterruptibly();
             Position prevPos = this.pos;
@@ -81,7 +94,9 @@ public class ManualRobot extends AbstractRobot {
             tt.setCycleCount(1);
             tt.setAutoReverse(true);
             tt.setInterpolator(Interpolator.LINEAR);
+            playSemaphore.acquireUninterruptibly();
             tt.play();
+            playSemaphore.release();
             tt.setOnFinished(event -> {
                 semaphore.release();
                 logger.info("ManualRobot (" + this.id + ") moved to " + this.pos);
@@ -91,7 +106,7 @@ public class ManualRobot extends AbstractRobot {
         return true;
     }
 
-    public void rotateLeft() {
+    public void Left() {
         semaphore.acquireUninterruptibly();
         rotate(-this.stepAngle);
         RotateTransition rt = new RotateTransition(Duration.millis((double) Playground.tickPeriod / speed), getImageView());
@@ -99,14 +114,16 @@ public class ManualRobot extends AbstractRobot {
         rt.setCycleCount(1);
         rt.setAutoReverse(true);
         rt.setInterpolator(Interpolator.LINEAR);
+        playSemaphore.acquireUninterruptibly();
         rt.play();
+        playSemaphore.release();
         rt.setOnFinished(event -> {
             semaphore.release();
             logger.info("ManualRobot ("+this.id+") rotated left");
         });
     }
 
-    public void rotateRight() {
+    private void Right() {
         semaphore.acquireUninterruptibly();
         rotate(this.stepAngle);
         RotateTransition rt = new RotateTransition(Duration.millis((double) Playground.tickPeriod / speed), getImageView());
@@ -114,7 +131,9 @@ public class ManualRobot extends AbstractRobot {
         rt.setCycleCount(1);
         rt.setAutoReverse(true);
         rt.setInterpolator(Interpolator.LINEAR);
+        playSemaphore.acquireUninterruptibly();
         rt.play();
+        playSemaphore.release();
         rt.setOnFinished(event ->
         {
             semaphore.release();
@@ -123,7 +142,66 @@ public class ManualRobot extends AbstractRobot {
         });
     }
 
-    public Semaphore getSemaphore() {
-        return semaphore;
+    private void Nothing() {
+        semaphore.acquireUninterruptibly();
+        Transition tt = new Transition() {
+            {
+                setCycleDuration(Duration.millis((double) Playground.tickPeriod / speed));
+            }
+            @Override
+            protected void interpolate(double frac) {
+                // do nothing
+            }
+        };
+        playSemaphore.acquireUninterruptibly();
+        tt.play();
+        playSemaphore.release();
+        tt.setOnFinished(event -> {
+            semaphore.release();
+            logger.info("ManualRobot ("+this.id+") did nothing");
+            addToBackTransition(tt);
+        });
+    }
+
+    @Override
+    public boolean move() {
+        queue.add("Go");
+        logger.info("ManualRobot ("+this.id+") got request to move forward ADDED TO QUEUE");
+        return true;
+    }
+
+    @Override
+    public void tick() {
+        tickSemaphore.acquireUninterruptibly();
+        String action = queue.poll();
+        if (action == null) {
+            Nothing();
+            logger.info("ManualRobot ("+this.id+") did nothing SKIP");
+        } else {
+            switch (action) {
+                case "Go":
+                    Go();
+                    break;
+                case "Left":
+                    Left();
+                    break;
+                case "Right":
+                    Right();
+                    break;
+                default:
+                    throw new RuntimeException("Unknown action: " + action);
+            }
+        }
+        tickSemaphore.release();
+    }
+
+    public void rotateLeft() {
+        queue.add("Left");
+        logger.info("ManualRobot ("+this.id+") got request to rotate left ADDED TO QUEUE");
+    }
+
+    public void rotateRight() {
+        queue.add("Right");
+        logger.info("ManualRobot ("+this.id+") got request to rotate right ADDED TO QUEUE");
     }
 }

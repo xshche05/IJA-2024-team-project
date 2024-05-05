@@ -1,5 +1,6 @@
 package ija.project.robot.logic.room;
 
+import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.gui.logic.ControlledRobot;
 import ija.project.robot.logic.common.AbstractRoomObject;
 import ija.project.robot.logic.common.Position;
@@ -24,6 +25,10 @@ public class Room {
     private final System.Logger logger;
     private static Room instance = null;
     private GridPane grid;
+
+    private int tick_counter = 0;
+
+    public boolean back_play_running = false;
 
     private Room() {
         logger = System.getLogger("Room");
@@ -75,18 +80,18 @@ public class Room {
     }
 
     public void tick() {
+        tick_counter++;
         for (AbstractRobot robot : robots) {
-            if (robot instanceof AutomatedRobot automatedRobot) {
-                new Thread(automatedRobot::tick).start();
-                logger.log(System.Logger.Level.INFO,
-                        "Send tick to " + robot.getId());
-            }
+            new Thread(robot::tick).start();
+            logger.log(System.Logger.Level.INFO,
+                    "Send tick to " + robot.getId());
         }
     }
 
     public boolean isPositionInRoom(Position pos) {
         return pos.x() >= 0 && pos.x() < width && pos.y() >= 0 && pos.y() < height;
     }
+
     public boolean isPositionFree(Position pos) {
         for (AbstractRobot robot : robots) {
             if (robot.getPosition().equals(pos)) {
@@ -100,12 +105,16 @@ public class Room {
         }
         return isPositionInRoom(pos);
     }
-    public void runAutomatedRobots() {
-        for (AbstractRobot robot : robots) {
-            if (robot instanceof AutomatedRobot) {
-                ((AutomatedRobot) robot).startMoving();
-            }
+
+    public void addObstacle(Position pos){
+        if (!isPositionFree(pos)) {
+            throw new IllegalArgumentException("Position is not free");
         }
+        Obstacle obstacle = new Obstacle(pos);
+        obstacles.add(obstacle);
+        if (grid != null) grid.add(obstacle.getImageView(), pos.x(), pos.y());
+        logger.log(System.Logger.Level.INFO,
+                "Obstacle added to room");
     }
     public AutomatedRobot addAutoRobot(Position pos) {
         if (!isPositionFree(pos)) {
@@ -116,6 +125,7 @@ public class Room {
         if (grid != null) grid.add(robot.getImageView(), pos.x(), pos.y());
         return robot;
     }
+
     public ManualRobot addManualRobot(Position pos) {
         if (!isPositionFree(pos)) {
             throw new IllegalArgumentException("Position is not free");
@@ -125,10 +135,12 @@ public class Room {
         if (grid != null) grid.add(robot.getImageView(), pos.x(), pos.y());
         return robot;
     }
+
     public void removeAll() {
         removeObstacles();
         removeRobots();
     }
+
     public void removeObstacles() {
         logger.log(System.Logger.Level.INFO,
                 "Obstacles removed from room");
@@ -137,16 +149,7 @@ public class Room {
         }
         obstacles.clear();
     }
-    public void stopSimulation() {
-        for (AbstractRobot robot : robots) {
-            if (robot instanceof AutomatedRobot) {
-                ((AutomatedRobot) robot).stopMoving();
-            }
-        }
-    }
-    public void startSimulation() {
-        runAutomatedRobots();
-    }
+
     public void removeRobots() {
         logger.log(System.Logger.Level.INFO,
                 "Robots removed from room");
@@ -158,6 +161,7 @@ public class Room {
         }
         robots.clear();
     }
+
     public void removeFrom(Position pos) {
         AbstractRoomObject obj = getObjectAt(pos);
         if (obj == null) {
@@ -170,6 +174,23 @@ public class Room {
         }
         grid.getChildren().remove(obj.getImageView());
     }
+
+    public void stopSimulation() {
+        for (AbstractRobot robot : robots) {
+            if (robot instanceof AutomatedRobot) {
+                ((AutomatedRobot) robot).stopMoving();
+            }
+        }
+    }
+
+    public void startSimulation() {
+        for (AbstractRobot robot : robots) {
+            if (robot instanceof AutomatedRobot) {
+                ((AutomatedRobot) robot).startMoving();
+            }
+        }
+    }
+
     public AbstractRoomObject getObjectAt(Position pos) {
         for (AbstractRobot robot : robots) {
             if (robot.getPosition().equals(pos)) {
@@ -183,55 +204,25 @@ public class Room {
         }
         return null;
     }
-    public void addObstacle(Position pos){
-        if (!isPositionFree(pos)) {
-            throw new IllegalArgumentException("Position is not free");
-        }
-        Obstacle obstacle = new Obstacle(pos);
-        obstacles.add(obstacle);
-        if (grid != null) grid.add(obstacle.getImageView(), pos.x(), pos.y());
-        logger.log(System.Logger.Level.INFO,
-                "Obstacle added to room");
-    }
-    public void loadRoomConfiguration(File file) {
-        // todo
-        logger.log(System.Logger.Level.INFO, "Room configuration loaded from file " + file.getName());
-    }
-    public String getRoomConfiguration() {
-        return toString();
-    }
+
     public int getWidth() {
         return width;
     }
+
     public int getHeight() {
         return height;
     }
-    public void updateViewAt(Position pos) {
-        AbstractRoomObject obj = getObjectAt(pos);
-        if (obj == null) {
-            return;
-        }
-        ImageView imageView = obj.getImageView();
-        List<ImageView> imageViews = new ArrayList<>();
-        for (int i = 0; i < grid.getChildren().size(); i++) {
-            if (grid.getChildren().get(i) instanceof ImageView) {
-                imageViews.add((ImageView) grid.getChildren().get(i));
-            }
-        }
-        for (ImageView iv : imageViews) {
-            int x = GridPane.getColumnIndex(iv);
-            int y = GridPane.getRowIndex(iv);
-            if (x == pos.x() && y == pos.y()) {
-                grid.getChildren().remove(iv);
-                break;
-            }
-        }
-        grid.add(imageView, pos.x(), pos.y());
-    }
+
     public void playBackTransition() {
+//        if (back_play_running) {
+//            return;
+//        }
+//        back_play_running = true;
+        ControlledRobot.getInstance().unselectRobot();
         for (AbstractRobot robot : robots) {
             robot.playBackTransition();
         }
+//        back_play_running = true;
     }
     public void fromJsonRoom(JsonRoom room) {
         setDimensions(room.cols, room.rows);
