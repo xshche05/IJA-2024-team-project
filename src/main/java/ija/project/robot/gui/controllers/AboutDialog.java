@@ -22,7 +22,7 @@ import javafx.scene.control.Label;
  * hence the re-use of the {@link #Cancel()} method.
  */
 public class AboutDialog extends Dialog {
-
+    /** The label displaying the about text. */
     @FXML public Label aboutLabel;
 
     /**

@@ -10,12 +10,18 @@ package ija.project.robot.maps;
  * This class provides the necessary properties to define the behavior of a robot that moves autonomously.
  */
 public class JsonAutoRobot {
-    public JsonPosition position; // The position of the robot in the room
-    public int speed; // The speed at which the robot moves
-    public int start_angle; // The initial angle of the robot
-    public int rotation_angle; // The angle of each rotation step
-    public int view_distance; // The distance the robot can see
-    public String rotation_direction; // The direction of rotation for the robot
+    /** The position of the robot within the room. */
+    public JsonPosition position;
+    /** The speed at which the robot moves. */
+    public int speed;
+    /** The initial angle of the robot. */
+    public int start_angle;
+    /** The angle of each rotation step. */
+    public int rotation_angle;
+    /** The distance the robot can see. */
+    public int view_distance;
+    /** The direction of rotation for the robot. */
+    public String rotation_direction;
 
     /**
      * Constructor to initialize the robot with a position.

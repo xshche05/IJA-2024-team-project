@@ -18,7 +18,7 @@ import static ija.project.robot.RobotApp.logger;
  * This class provides methods to load maps from specific files as well as predefined maps embedded in the application.
  */
 public class MapLoader {
-
+    /** The singleton instance of MapLoader. */
     private static MapLoader instance = null;
 
     /**

@@ -1,3 +1,6 @@
+/**
+ * Module info for the project.
+ */
 module ija.project.robot {
     requires javafx.graphics;
     requires javafx.controls;

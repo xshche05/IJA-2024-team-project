@@ -11,8 +11,10 @@ package ija.project.robot.maps;
  * This class provides the necessary properties to define the coordinates of a position.
  */
 public class JsonPosition {
-    public int x; // The x coordinate of the position
-    public int y; // The y coordinate of the position
+    /** The x coordinate of the position. */
+    public int x;
+    /** The y coordinate of the position. */
+    public int y;
 
     /**
      * Constructor to initialize the position with coordinates.

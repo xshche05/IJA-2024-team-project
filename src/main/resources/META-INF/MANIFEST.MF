@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: ija.project.robot.RobotApp
-
+JavaFX-Application-Class: ija.project.robot.RobotApp
+JavaFX-Version: 17.0.6

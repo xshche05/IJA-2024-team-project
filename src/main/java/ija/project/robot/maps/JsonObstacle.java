@@ -10,7 +10,9 @@ package ija.project.robot.maps;
  * This class provides the necessary properties to define the behavior of an obstacle in the room.
  */
 public class JsonObstacle {
-    public JsonPosition position; // The position of the obstacle in the room
+
+    /** The position of the obstacle within the room. */
+    public JsonPosition position;
 
     /**
      * Constructor to initialize the obstacle with a position.

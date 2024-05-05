@@ -70,6 +70,10 @@ public class ControlledRobot {
         }
     }
 
+    /**
+     * Unselects the currently controlled robot.
+     * If no robot is controlled, this method does nothing.
+     */
     public void unselectRobot() {
         if (robot == null) {
             return;
