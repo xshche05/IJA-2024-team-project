@@ -34,97 +34,178 @@ import static ija.project.robot.RobotApp.logger;
  * and control the movement of robots.
  */
 public class Playground implements MenuInterface, SceneInterface {
-    @FXML
-    public AnchorPane AnchorPane; // fx:id="AnchorPane"
-    @FXML
-    public MenuItem MenuFileSaveAs;
-    @FXML
-    public MenuItem MenuFileLoad;
-    @FXML
-    public MenuItem MenuNewFile;
-    @FXML
-    public HBox HBoxGrid;
-    public HBox HBoxBttnDown;
-    public HBox HBoxBttnUp;
+    @FXML public AnchorPane AnchorPane; // fx:id="AnchorPane"
+    @FXML public MenuItem MenuFileSaveAs;
+    @FXML public MenuItem MenuFileLoad;
+    @FXML public MenuItem MenuNewFile;
+    @FXML public HBox HBoxGrid;
+    @FXML public HBox HBoxBttnDown;
+    @FXML public HBox HBoxBttnUp;
 
-    public static final int gridWidth = 28;
-    public static final int tickPeriod = 1000; // in milliseconds
-    private Timeline timeline;
-    public GridPane grid;
+    public static final int gridWidth = 28; // Width of each cell in the grid
+    public static final int tickPeriod = 1000; // Milliseconds between each application tick
+    private Timeline timeline; // Timeline for managing automatic updates
+    public GridPane grid; // Grid layout for placing robots and obstacles
 
-    public static String createRequest;
-    private final List<Node> addGroup = new ArrayList<>();
-    private final List<Node> removeGroup = new ArrayList<>();
-    private final List<Node> startGroup = new ArrayList<>();
-    private final List<Node> pauseGroup = new ArrayList<>();
-    private final List<Node> moveGroup = new ArrayList<>();
+    public static String createRequest; // Tracks requests for creating new robots or obstacles
+    private final List<Node> addGroup = new ArrayList<>(); // Group of buttons for adding objects
+    private final List<Node> removeGroup = new ArrayList<>(); // Group of buttons for removing objects
+    private final List<Node> startGroup = new ArrayList<>(); // Group of buttons for starting the simulation
+    private final List<Node> pauseGroup = new ArrayList<>(); // Group of buttons for pausing the simulation
+    private final List<Node> moveGroup = new ArrayList<>(); // Group of buttons for moving selected robot
 
     private String currentMode = "ADD";
     private String lastEditMode = "ADD";
 
-    public static final Semaphore playSemaphore = new Semaphore(1);
-
-
+    public static final Semaphore playSemaphore = new Semaphore(1); // Semaphore for managing playback control
 
     /**
-     * Initializes the controller by setting up the UI components, canvas, and initial settings for the game mode.
-     * This method constructs the canvas based on the room dimensions, initializes the toggle buttons,
-     * and sets up the default settings for adding, moving, and controlling robots or obstacles.
+     * Initializes the controller setup by configuring UI components and preparing the simulation environment.
+     * This method sets up the grid, initializes interactive buttons, and configures the timeline for simulation ticks.
      */
     @FXML
     public void initialize() {
         createRequest = "NONE";
         GridPaneConstruct();
-        ToggleButton addOrRemove = new ToggleButton("ADD MODE");
+        setupInteractiveButtons();
+        currentMode = "ADD";
+        lastEditMode = "ADD";
+        setupTimeline();
+    }
+
+    /**
+     * Initiates the manual creation of a new room map by user.
+     * This method is triggered when the user clicks the 'Create New' button.
+     */
+    @FXML
+    public void CreateNew() {
+        new Menu().initialize().CreateNew(AnchorPane);
+    }
+
+    /**
+     * Loads the game configuration from a file into the current session.
+     */
+    @FXML
+    public void FileLoad() {
+        new Menu().initialize().FileLoad(AnchorPane);
+    }
+
+    /**
+     * Saves the current game configuration to a file.
+     */
+    @FXML
+    public void FileSaveAs() {
+        new Menu().initialize().FileSaveAs(AnchorPane);
+    }
+
+    /**
+     * Loads the 1 predefined map configuration into the current session.
+     */
+    @FXML
+    public void LoadPredefinedMap1() {
+        new Menu().initialize().LoadPredefinedMap1(AnchorPane);
+    }
+
+    /**
+     * Loads the 2 predefined map configuration into the current session.
+     */
+    @FXML
+    public void LoadPredefinedMap2() {
+        new Menu().initialize().LoadPredefinedMap2(AnchorPane);
+    }
+
+    /**
+     * Loads the 3 predefined map configuration into the current session.
+     */
+    @FXML
+    public void LoadPredefinedMap3() {
+        new Menu().initialize().LoadPredefinedMap3(AnchorPane);
+    }
+
+    /**
+     * Opens the 'About' dialog to display information about the application.
+     */
+    @FXML
+    public void About() {
+        new Menu().initialize().About(AnchorPane);
+    }
+
+    /**
+     * Gets the scene for the playground.
+     *
+     * @return The scene for the playground.
+     */
+    public static Scene getScene() {
+        logger.info("Getting playground scene");
+        return SceneInterface.getScene(Playground.class, "playground.fxml");
+    }
+
+    /**
+     * Configures the interactive buttons and their initial settings.
+     * The buttons are grouped together based on their functionality.
+     * The buttons are styled to indicate their current state.
+     */
+    private void setupInteractiveButtons() {
+        ToggleButton addOrRemove = new ToggleButton("ADD MODE"); // Toggle for switch between add and remove modes
         addOrRemove.setStyle("-fx-background-color: LightBlue;");
         addOrRemove.setOnAction(e -> AddOrRemoveAction());
         addGroup.add(addOrRemove);
         removeGroup.add(addOrRemove);
-        ToggleGroup placeSelection = new ToggleGroup();
-        ToggleButton autoRobot = new ToggleButton("AUTO ROBOT");
+
+        ToggleGroup placeSelection = new ToggleGroup(); // Toggle group for selecting the type of object to add
+
+        ToggleButton autoRobot = new ToggleButton("AUTO ROBOT"); // Toggle for adding automatic robots
         autoRobot.setOnAction(e -> AutoRobotAction());
         autoRobot.setToggleGroup(placeSelection);
         addGroup.add(autoRobot);
-        ToggleButton manualRobot = new ToggleButton("MANUAL ROBOT");
+
+        ToggleButton manualRobot = new ToggleButton("MANUAL ROBOT"); // Toggle for adding manual robots
         manualRobot.setOnAction(e -> ManualRobotAction());
         manualRobot.setToggleGroup(placeSelection);
         addGroup.add(manualRobot);
-        ToggleButton obstacle = new ToggleButton("OBSTACLE");
+
+        ToggleButton obstacle = new ToggleButton("OBSTACLE"); // Toggle for adding obstacles
         obstacle.setOnAction(e -> ObstacleAction());
         obstacle.setToggleGroup(placeSelection);
         addGroup.add(obstacle);
 
 
-        ToggleButton startPause = new ToggleButton("START");
+        ToggleButton startPause = new ToggleButton("START"); // Toggle for starting and pausing the simulation
         startPause.setOnAction(e -> StartPauseAction());
         startPause.setStyle("-fx-background-color: lightgreen;");
         startGroup.add(startPause);
         pauseGroup.add(startPause);
-        Button left = new Button("LEFT");
+
+        Button left = new Button("LEFT"); // Button for turning the selected robot left
         left.setOnAction(e -> LeftAction());
         moveGroup.add(left);
-        Button go = new Button("GO");
+
+        Button go = new Button("GO"); // Button for moving the selected robot forward
         go.setOnAction(e -> GoAction());
         moveGroup.add(go);
-        Button right = new Button("RIGHT");
+
+        Button right = new Button("RIGHT"); // Button for turning the selected robot right
         right.setOnAction(e -> RightAction());
         moveGroup.add(right);
 
-        Button playback = new Button("PLAYBACK");
+        Button playback = new Button("PLAYBACK"); // Button for starting the playback of the simulation
         playback.setOnAction(e -> StartPlayBack());
-        playback.setStyle("-fx-background-color: Orange;"); //
+        playback.setStyle("-fx-background-color: Orange;");
         pauseGroup.add(playback);
 
-        Button removeAll = new Button("REMOVE ALL");
+        Button removeAll = new Button("REMOVE ALL"); // Button for removing all objects from the room
         removeAll.setOnAction(e -> RemoveAllAction());
         removeGroup.add(removeAll);
-        Button removeObstacles = new Button("REMOVE OBSTACLES");
+
+        Button removeObstacles = new Button("REMOVE OBSTACLES"); // Button for removing all obstacles from the room
         removeObstacles.setOnAction(e -> RemoveObstaclesAction());
         removeGroup.add(removeObstacles);
-        Button removeRobots = new Button("REMOVE ROBOTS");
+
+        Button removeRobots = new Button("REMOVE ROBOTS"); // Button for removing all robots from the room
         removeRobots.setOnAction(e -> RemoveRobotsAction());
         removeGroup.add(removeRobots);
 
+        // Set the minimum size of the buttons groups to ensure consistent layout
         for (Node node : addGroup) {
             ((Region) node).setMinSize(100, 30);
         }
@@ -141,93 +222,56 @@ public class Playground implements MenuInterface, SceneInterface {
             ((Region) node).setMinSize(100, 30);
         }
 
+        // Add the buttons to the program interface
         HBoxBttnUp.getChildren().addAll(addGroup);
-        currentMode = "ADD";
-        lastEditMode = "ADD";
         HBoxBttnDown.getChildren().addAll(pauseGroup);
-
-        setupTimeline();
     }
 
     /**
-     * Initiates the manual creation of a new room map by user.
-     * This method is triggered when the user clicks the 'Create New' button.
+     * Removes all objects from the current room.
      */
-    @FXML
-    public void CreateNew() {
-        new Menu().initialize().CreateNew(AnchorPane);
-    }
-
-    /**
-     * Loads the game configuration from a file into the current session.
-     */
-    @Override
-    @FXML
-    public void FileLoad() {
-        new Menu().initialize().FileLoad(AnchorPane);
-    }
-
-    /**
-     * Saves the current game configuration to a file.
-     */
-    @Override
-    @FXML
-    public void FileSaveAs() {
-        new Menu().initialize().FileSaveAs(AnchorPane);
-    }
-
-    @FXML
-    public void LoadPredefinedMap1() {
-        new Menu().initialize().LoadPredefinedMap1(AnchorPane);
-    }
-
-    @FXML
-    public void LoadPredefinedMap2() {
-        new Menu().initialize().LoadPredefinedMap2(AnchorPane);
-    }
-
-    @FXML
-    public void LoadPredefinedMap3() {
-        new Menu().initialize().LoadPredefinedMap3(AnchorPane);
-    }
-
-    @Override
-    @FXML
-    public void About() {
-        new Menu().initialize().About(AnchorPane);
-    }
-
-    /**
-     * Gets the scene for the playground.
-     *
-     * @return The scene for the playground.
-     */
-    public static Scene getScene() {
-        logger.info("Getting playground scene");
-        return SceneInterface.getScene(Playground.class, "playground.fxml");
-    }
-
     public void RemoveAllAction() {
         logger.info("Remove all button pressed");
         Room room = Room.getInstance();
         room.removeAll();
     }
 
+    /**
+     * Removes all obstacles from the current room.
+     */
     public void RemoveObstaclesAction() {
         logger.info("Remove obstacles button pressed");
         Room room = Room.getInstance();
         room.removeObstacles();
     }
 
+    /**
+     * Removes all robots from the current room.
+     */
     public void RemoveRobotsAction() {
         logger.info("Remove robots button pressed");
         Room room = Room.getInstance();
         room.removeRobots();
     }
 
+    /**
+     * Initializes the timeline that manages periodic updates (ticks) to the room's state.
+     * The timeline is used to manage the automatic updates of the simulation,
+     * and simulates the smooth movement of robots and obstacles.
+     * The timeline triggers the {@link #tick()} method.
+     */
     private void setupTimeline() {
         timeline = new Timeline(new KeyFrame(Duration.millis(tickPeriod), e -> tick()));
         timeline.setCycleCount(Timeline.INDEFINITE);
+    }
+
+    /**
+     * Updates the state of the room and room objects on each tick of the simulation.
+     * Calls the {@link Room#tick()} method to update the room state.
+     */
+    public void tick() {
+        Room room = Room.getInstance();
+        room.tick();
     }
 
     /**
@@ -319,23 +363,46 @@ public class Playground implements MenuInterface, SceneInterface {
         }
     }
 
+    /**
+     * Turns the selected robot left.
+     * This method is triggered when the user clicks the 'LEFT' button.
+     * Calls the {@link ControlledRobot#turnLeft()} method to turn the selected robot left.
+     */
     public void LeftAction(){
         ControlledRobot.getInstance().turnLeft();
     }
 
+    /**
+     * Moves the selected robot forward.
+     * This method is triggered when the user clicks the 'GO' button.
+     * Calls the {@link ControlledRobot#moveForward()} method to move the selected robot forward.
+     */
     public void GoAction(){
         ControlledRobot.getInstance().moveForward();
     }
 
+    /**
+     * Turns the selected robot right.
+     * This method is triggered when the user clicks the 'RIGHT' button.
+     * Calls the {@link ControlledRobot#turnRight()} method to turn the selected robot right.
+     */
     public void RightAction(){
         logger.info("Right button pressed");
         ControlledRobot.getInstance().turnRight();
     }
 
+    /**
+     * Handles the user clicking on the grid.
+     * The method determines the cell that was clicked and the mouse button that was pressed,
+     * and then calls the appropriate action based on the current mode and mouse button.
+     *
+     * @param e The mouse event that triggered the grid click.
+     */
     public void GridClicked(MouseEvent e) {
         int x = (int) e.getX() / gridWidth;
         int y = (int) e.getY() / gridWidth;
         logger.info("Grid cell clicked: (" + x + ", " + y + ")");
+
         if (e.getButton() == MouseButton.SECONDARY) {
             logger.info("Right mouse button clicked");
             HandleRightClick(x, y);
@@ -350,12 +417,22 @@ public class Playground implements MenuInterface, SceneInterface {
 
     }
 
+    /**
+     * Starts the playback of the simulation.
+     * This method is triggered when the user clicks the 'PLAYBACK' button.
+     * Calls the {@link Room#playBackTransition()} method to start the playback of the simulation.
+     */
     public void StartPlayBack() {
         logger.info("Playback button pressed");
         Room room = Room.getInstance();
         room.playBackTransition();
     }
 
+    /**
+     * Constructs the grid layout for the playground.
+     * The grid is used to display the room map and objects.
+     * The grid is interactive, allowing users to add and remove objects by clicking on the cells.
+     */
     private void GridPaneConstruct() {
         logger.info("Constructing GridPane");
         Room room = Room.getInstance();
@@ -396,10 +473,21 @@ public class Playground implements MenuInterface, SceneInterface {
 //        grid.setGridLinesVisible(true);
     }
 
+    /**
+     * Handles the user left mouse button clicking on the grid.
+     * The method checks the current mode and then calls the appropriate action based on the mode:
+     * - In 'START' mode, selects the robot at the clicked cell.
+     * - In 'ADD' mode, adds a robot or obstacle to the clicked cell.
+     * - In 'REMOVE' mode, removes the object at the clicked cell.
+     *
+     * @param x The x-coordinate of the cell that was clicked.
+     * @param y The y-coordinate of the cell that was clicked.
+     */
     private void HandleLeftClick(int x, int y){
         if (currentMode.equals("START")) {
             logger.info("Grid cell clicked in start mode, selecting robot");
             ControlledRobot.getInstance().setRobot(new Position(x, y));
+
         } else if (currentMode.equals("ADD")) {
             if (((ToggleButton)addGroup.get(1)).isSelected()) {
                 logger.info("Grid cell clicked in add mode, adding auto robot");
@@ -447,10 +535,19 @@ public class Playground implements MenuInterface, SceneInterface {
             logger.info("Grid cell clicked in remove mode, removing object");
             Room.getInstance().removeFrom(new Position(x, y));
         } else {
-            logger.finest("Grid cell clicked in unknown mode!!!!!!!!!!!!!");
+            logger.finest("Grid cell clicked in unknown mode!!!");
         }
     }
 
+    /**
+     * Handles the user right mouse button clicking on the grid.
+     * The method checks the contents of the clicked cell and then calls the appropriate action based on the object present:
+     * - If an automatic or manual robot is clicked, opens the robot dialog to update its parameters.
+     * - If an empty cell or obstacle is clicked, performs no action.
+     *
+     * @param x The x-coordinate of the cell that was clicked.
+     * @param y The y-coordinate of the cell that was clicked.
+     */
     private void HandleRightClick(int x, int y){
         var object = Room.getInstance().getObjectAt(new Position(x, y));
         if (object instanceof AutomatedRobot robot) {
@@ -477,6 +574,10 @@ public class Playground implements MenuInterface, SceneInterface {
         }
     }
 
+    /**
+     * Opens the robot dialog for updating the parameters of a robot.
+     * This method is triggered when the user clicks mouse right button on a robot in 'PAUSE' mode.
+     */
     private void OpenRobotDialog() {
         logger.info("Opening robot dialog");
         Stage dialog = new Stage();
@@ -487,10 +588,5 @@ public class Playground implements MenuInterface, SceneInterface {
         dialog.setScene(robotDialog);
         dialog.setResizable(false);
         dialog.showAndWait();
-    }
-
-    public void tick() {
-        Room room = Room.getInstance();
-        room.tick();
     }
 }

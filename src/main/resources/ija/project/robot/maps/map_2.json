@@ -17,7 +17,7 @@
         "y": 7
       },
       "speed": 3,
-      "start_angle": 0,
+      "start_angle": 180,
       "rotation_angle": 45
     }
   ],
@@ -31,7 +31,7 @@
       "start_angle": 0,
       "rotation_angle": 45,
       "view_distance": 1,
-      "rotation_direction": "ccw"
+      "rotation_direction": "cw"
     },
     {
       "position": {
@@ -39,9 +39,9 @@
         "y": 0
       },
       "speed": 3,
-      "start_angle": 0,
-      "rotation_angle": -45,
-      "view_distance": 3,
+      "start_angle": 180,
+      "rotation_angle": 45,
+      "view_distance": 1,
       "rotation_direction": "cw"
     }
   ],
