@@ -1,7 +1,6 @@
 package ija.project.robot.logic.robots;
 
 import ija.project.robot.gui.controllers.Playground;
-import ija.project.robot.gui.logic.ControlledRobot;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
 import javafx.animation.Interpolator;
@@ -13,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
@@ -27,8 +25,6 @@ public class ManualRobot extends AbstractRobot {
     private final Queue<String> queue = new LinkedList<>();
 
     private final Semaphore tickSemaphore = new Semaphore(1);
-
-    private boolean controlFlag = false;
 
     public boolean running = false;
 
@@ -47,13 +43,11 @@ public class ManualRobot extends AbstractRobot {
     }
 
     public void setControlled() {
-        controlFlag = true;
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("selected_robot.png")));
         imageView.setImage(image);
     }
 
     public void unsetControlled() {
-        controlFlag = false;
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("robot.png")));
         imageView.setImage(image);
     }
@@ -82,7 +76,7 @@ public class ManualRobot extends AbstractRobot {
         return null;
     }
 
-    public boolean Go() {
+    public void Go() {
         for (int i = 0; i < speed; i++) {
             semaphore.acquireUninterruptibly();
             Position prevPos = this.pos;
@@ -90,7 +84,7 @@ public class ManualRobot extends AbstractRobot {
             if (newPos == null) {
                 logger.warning("ManualRobot (" + this.id + ") cannot move forward, there is an obstacle on the way");
                 semaphore.release();
-                return false;
+                return;
             }
             this.pos = newPos;
             // Make translate transition
@@ -109,7 +103,6 @@ public class ManualRobot extends AbstractRobot {
                 addToBackTransition(tt);
             });
         }
-        return true;
     }
 
     public void Left() {

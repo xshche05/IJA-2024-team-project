@@ -9,8 +9,6 @@ import ija.project.robot.logic.robots.AbstractRobot;
 import ija.project.robot.logic.robots.AutomatedRobot;
 import ija.project.robot.logic.robots.ManualRobot;
 import ija.project.robot.logic.room.Room;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -20,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -72,7 +69,6 @@ public class Playground implements MenuInterface, SceneInterface {
         setupInteractiveButtons();
         currentMode = "ADD";
         lastEditMode = "ADD";
-        setupTimeline();
     }
 
     @Override
@@ -245,25 +241,6 @@ public class Playground implements MenuInterface, SceneInterface {
     }
 
     /**
-     * Initializes the timeline that manages periodic updates (ticks) to the room's state.
-     * The timeline is used to manage the automatic updates of the simulation,
-     * and simulates the smooth movement of robots and obstacles.
-     * The timeline triggers the {@link #tick()} method.
-     */
-    private void setupTimeline() {
-//        tickThread = new Thread(() -> {
-//            while (true) {
-//                try {
-//                    tick();
-//                    Thread.sleep((long) (tickPeriod * 0.9));
-//                } catch (InterruptedException e) {
-//                    logger.warning("Tick thread interrupted");
-//                }
-//            }
-//        });
-    }
-
-    /**
      * Updates the state of the room and room objects on each tick of the simulation.
      * Calls the {@link Room#tick()} method to update the room state.
      */
@@ -361,7 +338,7 @@ public class Playground implements MenuInterface, SceneInterface {
                 while (true) {
                     try {
                         tick();
-                        Thread.sleep((long) (tickPeriod * 0.9));
+                        Thread.sleep((long) (tickPeriod * 0.95));
                     } catch (InterruptedException e) {
                         logger.warning("Tick thread interrupted");
                     }

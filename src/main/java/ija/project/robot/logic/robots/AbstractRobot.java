@@ -1,6 +1,5 @@
 package ija.project.robot.logic.robots;
 
-import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.logic.common.AbstractRoomObject;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
@@ -8,10 +7,8 @@ import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
-import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
@@ -27,7 +24,7 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     protected int playBackAngle;
     protected final Semaphore resourceSemaphore = new Semaphore(1);
     public boolean backPlaying = false;
-    private int backPlaySped = 4;
+
     public AbstractRobot(Position pos) {
         super(pos);
         this.currentAngle = 0;
@@ -62,6 +59,7 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     public abstract boolean move();
     public void addToBackTransition(Transition transition) {
         resourceSemaphore.acquireUninterruptibly();
+        int backPlaySped = 4;
         int duration = (int) transition.getCycleDuration().toMillis() / backPlaySped;
         if (transition instanceof RotateTransition rt) {
             RotateTransition back_rt = new RotateTransition();

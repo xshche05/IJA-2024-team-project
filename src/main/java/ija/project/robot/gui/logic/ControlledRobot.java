@@ -45,8 +45,7 @@ public class ControlledRobot {
      */
     public void setRobot(Position pos) {
         AbstractRoomObject obj = Room.getInstance().getObjectAt(pos);
-        if (obj instanceof ManualRobot) {
-            ManualRobot new_robot = (ManualRobot) obj;
+        if (obj instanceof ManualRobot new_robot) {
             ManualRobot old_robot = this.robot;
             if (old_robot != null) {
                 old_robot.unsetControlled();
@@ -71,18 +70,6 @@ public class ControlledRobot {
             return;
         }
         setRobot(robot.getPosition());
-    }
-
-    /**
-     * Returns the image view of the currently controlled robot.
-     *
-     * @return The {@link ImageView} of the currently controlled robot, or {@code null} if no robot is controlled.
-     */
-    public ImageView getImageView() {
-        if (robot == null) {
-            return null;
-        }
-        return imageView;
     }
 
     /**
@@ -118,9 +105,7 @@ public class ControlledRobot {
             return;
         }
         logger.info("Robot controller got request to move forward");
-        new Thread(() -> {
-            robot.move();
-        }).start();
+        new Thread(() -> robot.move()).start();
     }
 
     /**
@@ -132,9 +117,7 @@ public class ControlledRobot {
             return;
         }
         logger.info("Robot controller got request to turn left");
-        new Thread(() -> {
-            robot.rotateLeft();
-        }).start();
+        new Thread(() -> robot.rotateLeft()).start();
     }
 
     /**
@@ -146,8 +129,6 @@ public class ControlledRobot {
             return;
         }
         logger.info("Robot controller got request to turn right");
-        new Thread(() -> {
-            robot.rotateRight();
-        }).start();
+        new Thread(() -> robot.rotateRight()).start();
     }
 }

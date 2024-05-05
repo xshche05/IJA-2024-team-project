@@ -1,6 +1,5 @@
 package ija.project.robot.logic.room;
 
-import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.gui.logic.ControlledRobot;
 import ija.project.robot.logic.common.AbstractRoomObject;
 import ija.project.robot.logic.common.Position;
@@ -11,8 +10,6 @@ import ija.project.robot.maps.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
-import java.awt.*;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +22,6 @@ public class Room {
     private final System.Logger logger;
     private static Room instance = null;
     private GridPane grid;
-    private int tick_counter = 0;
-    public boolean back_play_running = false;
 
     private Room() {
         logger = System.getLogger("Room");
@@ -78,7 +73,6 @@ public class Room {
     }
 
     public void tick() {
-        tick_counter++;
         for (AbstractRobot robot : robots) {
             new Thread(robot::tick).start();
             logger.log(System.Logger.Level.INFO,
@@ -216,15 +210,10 @@ public class Room {
     }
 
     public void playBackTransition() {
-//        if (back_play_running) {
-//            return;
-//        }
-//        back_play_running = true;
         ControlledRobot.getInstance().unselectRobot();
         for (AbstractRobot robot : robots) {
             robot.playBackTransition();
         }
-//        back_play_running = true;
     }
     public void fromJsonRoom(JsonRoom room) {
         setDimensions(room.cols, room.rows);

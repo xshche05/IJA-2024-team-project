@@ -3,11 +3,9 @@ package ija.project.robot.gui;
 import ija.project.robot.gui.controllers.Start;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.InputStream;
 import java.util.logging.Logger;
@@ -41,7 +39,7 @@ public class App extends Application {
         }
     }
 
-    public static void run(String[] args) {
+    public static void run() {
         launch();
     }
 }

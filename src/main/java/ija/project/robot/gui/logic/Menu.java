@@ -17,7 +17,7 @@ import java.io.IOException;
 import static ija.project.robot.RobotApp.logger;
 
 /**
- * Handles the main menu operations including file loading, saving, and other configurations management.
+ * Handles the main menu operations including file loading, saving, and other configurations' management.
  * This class utilizes JavaFX components to interact with the user through graphical menus and dialogs.
  */
 public class Menu {

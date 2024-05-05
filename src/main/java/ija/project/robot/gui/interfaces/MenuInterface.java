@@ -1,8 +1,5 @@
 package ija.project.robot.gui.interfaces;
 
-import ija.project.robot.gui.logic.Menu;
-import javafx.fxml.FXML;
-
 /**
  * Defines the basic file handling and help functionalities for a user interface menu.
  */

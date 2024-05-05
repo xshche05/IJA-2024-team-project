@@ -102,9 +102,7 @@ public class AutomatedRobot extends AbstractRobot {
         tt.setCycleCount(1);
         tt.setAutoReverse(true);
         tt.setInterpolator(Interpolator.LINEAR);
-        tt.setOnFinished(event -> {
-            transitionSemaphore.release();
-        });
+        tt.setOnFinished(event -> transitionSemaphore.release());
         playSemaphore.acquireUninterruptibly();
         addToBackTransition(tt);
         tt.play();
@@ -121,9 +119,7 @@ public class AutomatedRobot extends AbstractRobot {
         rt.setCycleCount(1);
         rt.setAutoReverse(true);
         rt.setInterpolator(Interpolator.LINEAR);
-        rt.setOnFinished(event -> {
-            transitionSemaphore.release();
-        });
+        rt.setOnFinished(event -> transitionSemaphore.release());
         playSemaphore.acquireUninterruptibly();
         addToBackTransition(rt);
         rt.play();
