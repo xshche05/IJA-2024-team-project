@@ -27,6 +27,7 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     protected int playBackAngle;
     protected final Semaphore resourceSemaphore = new Semaphore(1);
     public boolean backPlaying = false;
+    private int backPlaySped = 4;
     public AbstractRobot(Position pos) {
         super(pos);
         this.currentAngle = 0;
@@ -61,7 +62,7 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     public abstract boolean move();
     public void addToBackTransition(Transition transition) {
         resourceSemaphore.acquireUninterruptibly();
-        int duration = (int) transition.getCycleDuration().toMillis() / 4;
+        int duration = (int) transition.getCycleDuration().toMillis() / backPlaySped;
         if (transition instanceof RotateTransition rt) {
             RotateTransition back_rt = new RotateTransition();
             back_rt.setByAngle(-rt.getByAngle());
