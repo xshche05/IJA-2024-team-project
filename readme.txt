@@ -12,17 +12,22 @@ It allows users to interactively add, move, and manage mobile robots in a simula
 The application provides functionalities to simulate robot movements, obstacle placements,
 and various robot interactions within a defined area.
 
-How to Build:
+
+1. How to Build:
 
 mvn package
 
-How to create the documentation:
+2. How to create the documentation:
 
 mvn javadoc:javadoc
 
-How to Start the Application:
+3. How to Start the Application:
 
 java -jar ./target/robot-1.0.jar
+
+ALL-IN-ONE:
+
+mvn package && mvn javadoc:javadoc && java -jar ./target/robot-1.0.jar
 
 This commands will compile the project and packages it into a runnable jar file located in the ./target directory.
 And will launch the graphical user interface of the simulator, where you can start interacting with the mobile robots.
