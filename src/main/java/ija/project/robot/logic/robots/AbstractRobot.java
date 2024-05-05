@@ -9,6 +9,7 @@ import javafx.animation.RotateTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,13 +61,14 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     public abstract boolean move();
     public void addToBackTransition(Transition transition) {
         resourceSemaphore.acquireUninterruptibly();
+        int duration = (int) transition.getCycleDuration().toMillis() / 4;
         if (transition instanceof RotateTransition rt) {
             RotateTransition back_rt = new RotateTransition();
             back_rt.setByAngle(-rt.getByAngle());
             back_rt.setCycleCount(1);
             back_rt.setAutoReverse(true);
             back_rt.setInterpolator(Interpolator.LINEAR);
-            back_rt.setDuration(rt.getDuration());
+            back_rt.setDuration(Duration.millis(duration));
             back_rt.setNode(getSelfImageView()); // todo
             play_back_transition.push(back_rt);
         } else if (transition instanceof TranslateTransition tt) {
@@ -76,11 +78,19 @@ public abstract class AbstractRobot extends AbstractRoomObject {
             back_tt.setCycleCount(1);
             back_tt.setAutoReverse(true);
             back_tt.setInterpolator(Interpolator.LINEAR);
-            back_tt.setDuration(tt.getDuration());
+            back_tt.setDuration(Duration.millis(duration));
             back_tt.setNode(getSelfImageView()); // todo
             play_back_transition.push(back_tt);
         } else {
-            play_back_transition.push(transition);
+            Transition back_transition = new Transition() {
+                {
+                    setCycleDuration(Duration.millis(duration));
+                }
+                @Override
+                protected void interpolate(double v) {
+                }
+            };
+            play_back_transition.push(back_transition);
         }
         resourceSemaphore.release();
     }
