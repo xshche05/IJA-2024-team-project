@@ -47,19 +47,34 @@ public class MapLoader {
         return false;
     }
 
+    public void loadPredefinedMap(InputStream jsonFile) {
+        JsonRoom room;
+        try {
+            String json = new String(Objects.requireNonNull(jsonFile).readAllBytes());
+            Gson gson = new Gson();
+            room = gson.fromJson(json, JsonRoom.class);
+            Room.getInstance().clear();
+            Room.getInstance().fromJsonRoom(room);
+        } catch (IOException e) {
+            logger.warning("Error reading file: " + jsonFile.toString());
+        } catch (JsonSyntaxException e) {
+            logger.warning("Error parsing JSON: " + jsonFile.toString());
+        }
+    }
+
     public void loadPredefinedMap1() { // todo link to menu
-        // get resource from predefined map 1
-        File mapJson = new File(Objects.requireNonNull(getClass().getResource("map_1.json")).getFile());
-        loadMap(mapJson);
+        // get resource from predefined map 1;
+        InputStream inputStream = getClass().getResourceAsStream("map_1.json");
+        loadPredefinedMap(inputStream);
     }
 
     public void loadPredefinedMap2() { // todo link to menu
-        File mapJson = new File(Objects.requireNonNull(getClass().getResource("map_2.json")).getFile());
-        loadMap(mapJson);
+        InputStream inputStream = getClass().getResourceAsStream("map_2.json");
+        loadPredefinedMap(inputStream);
     }
 
     public void loadPredefinedMap3() { // todo link to menu
-        File mapJson = new File(Objects.requireNonNull(getClass().getResource("map_3.json")).getFile());
-        loadMap(mapJson);
+        InputStream inputStream = getClass().getResourceAsStream("map_3.json");
+        loadPredefinedMap(inputStream);
     }
 }
