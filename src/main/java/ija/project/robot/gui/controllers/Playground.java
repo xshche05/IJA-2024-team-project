@@ -32,7 +32,7 @@ import static ija.project.robot.RobotApp.logger;
  * and control the movement of robots.
  */
 public class Playground implements MenuInterface, SceneInterface {
-    @FXML public AnchorPane AnchorPane; // fx:id="AnchorPane"
+    @FXML public AnchorPane AnchorPane; // Main pane for the playground
     @FXML public MenuItem MenuFileSaveAs;
     @FXML public MenuItem MenuFileLoad;
     @FXML public MenuItem MenuNewFile;
@@ -43,9 +43,7 @@ public class Playground implements MenuInterface, SceneInterface {
     public static final int gridWidth = 32; // Width of each cell in the grid
     public static final int tickPeriod = 1000; // Milliseconds between each application tick
     public GridPane grid; // Grid layout for placing robots and obstacles
-
-    private Thread tickThread;
-
+    private Thread tickThread; // Thread for running the simulation ticks
     public static String createRequest; // Tracks requests for creating new robots or obstacles
     private final List<Node> addGroup = new ArrayList<>(); // Group of buttons for adding objects
     private final List<Node> removeGroup = new ArrayList<>(); // Group of buttons for removing objects
@@ -53,8 +51,8 @@ public class Playground implements MenuInterface, SceneInterface {
     private final List<Node> pauseGroup = new ArrayList<>(); // Group of buttons for pausing the simulation
     private final List<Node> moveGroup = new ArrayList<>(); // Group of buttons for moving selected robot
 
-    private String currentMode = "ADD";
-    private String lastEditMode = "ADD";
+    private String currentMode = "ADD"; // Current mode of the playground
+    private String lastEditMode = "ADD"; // Last edit mode of the playground
 
     public static final Semaphore playSemaphore = new Semaphore(1); // Semaphore for managing playback control
 
@@ -123,7 +121,7 @@ public class Playground implements MenuInterface, SceneInterface {
      */
     public static Scene getScene() {
         logger.info("Getting playground scene");
-        return SceneInterface.getScene(Playground.class, "playground.fxml");
+        return SceneInterface.getScene(Playground.class, "playground.fxml"); // Load the playground scene
     }
 
     /**
@@ -223,7 +221,7 @@ public class Playground implements MenuInterface, SceneInterface {
         }
         logger.info("Remove all button pressed");
         Room room = Room.getInstance();
-        room.removeAll();
+        room.removeAll(); // Remove all objects from the room
     }
 
     /**
@@ -236,7 +234,7 @@ public class Playground implements MenuInterface, SceneInterface {
         }
         logger.info("Remove obstacles button pressed");
         Room room = Room.getInstance();
-        room.removeObstacles();
+        room.removeObstacles(); // Remove all obstacles from the room
     }
 
     /**
@@ -248,7 +246,7 @@ public class Playground implements MenuInterface, SceneInterface {
             return;
         }
         logger.info("Remove robots button pressed");
-        Room room = Room.getInstance();
+        Room room = Room.getInstance(); // Remove all robots from the room
         room.removeRobots();
     }
 
@@ -259,7 +257,7 @@ public class Playground implements MenuInterface, SceneInterface {
     public void tick() {
         if (currentMode.equals("START")) {
             Room room = Room.getInstance();
-            room.tick();
+            room.tick(); // Update the room state
         }
     }
 
@@ -276,16 +274,16 @@ public class Playground implements MenuInterface, SceneInterface {
             lastEditMode = "REMOVE";
             addBttn.setStyle("-fx-background-color: LightPink;");
             logger.info("Playground REMOVE MODE activated");
-            HBoxBttnUp.getChildren().clear();
-            HBoxBttnUp.getChildren().addAll(removeGroup);
+            HBoxBttnUp.getChildren().clear(); // Clear the current button group
+            HBoxBttnUp.getChildren().addAll(removeGroup); // Switch to remove button group
         } else {
             addBttn.setText("ADD MODE");
             currentMode = "ADD";
             lastEditMode = "ADD";
             addBttn.setStyle("-fx-background-color: LightBlue;");
             logger.info("Playground ADD MODE activated");
-            HBoxBttnUp.getChildren().clear();
-            HBoxBttnUp.getChildren().addAll(addGroup);
+            HBoxBttnUp.getChildren().clear(); // Clear the current button group
+            HBoxBttnUp.getChildren().addAll(addGroup); // Switch to add  button group
         }
     }
 
@@ -328,9 +326,9 @@ public class Playground implements MenuInterface, SceneInterface {
         ToggleButton strtbttn = (ToggleButton) startGroup.get(0);
         if (!strtbttn.isSelected()){
             currentMode = lastEditMode;
-            tickThread.interrupt();
+            tickThread.interrupt(); // Stop the simulation
             strtbttn.setText("START");
-            Room.getInstance().stopSimulation();
+            Room.getInstance().stopSimulation(); // Stop the room simulation
             strtbttn.setStyle("-fx-background-color: lightgreen;");
             HBoxBttnDown.getChildren().clear();
             HBoxBttnUp.getChildren().clear();
@@ -349,14 +347,14 @@ public class Playground implements MenuInterface, SceneInterface {
             tickThread = new Thread(() -> {
                 while (true) {
                     try {
-                        tick();
-                        Thread.sleep((long) (tickPeriod * 0.95));
+                        tick(); // Update the room state
+                        Thread.sleep((long) (tickPeriod * 0.95)); // Sleep for a short period
                     } catch (InterruptedException e) {
                         logger.warning("Tick thread interrupted");
                     }
                 }
             });
-            tickThread.start();
+            tickThread.start(); // Start the simulation
             Room.getInstance().startSimulation();
             strtbttn.setText("PAUSE");
             strtbttn.setStyle("-fx-background-color: yellow;");
@@ -462,6 +460,7 @@ public class Playground implements MenuInterface, SceneInterface {
         int anchor_min_height = width * gridWidth + 100;
 
         if (anchor_min_width > user_max_width || anchor_min_height > user_max_height) {
+            // add scroll pane if the grid is too large
             ScrollPane scrollPane = new ScrollPane();
             scrollPane.setContent(grid);
             HBoxGrid.getChildren().add(scrollPane);
@@ -506,7 +505,7 @@ public class Playground implements MenuInterface, SceneInterface {
                         logger.warning("Cannot add robot to occupied cell");
                         return;
                     }
-                    OpenRobotDialog();
+                    OpenRobotDialog(); // Open the robot dialog, get the parameters
                     if (RobotDialog.validData) {
                         logger.info("Adding auto robot at position: (" + x + ", " + y + ")");
                         logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle + ", distance: " + RobotDialog.Distance);
@@ -576,7 +575,7 @@ public class Playground implements MenuInterface, SceneInterface {
         if (object instanceof AutomatedRobot robot) {
             logger.info("Right clicked on auto robot");
             createRequest = "AUTO";
-            OpenRobotDialog();
+            OpenRobotDialog(); // Open the robot dialog, get the parameters
             if (RobotDialog.validData) {
                 logger.info("Adding auto robot at position: (" + x + ", " + y + ")");
                 logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle + ", distance: " + RobotDialog.Distance);
@@ -587,7 +586,7 @@ public class Playground implements MenuInterface, SceneInterface {
         } else if (object instanceof ManualRobot robot) {
             logger.info("Right clicked on manual robot");
             createRequest = "MANUAL";
-            OpenRobotDialog();
+            OpenRobotDialog(); // Open the robot dialog, get the parameters
             if (RobotDialog.validData) {
                 logger.info("Adding manual robot at position: (" + x + ", " + y + ")");
                 logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle);
@@ -610,6 +609,6 @@ public class Playground implements MenuInterface, SceneInterface {
         Scene robotDialog = RobotDialog.getScene();
         dialog.setScene(robotDialog);
         dialog.setResizable(false);
-        dialog.showAndWait();
+        dialog.showAndWait(); // Show the dialog and wait for user input
     }
 }

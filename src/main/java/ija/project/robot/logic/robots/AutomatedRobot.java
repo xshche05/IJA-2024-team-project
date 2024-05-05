@@ -64,7 +64,7 @@ public class AutomatedRobot extends AbstractRobot {
             case 225: x--; y++; break;
             case 270: x--; break;         // Left
             case 315: x--; y--; break;
-            default: return null;         // TODO: throw exception
+            default: return null;         // TODO: Handle other angles, we only support 45-degree increments
         }
 
         Position position = new Position(x, y);

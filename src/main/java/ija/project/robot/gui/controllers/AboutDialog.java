@@ -33,7 +33,6 @@ public class AboutDialog extends Dialog {
                 Authors:
                 Kirill Shchetiniuk (xshche05)
                 Artur Sultanov (xsulta01)""";
-
         aboutLabel.setText(about);
     }
 
@@ -42,7 +41,7 @@ public class AboutDialog extends Dialog {
      */
     @Override
     public void Ok() {
-        Cancel();
+        Cancel(); // Close the dialog
     }
 
     /**
@@ -53,6 +52,6 @@ public class AboutDialog extends Dialog {
      * @return The loaded {@link Scene} for the About dialog.
      */
     public static Scene getScene() {
-        return SceneInterface.getScene(AboutDialog.class, "about_dialog.fxml");
+        return SceneInterface.getScene(AboutDialog.class, "about_dialog.fxml"); // Load the About dialog scene
     }
 }

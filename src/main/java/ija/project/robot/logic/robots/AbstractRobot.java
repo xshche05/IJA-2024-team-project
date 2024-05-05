@@ -149,17 +149,17 @@ public abstract class AbstractRobot extends AbstractRoomObject {
         new Thread(() -> {
             Semaphore semaphore = new Semaphore(1);
             while (!play_back_transition.isEmpty()) {
-                semaphore.acquireUninterruptibly();
-                Transition transition = play_back_transition.pop();
+                semaphore.acquireUninterruptibly(); // wait for the previous transition to finish
+                Transition transition = play_back_transition.pop(); // get the next transition
                 transition.setAutoReverse(true);
                 playSemaphore.acquireUninterruptibly();
-                transition.play();
+                transition.play(); // play the transition in reverse
                 playSemaphore.release();
-                transition.setOnFinished(event -> semaphore.release());
+                transition.setOnFinished(event -> semaphore.release()); // release the semaphore after the transition finishes
             }
             backPlaying = false;
-            pos = playBackPosition;
-            setStartAngle(playBackAngle);
+            pos = playBackPosition; // reset the position
+            setStartAngle(playBackAngle); // reset the angle
         }).start();
     }
 

@@ -21,37 +21,41 @@ import static ija.project.robot.RobotApp.logger;
  * Error messages are displayed if the inputs are invalid.
  */
 public class CreateDialog extends Dialog {
-    @FXML public TextField rowsInput;
-    @FXML public TextField colsInput;
+    @FXML public TextField rowsInput; // FXML annotation to inject the rows input field
+    @FXML public TextField colsInput; // FXML annotation to inject the cols input field
     @FXML public Button okButton;
     @FXML public Button cancelButton;
-    @FXML public Label errorLabel;
+    @FXML public Label errorLabel; // FXML annotation to inject the error label
 
     public void Ok() {
         errorLabel.setText("");
         try {
+            // parse the input values
             int rows = Integer.parseInt(rowsInput.getText());
             int cols = Integer.parseInt(colsInput.getText());
+            // check if the values are valid
             if (rows < 1 || cols < 1) {
                 errorLabel.setText("Rows and cols must be positive!");
                 logger.warning("Rows and cols must be positive!");
                 return;
             }
             logger.info("Setting room dimensions to " + cols + "x" + rows);
+            // set the room dimensions
             Room.getInstance().setDimensions(cols, rows);
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
             Stage owner = (Stage) stage.getOwner();
             Scene playGround = Playground.getScene();
             owner.setScene(playGround);
-            owner.show();
+            owner.show(); // show the playground
         } catch (NumberFormatException e) {
+            // handle invalid input, show an error message
             errorLabel.setText("Rows and cols be positive integers!");
             logger.warning("Rows and cols be positive integers!");
         }
     }
 
     public static Scene getScene() {
-        return SceneInterface.getScene(CreateDialog.class, "create_dialog.fxml");
+        return SceneInterface.getScene(CreateDialog.class, "create_dialog.fxml"); // Load the Create dialog scene
     }
 }

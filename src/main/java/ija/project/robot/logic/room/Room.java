@@ -170,9 +170,9 @@ public class Room {
     public void stopSimulation() {
         for (AbstractRobot robot : robots) {
             if (robot instanceof AutomatedRobot) {
-                ((AutomatedRobot) robot).stopMoving();
+                ((AutomatedRobot) robot).stopMoving(); // send signal to stop moving
             } else if (robot instanceof ManualRobot) {
-                ((ManualRobot) robot).pause();
+                ((ManualRobot) robot).pause(); // send signal to stop moving
             }
         }
     }
@@ -180,9 +180,9 @@ public class Room {
     public void startSimulation() {
         for (AbstractRobot robot : robots) {
             if (robot instanceof AutomatedRobot) {
-                ((AutomatedRobot) robot).startMoving();
+                ((AutomatedRobot) robot).startMoving(); // send signal to start moving
             } else if (robot instanceof ManualRobot) {
-                ((ManualRobot) robot).start();
+                ((ManualRobot) robot).start(); // send signal to start moving
             }
         }
     }
@@ -302,7 +302,6 @@ public class Room {
     public String toString() {
         return getJsonRoomString();
     }
-
     public List<AbstractRobot> getRobots() {
         return robots;
     }

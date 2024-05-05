@@ -10,8 +10,12 @@ public class RobotApp {
 
     public static final Logger logger = Logger.getAnonymousLogger();
 
-    public static void main(String[] args) throws InterruptedException, IOException {
-        LogManager.getLogManager().readConfiguration(RobotApp.class.getResourceAsStream("logging.properties"));
+    public static void main(String[] args) {
+        try {
+            LogManager.getLogManager().readConfiguration(RobotApp.class.getResourceAsStream("logging.properties"));
+        } catch (IOException e) {
+            logger.warning("Could not load logging configuration");
+        }
         logger.info("Starting application");
         App.run();
     }

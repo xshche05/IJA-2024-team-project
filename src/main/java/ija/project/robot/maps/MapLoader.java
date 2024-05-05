@@ -26,7 +26,7 @@ public class MapLoader {
     public boolean loadMap(File jsonFile) {
         InputStream inputStream;
         try {
-            inputStream = new FileInputStream(jsonFile);
+            inputStream = new FileInputStream(jsonFile); // get resource from file
         } catch (FileNotFoundException e) {
             logger.warning("File not found: " + jsonFile.getAbsolutePath());
             return false;
@@ -35,9 +35,9 @@ public class MapLoader {
         try {
             String json = new String(Objects.requireNonNull(inputStream).readAllBytes());
             Gson gson = new Gson();
-            room = gson.fromJson(json, JsonRoom.class);
-            Room.getInstance().clear();
-            Room.getInstance().fromJsonRoom(room);
+            room = gson.fromJson(json, JsonRoom.class); // parse JSON to object
+            Room.getInstance().clear(); // clear the room
+            Room.getInstance().fromJsonRoom(room); // load the room from JSON
             return true;
         } catch (IOException e) {
             logger.warning("Error reading file: " + jsonFile.getAbsolutePath());
@@ -62,18 +62,18 @@ public class MapLoader {
         }
     }
 
-    public void loadPredefinedMap1() { // todo link to menu
+    public void loadPredefinedMap1() {
         // get resource from predefined map 1;
         InputStream inputStream = getClass().getResourceAsStream("map_1.json");
         loadPredefinedMap(inputStream);
     }
 
-    public void loadPredefinedMap2() { // todo link to menu
+    public void loadPredefinedMap2() {
         InputStream inputStream = getClass().getResourceAsStream("map_2.json");
         loadPredefinedMap(inputStream);
     }
 
-    public void loadPredefinedMap3() { // todo link to menu
+    public void loadPredefinedMap3() {
         InputStream inputStream = getClass().getResourceAsStream("map_3.json");
         loadPredefinedMap(inputStream);
     }

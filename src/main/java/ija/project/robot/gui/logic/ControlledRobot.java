@@ -48,17 +48,17 @@ public class ControlledRobot {
         if (obj instanceof ManualRobot new_robot) {
             ManualRobot old_robot = this.robot;
             if (old_robot != null) {
-                old_robot.unsetControlled();
+                old_robot.unsetControlled(); // Unset the currently controlled robot
             }
-            if (new_robot == old_robot) {
+            if (new_robot == old_robot) { // If the same robot is selected, do not set it again
                 this.robot = null;
                 this.imageView = null;
                 logger.info("Robot controller is now unlinked from robot (" + old_robot.getId() + ")");
                 return;
             }
-            new_robot.setControlled();
+            new_robot.setControlled(); // Set the new robot as controlled
             this.robot = new_robot;
-            this.imageView = robot.getImageView();
+            this.imageView = robot.getImageView(); // Get the image view of the robot
             logger.info("Robot controller is now linked to robot (" + new_robot.getId() + ")");
         } else {
             logger.info("No manual robot found at position (" + pos + ")");

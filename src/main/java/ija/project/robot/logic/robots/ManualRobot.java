@@ -80,7 +80,7 @@ public class ManualRobot extends AbstractRobot {
             case 225: x--; y++; break;
             case 270: x--; break;         // Left
             case 315: x--; y--; break;
-            default: return null;
+            default: return null;         // TODO: Handle other angles, we only support 45-degree increments
         }
 
         Position pos = new Position(x, y);
