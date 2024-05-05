@@ -27,13 +27,12 @@ java -jar ./target/robot-1.0.jar
 
 4. ALL-IN-ONE:
 
-mvn package && mvn javadoc:javadoc && java -jar ./target/robot-1.0.jar
+mvn
 
+Program run:
 
-This commands will compile the project and packages it into a runnable jar file located in the ./target directory.
-And will launch the graphical user interface of the simulator, where you can start interacting with the mobile robots.
+java -jar robot-1.0-jar-with-dependencies.jar
 
+Final JAR archive with dependencies is located in the base directory of the project and is named robot-1.0-jar-with-dependencies.jar.
+Automatically generated Javadoc documentation is located in the javadoc folder in the base directory of the project.
 
-If you need to clean all the compiled files and the jar file, you can use the following command:
-
-mvn clean
