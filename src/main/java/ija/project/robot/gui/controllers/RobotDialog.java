@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05)
+ * Description: This file provides the logic for the robot dialog.
+ * It allows users to configure parameters for both manual and automatic robots.
+ */
 package ija.project.robot.gui.controllers;
 
 import ija.project.robot.gui.interfaces.Dialog;

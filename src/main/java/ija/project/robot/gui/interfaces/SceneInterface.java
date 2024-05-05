@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05)
+ * Description: This file contains the interface loading JavaFX scenes from FXML files.
+ */
+
 package ija.project.robot.gui.interfaces;
 
 import javafx.fxml.FXMLLoader;

@@ -1,3 +1,7 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05)
+ * Description: This file contains a record that represents a position in a 2D space using x and y coordinates.
+ */
 package ija.project.robot.logic.common;
 
 /**

@@ -1,3 +1,7 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05)
+ * Description: This file contains the main entry point for the Robot Simulation application.
+ */
 package ija.project.robot.gui;
 
 import ija.project.robot.gui.controllers.Start;

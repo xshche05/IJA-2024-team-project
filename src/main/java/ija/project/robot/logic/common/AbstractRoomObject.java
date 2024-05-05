@@ -1,3 +1,7 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05)
+ * Description: This file contains the abstract class representing a room object in the robot simulation.
+ */
 package ija.project.robot.logic.common;
 
 import javafx.scene.image.ImageView;

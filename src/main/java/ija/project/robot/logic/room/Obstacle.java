@@ -1,3 +1,7 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05)
+ * Description: This file contains the logic for the obstacle in the simulation.
+ */
 package ija.project.robot.logic.room;
 
 import ija.project.robot.gui.controllers.Playground;
@@ -11,13 +15,15 @@ import java.util.Objects;
 import static ija.project.robot.RobotApp.logger;
 
 /**
- * Represents an obstacle within the room that robots must avoid.
- * Obstacles are static and cannot be moved or interacted with by robots.
+ * Represents an obstacle within the robot simulation environment.
+ * Obstacles are immovable objects that can block the path of robots.
  */
 public class Obstacle extends AbstractRoomObject {
 
     /**
-     * Initializes a new obstacle at the specified position.
+     * Constructs an Obstacle at a specified position and initializes its graphical representation.
+     *
+     * @param pos The position in the grid where the obstacle is placed.
      */
     public Obstacle(Position pos) {
         super(pos);

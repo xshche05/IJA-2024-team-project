@@ -1,3 +1,8 @@
+/*
+ * Author: Artur Sultanov (xsulta01)
+ * Description: About dialog controller file, that provides the logic for the About dialog.
+ */
+
 package ija.project.robot.gui.controllers;
 
 import ija.project.robot.gui.interfaces.Dialog;

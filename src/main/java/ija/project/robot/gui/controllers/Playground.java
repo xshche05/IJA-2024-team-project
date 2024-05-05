@@ -1,3 +1,9 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file contains the implementation of the Playground controller. It handles the user interactions with the playground scene.
+ * It allows users to add robots and obstacles to the room, start and pause the simulation, and control the movement of robots.
+ * Initializes the UI components and prepares the simulation environment.
+ */
 package ija.project.robot.gui.controllers;
 
 import ija.project.robot.gui.interfaces.MenuInterface;
@@ -21,6 +27,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import javafx.application.Platform;
 
 import static ija.project.robot.RobotApp.logger;
 
@@ -238,13 +245,46 @@ public class Playground implements MenuInterface, SceneInterface {
     }
 
     /**
+     * Disables all user interface buttons during playback and re-enables them after playback finishes.
+     * This method improves application responsiveness by not blocking the UI thread and provides clear feedback.
+     */
+    private void disableButtonsDuringPlayback() {
+        // Helper method to toggle the disable state of buttons
+        toggleButtonState(true);  // Disable all buttons
+        // Asynchronously wait for playback to finish
+        new Thread(() -> {
+            while (!AbstractRobot.isPlayBackFinished()) {
+                try {
+                    Thread.sleep(100); // Reduce CPU usage
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Restore the interrupted status
+                    logger.severe("Playback waiting thread was interrupted.");
+                    return;
+                }
+            }
+            // Re-enable buttons on the UI thread after playback finishes
+            Platform.runLater(() -> toggleButtonState(false));
+        }).start();
+    }
+
+    /**
+     * Helper method to toggle the enable/disable state of UI button groups.
+     * @param state true to disable buttons, false to enable them.
+     */
+    private void toggleButtonState(boolean state) {
+        logger.info("Toggling button state: " + state);
+        List<List<Node>> buttonGroups = List.of(addGroup, removeGroup, startGroup, pauseGroup, moveGroup);
+        for (List<Node> group : buttonGroups) {
+            for (Node node : group) {
+                node.setDisable(state);
+            }
+        }
+    }
+
+    /**
      * Removes all objects from the current room.
      */
     public void RemoveAllAction() {
-        if (!AbstractRobot.isPlayBackFinished()) {
-            logger.warning("Playback is running, cannot edit objects");
-            return;
-        }
         logger.info("Remove all button pressed");
         Room room = Room.getInstance();
         room.removeAll(); // Remove all objects from the room
@@ -254,10 +294,6 @@ public class Playground implements MenuInterface, SceneInterface {
      * Removes all obstacles from the current room.
      */
     public void RemoveObstaclesAction() {
-        if (!AbstractRobot.isPlayBackFinished()) {
-            logger.warning("Playback is running, cannot edit objects");
-            return;
-        }
         logger.info("Remove obstacles button pressed");
         Room room = Room.getInstance();
         room.removeObstacles(); // Remove all obstacles from the room
@@ -267,10 +303,6 @@ public class Playground implements MenuInterface, SceneInterface {
      * Removes all robots from the current room.
      */
     public void RemoveRobotsAction() {
-        if (!AbstractRobot.isPlayBackFinished()) {
-            logger.warning("Playback is running, cannot edit objects");
-            return;
-        }
         logger.info("Remove robots button pressed");
         Room room = Room.getInstance(); // Remove all robots from the room
         room.removeRobots();
@@ -415,7 +447,6 @@ public class Playground implements MenuInterface, SceneInterface {
      * Calls the {@link ControlledRobot#turnRight()} method to turn the selected robot right.
      */
     public void RightAction(){
-        logger.info("Right button pressed");
         ControlledRobot.getInstance().turnRight();
     }
 
@@ -430,6 +461,11 @@ public class Playground implements MenuInterface, SceneInterface {
         int x = (int) e.getX() / gridWidth;
         int y = (int) e.getY() / gridWidth;
         logger.info("Grid cell clicked: (" + x + ", " + y + ")");
+
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.info("Playback is running, cannot handle mouse clicks");
+            return;
+        }
 
         if (e.getButton() == MouseButton.SECONDARY) {
             logger.info("Right mouse button clicked");
@@ -454,6 +490,7 @@ public class Playground implements MenuInterface, SceneInterface {
         logger.info("Playback button pressed");
         Room room = Room.getInstance();
         room.playBackTransition();
+        disableButtonsDuringPlayback();
     }
 
     /**

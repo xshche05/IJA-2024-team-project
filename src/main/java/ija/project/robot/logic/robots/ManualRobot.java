@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file provides the logic for the manual robot class in the application,
+ * including its movement and rotation.
+ */
 package ija.project.robot.logic.robots;
 
 import ija.project.robot.gui.controllers.Playground;
@@ -51,7 +56,8 @@ public class ManualRobot extends AbstractRobot {
     }
 
     /**
-     * Sets the robot as the controlled robot in the simulation, changing its image to indicate it's under control.
+     * Sets the robot as the controlled robot in the simulation,
+     * changing image to indicate that robot is under user control.
      */
     public void setControlled() {
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("selected_robot.png")));
@@ -122,7 +128,10 @@ public class ManualRobot extends AbstractRobot {
         }
     }
 
-
+    /**
+     * Rotates the robot left.
+     * Update image view rotation by the step angle.
+     */
     public void Left() {
         semaphore.acquireUninterruptibly();
         rotate(-this.stepAngle);
@@ -140,6 +149,10 @@ public class ManualRobot extends AbstractRobot {
         });
     }
 
+    /**
+     * Rotates the robot right.
+     * Update image view rotation by the step angle.
+     */
     private void Right() {
         semaphore.acquireUninterruptibly();
         rotate(this.stepAngle);
@@ -159,6 +172,11 @@ public class ManualRobot extends AbstractRobot {
         });
     }
 
+    /**
+     * Robot does nothing.
+     * Needed for correct seamless playback and simulation of automatic and manual robots,
+     * when automatic robot moves and manual robot does nothing.
+     */
     private void Nothing() {
         semaphore.acquireUninterruptibly();
         Transition tt = new Transition() {
@@ -216,22 +234,34 @@ public class ManualRobot extends AbstractRobot {
         tickSemaphore.release();
     }
 
+    /**
+     * Indicate that robot starts moving.
+     */
     public void start() {
         running = true;
         logger.info("ManualRobot ("+this.id+") got request to start");
     }
 
+    /**
+     * Indicate that robot's movement was paused.
+     */
     public void pause() {
         queue.clear();
         running = false;
         logger.info("ManualRobot ("+this.id+") got request to pause CLEARED QUEUE");
     }
 
+    /**
+     * Indicate that robot has been rotated left.
+     */
     public void rotateLeft() {
         queue.add("Left");
         logger.info("ManualRobot ("+this.id+") got request to rotate left ADDED TO QUEUE");
     }
 
+    /**
+     * Indicate that robot has been rotated right.
+     */
     public void rotateRight() {
         queue.add("Right");
         logger.info("ManualRobot ("+this.id+") got request to rotate right ADDED TO QUEUE");

@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05)
+ * Description: This file contains the logic for the controlled robot in the simulation.
+ * It provides methods to set, move, and interact with a manually controlled robot.
+ */
 package ija.project.robot.gui.logic;
 
 import ija.project.robot.logic.common.AbstractRoomObject;
