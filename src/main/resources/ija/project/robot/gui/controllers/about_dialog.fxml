@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="320.0" maxWidth="480.0" minHeight="200.0" minWidth="300.0" prefHeight="320.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ija.project.robot.gui.controllers.AboutDialog">
+<AnchorPane maxHeight="320.0" maxWidth="480.0" minHeight="200.0" minWidth="300.0" prefHeight="320.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ija.project.robot.gui.controllers.AboutDialog">
    <children>
       <ImageView fitHeight="120.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="5.0">
          <image>
