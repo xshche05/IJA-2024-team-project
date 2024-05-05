@@ -16,15 +16,20 @@ import static ija.project.robot.RobotApp.logger;
  * The dialog adapts based on the type of robot being configured: distance input is disabled for manual robots.
  */
 public class RobotDialog extends Dialog {
+    /** Speed input field. */
     public TextField speedInput;
+    /** Angle input field. */
     public TextField angleInput1;
+    /** Collision detection input field */
     public TextField distInput;
-
+    /** Data validation flag */
     public static boolean validData;
+    /** Angle value */
     public static int Angle;
+    /** Speed value */
     public static int Speed;
+    /** Distance value */
     public static int Distance;
-
     private String request; // "MANUAL" or "AUTOMATIC" robot context
 
     /**

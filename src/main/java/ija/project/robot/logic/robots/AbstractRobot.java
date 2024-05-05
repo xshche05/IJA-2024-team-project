@@ -20,15 +20,22 @@ import static ija.project.robot.gui.controllers.Playground.playSemaphore;
  * This class provides a framework for defining robots' movement strategies, animation transitions, and handling their playback.
  */
 public abstract class AbstractRobot extends AbstractRoomObject {
+    /** The current angle of the robot in degrees. */
     protected int currentAngle;
+    /** The speed at which the robot moves. */
     protected int speed = 1;
+    /** The angle of each rotation step. */
     protected int stepAngle = 45;
+    /** The stack of transitions for playback animations. */
     protected Stack<Transition> play_back_transition = new Stack<>();
+    /** The position to return to after playback. */
     protected Position playBackPosition;
+    /** The angle to return to after playback. */
     protected int playBackAngle;
+    /** The semaphore for controlling access to shared resources. */
     protected final Semaphore resourceSemaphore = new Semaphore(1);
-    public boolean backPlaying = false;
-    private int backPlaySped = 4;
+    private boolean backPlaying = false;
+    private final int backPlaySped = 4;
 
     /**
      * Constructs a new AbstractRobot at a given position with a default angle of zero degrees.

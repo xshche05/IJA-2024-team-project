@@ -30,7 +30,7 @@ public class ManualRobot extends AbstractRobot {
 
     private final Semaphore tickSemaphore = new Semaphore(1);
 
-    public boolean running = false;
+    private boolean running = false;
 
     /**
      * Constructs a ManualRobot at a specified position with a predefined image.

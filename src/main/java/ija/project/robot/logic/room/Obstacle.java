@@ -10,8 +10,15 @@ import java.util.Objects;
 
 import static ija.project.robot.RobotApp.logger;
 
+/**
+ * Represents an obstacle within the room that robots must avoid.
+ * Obstacles are static and cannot be moved or interacted with by robots.
+ */
 public class Obstacle extends AbstractRoomObject {
 
+    /**
+     * Initializes a new obstacle at the specified position.
+     */
     public Obstacle(Position pos) {
         super(pos);
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("wall.png")));

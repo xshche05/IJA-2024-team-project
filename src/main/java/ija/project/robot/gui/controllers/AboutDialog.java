@@ -20,6 +20,11 @@ public class AboutDialog extends Dialog {
 
     @FXML public Label aboutLabel;
 
+    /**
+     * Initializes the About dialog.
+     * This method is called automatically when the FXML file is loaded.
+     * It sets the dialog title and the about text.
+     */
     public void initialize() {
         // Set the dialog title
         String about = """

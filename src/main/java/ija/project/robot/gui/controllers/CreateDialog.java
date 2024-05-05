@@ -21,12 +21,21 @@ import static ija.project.robot.RobotApp.logger;
  * Error messages are displayed if the inputs are invalid.
  */
 public class CreateDialog extends Dialog {
-    @FXML public TextField rowsInput; // FXML annotation to inject the rows input field
-    @FXML public TextField colsInput; // FXML annotation to inject the cols input field
-    @FXML public Button okButton;
-    @FXML public Button cancelButton;
-    @FXML public Label errorLabel; // FXML annotation to inject the error label
 
+    /** Row number input field. */
+    @FXML public TextField rowsInput;
+    /** Column number input field. */
+    @FXML public TextField colsInput;
+    /** OK button. */
+    @FXML public Button okButton;
+    /** Cancel button. */
+    @FXML public Button cancelButton;
+    /** Error message label. */
+    @FXML public Label errorLabel;
+
+    /**
+     * OK button action handler.
+     */
     public void Ok() {
         errorLabel.setText("");
         try {
@@ -55,6 +64,10 @@ public class CreateDialog extends Dialog {
         }
     }
 
+    /**
+     * Retrieves and returns the scene for the Create dialog using the {@link SceneInterface}.
+     * @return The loaded {@link Scene} for the Create dialog.
+     */
     public static Scene getScene() {
         return SceneInterface.getScene(CreateDialog.class, "create_dialog.fxml"); // Load the Create dialog scene
     }

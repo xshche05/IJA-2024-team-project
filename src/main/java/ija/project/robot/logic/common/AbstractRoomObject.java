@@ -8,9 +8,13 @@ import javafx.scene.image.ImageView;
  * by defining basic properties and behaviors shared among them.
  */
 public abstract class AbstractRoomObject {
-    protected Position pos; // The position of the object in the room
-    protected int id; // The unique identifier of the object
-    protected ImageView imageView; // The image view representing the object in the UI
+
+    /** The position of the object in the room. */
+    protected Position pos;
+    /** The unique identifier for the object. */
+    protected int id;
+    /** The ImageView representing the object in the UI. */
+    protected ImageView imageView;
     private static int id_counter = 0; // Counter for assigning unique IDs to objects
 
     /**

@@ -11,9 +11,12 @@ import static ija.project.robot.RobotApp.logger;
  * An abstract class representing a dialog window in the application.
  * This class provides a common interface for dialog windows, including OK and Cancel actions.
  */
-public abstract class Dialog implements SceneInterface{
+public abstract class Dialog implements SceneInterface {
+    /** OK button. */
     @FXML public Button okButton;
+    /** Cancel button. */
     @FXML public Button cancelButton;
+    /** Error message label. */
     @FXML public Label errorLabel;
 
     /**

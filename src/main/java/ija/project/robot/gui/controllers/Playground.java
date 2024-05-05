@@ -32,29 +32,37 @@ import static ija.project.robot.RobotApp.logger;
  * and control the movement of robots.
  */
 public class Playground implements MenuInterface, SceneInterface {
-    @FXML public AnchorPane AnchorPane; // Main pane for the playground
+    /** The anchor pane for the playground scene */
+    @FXML public AnchorPane AnchorPane;
+    /** The menu bar (Save as) for the playground scene */
     @FXML public MenuItem MenuFileSaveAs;
+    /** The menu bar (Load file) for the playground scene */
     @FXML public MenuItem MenuFileLoad;
+    /** The menu bar (New) for the playground scene */
     @FXML public MenuItem MenuNewFile;
+    /** Box for grid */
     @FXML public HBox HBoxGrid;
+    /** Box for upper buttons */
     @FXML public HBox HBoxBttnDown;
+    /** Box for lower buttons */
     @FXML public HBox HBoxBttnUp;
-
-    public static final int gridWidth = 32; // Width of each cell in the grid
-    public static final int tickPeriod = 1000; // Milliseconds between each application tick
-    public GridPane grid; // Grid layout for placing robots and obstacles
-    private Thread tickThread; // Thread for running the simulation ticks
-    public static String createRequest; // Tracks requests for creating new robots or obstacles
-    private final List<Node> addGroup = new ArrayList<>(); // Group of buttons for adding objects
-    private final List<Node> removeGroup = new ArrayList<>(); // Group of buttons for removing objects
-    private final List<Node> startGroup = new ArrayList<>(); // Group of buttons for starting the simulation
-    private final List<Node> pauseGroup = new ArrayList<>(); // Group of buttons for pausing the simulation
-    private final List<Node> moveGroup = new ArrayList<>(); // Group of buttons for moving selected robot
-
-    private String currentMode = "ADD"; // Current mode of the playground
-    private String lastEditMode = "ADD"; // Last edit mode of the playground
-
-    public static final Semaphore playSemaphore = new Semaphore(1); // Semaphore for managing playback control
+    /** Grid cell size */
+    public static final int gridWidth = 32;
+    /** Tick period for simulation in ms */
+    public static final int tickPeriod = 1000;
+    /** The create request for the robot dialog window*/
+    public static String createRequest;
+    /** The semaphore for controlling the simulation animation starts to avoid play() errors */
+    public static final Semaphore playSemaphore = new Semaphore(1);
+    private GridPane grid;
+    private Thread tickThread;
+    private final List<Node> addGroup = new ArrayList<>();
+    private final List<Node> removeGroup = new ArrayList<>();
+    private final List<Node> startGroup = new ArrayList<>();
+    private final List<Node> pauseGroup = new ArrayList<>();
+    private final List<Node> moveGroup = new ArrayList<>();
+    private String currentMode = "ADD";
+    private String lastEditMode = "ADD";
 
     /**
      * Initializes the controller setup by configuring UI components and preparing the simulation environment.
@@ -69,45 +77,63 @@ public class Playground implements MenuInterface, SceneInterface {
         lastEditMode = "ADD";
     }
 
+    /**
+     * Creates a new room and resets the playground scene.
+     */
     @Override
     @FXML
     public void CreateNew() {
         new Menu().initialize().CreateNew(AnchorPane);
     }
 
-
+    /**
+     * Loads a room from a file and updates the playground scene.
+     */
     @Override
     @FXML
     public void FileLoad() {
         new Menu().initialize().FileLoad(AnchorPane);
     }
 
-
+    /**
+     * Saves the current room to a file.
+     */
     @Override
     @FXML
     public void FileSaveAs() {
         new Menu().initialize().FileSaveAs(AnchorPane);
     }
 
-
+    /**
+     * Loads a predefined map 1 to the playground scene.
+     */
     @Override
     @FXML
     public void LoadPredefinedMap1() {
         new Menu().initialize().LoadPredefinedMap1(AnchorPane);
     }
 
+    /**
+     * Loads a predefined map 2 to the playground scene.
+     */
     @Override
     @FXML
     public void LoadPredefinedMap2() {
         new Menu().initialize().LoadPredefinedMap2(AnchorPane);
     }
 
+    /**
+     * Loads a predefined map 3 to the playground scene.
+     */
     @Override
     @FXML
     public void LoadPredefinedMap3() {
         new Menu().initialize().LoadPredefinedMap3(AnchorPane);
     }
 
+    /**
+     * Shows the about dialog for the application.
+     */
     @Override
     @FXML
     public void About() {

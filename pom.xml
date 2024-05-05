@@ -7,11 +7,15 @@
     <groupId>ija.project</groupId>
     <artifactId>robot</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
     <name>robot</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.0</junit.version>
+        <javafx.version>17.0.6</javafx.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -116,16 +120,14 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.5.3</version>
-        </dependency>
     </dependencies>
 
     <build>
+        <!-- Default goal -->
+        <defaultGoal>clean package javadoc:javadoc clean</defaultGoal>
+
         <plugins>
+            <!-- Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -135,35 +137,50 @@
                     <target>17</target>
                 </configuration>
             </plugin>
-            <!-- Make jar executable with all dependencies for java FX application -->
+            <!-- JAR Assembly -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.3</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>ija.project.robot.RobotApp</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <outputDirectory>${project.basedir}</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
+                        <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>single</goal>
                         </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>ija.project.robot.RobotApp</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-
+            <!-- Javadoc -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.3</version>
                 <configuration>
-                    <show>private</show>
+                    <show>protected</show>
                     <nohelp>true</nohelp>
+                    <reportOutputDirectory>${project.basedir}/javadoc</reportOutputDirectory>
+                    <outputDirectory>${project.basedir}/javadoc</outputDirectory>
+                </configuration>
+            </plugin>
+            <!-- JavaFX run -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>ija.project.robot.RobotApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>

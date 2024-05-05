@@ -20,7 +20,6 @@ import static ija.project.robot.gui.controllers.Playground.playSemaphore;
  * This robot can perform automatic pathfinding, avoid obstacles, and manage its movement through transitions.
  */
 public class AutomatedRobot extends AbstractRobot {
-
     private int viewDistance = 1; // The maximum distance the robot can view and move towards in a straight line.
     private boolean moving = false; // Indicates if the robot is currently moving.
     private final Semaphore transitionSemaphore = new Semaphore(1); // Controls access to transition animations.

@@ -18,53 +18,79 @@ import static ija.project.robot.RobotApp.logger;
  * including loading files, saving files, accessing help, and creating new projects.
  */
 public class Start implements MenuInterface, SceneInterface {
+    /** Anchor pane for the start scene. */
     @FXML
-    public AnchorPane AnchorPane; // fx:id="AnchorPane"
+    public AnchorPane AnchorPane;
+    /** Load file menu item. */
     @FXML
-    public MenuItem MenuFileLoad; // fx:id="MenuFileLoad"
+    public MenuItem MenuFileLoad;
+    /** Save as menu item. */
     @FXML
-    public MenuItem MenuFileSaveAs; // fx:id="MenuFileSaveAs"
+    public MenuItem MenuFileSaveAs;
+    /** Create new button. */
     @FXML
     public Button CreateNew;
+    /** Create new menu item. */
     @FXML
     public MenuItem MenuNewFile;
 
+    /**
+     * Loading the map configuration from the file.
+     */
     @Override
     @FXML
     public void FileLoad() {
         new Menu().initialize().FileLoad(AnchorPane);
     }
 
+    /**
+     * Saving the map configuration to the file.
+     */
     @Override
     @FXML
     public void FileSaveAs() {
         new Menu().initialize().FileSaveAs(AnchorPane);
     }
 
+    /**
+     * Displaying the About dialog.
+     */
     @Override
     @FXML
     public void About() {
         new Menu().initialize().About(AnchorPane);
     }
 
+    /**
+     * Creating a new map configuration.
+     */
     @Override
     @FXML
     public void CreateNew() {
         new Menu().initialize().CreateNew(AnchorPane);
     }
 
+    /**
+     * Loading the predefined map configuration 1.
+     */
     @Override
     @FXML
     public void LoadPredefinedMap1() {
         new Menu().initialize().LoadPredefinedMap1(AnchorPane);
     }
 
+    /**
+     * Loading the predefined map configuration 2.
+     */
     @Override
     @FXML
     public void LoadPredefinedMap2() {
         new Menu().initialize().LoadPredefinedMap2(AnchorPane);
     }
 
+    /**
+     * Loading the predefined map configuration 3.
+     */
     @Override
     @FXML
     public void LoadPredefinedMap3() {
