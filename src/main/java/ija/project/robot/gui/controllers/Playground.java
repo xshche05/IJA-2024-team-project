@@ -476,79 +476,89 @@ public class Playground implements MenuInterface, SceneInterface {
     /**
      * Handles the user left mouse button clicking on the grid.
      * The method checks the current mode and then calls the appropriate action based on the mode:
-     * - In 'START' mode, selects the robot at the clicked cell.
-     * - In 'ADD' mode, adds a robot or obstacle to the clicked cell.
-     * - In 'REMOVE' mode, removes the object at the clicked cell.
-     *
+     * <ul>
+     *  <li>In 'START' mode, selects the robot at the clicked cell.
+     *  <li>In 'ADD' mode, adds a robot or obstacle to the clicked cell.
+     *  <li>In 'REMOVE' mode, removes the object at the clicked cell.
+     * </ul>
      * @param x The x-coordinate of the cell that was clicked.
      * @param y The y-coordinate of the cell that was clicked.
      */
     private void HandleLeftClick(int x, int y){
-        if (currentMode.equals("START")) {
-            logger.info("Grid cell clicked in start mode, selecting robot");
-            ControlledRobot.getInstance().setRobot(new Position(x, y));
-
-        } else if (currentMode.equals("ADD")) {
-            if (((ToggleButton)addGroup.get(1)).isSelected()) {
-                logger.info("Grid cell clicked in add mode, adding auto robot");
-                createRequest = "AUTO";
-                if (Room.getInstance().getObjectAt(new Position(x, y)) != null) {
-                    logger.warning("Cannot add robot to occupied cell");
-                    return;
+        switch (currentMode) {
+            case "START" -> {
+                logger.info("Grid cell clicked in start mode, selecting robot");
+                ControlledRobot.getInstance().setRobot(new Position(x, y));
+            }
+            case "ADD" -> {
+                if (((ToggleButton) addGroup.get(1)).isSelected()) {
+                    logger.info("Grid cell clicked in add mode, adding auto robot");
+                    createRequest = "AUTO";
+                    if (Room.getInstance().getObjectAt(new Position(x, y)) != null) {
+                        logger.warning("Cannot add robot to occupied cell");
+                        return;
+                    }
+                    OpenRobotDialog();
+                    if (RobotDialog.validData) {
+                        logger.info("Adding auto robot at position: (" + x + ", " + y + ")");
+                        logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle + ", distance: " + RobotDialog.Distance);
+                        AutomatedRobot robot = Room.getInstance().addAutoRobot(new Position(x, y));
+                        robot.setSpeed(RobotDialog.Speed);
+                        robot.setStepAngle(RobotDialog.Angle);
+                        robot.setViewDistance(RobotDialog.Distance);
+                    }
                 }
-                OpenRobotDialog();
-                if (RobotDialog.validData) {
-                    logger.info("Adding auto robot at position: (" + x + ", " + y + ")");
-                    logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle + ", distance: " + RobotDialog.Distance);
-                    AutomatedRobot robot = Room.getInstance().addAutoRobot(new Position(x, y));
-                    robot.setSpeed(RobotDialog.Speed);
-                    robot.setStepAngle(RobotDialog.Angle);
-                    robot.setViewDistance(RobotDialog.Distance);
+                if (((ToggleButton) addGroup.get(2)).isSelected()) {
+                    logger.info("Grid cell clicked in add mode, adding manual robot");
+                    createRequest = "MANUAL";
+                    if (Room.getInstance().getObjectAt(new Position(x, y)) != null) {
+                        logger.warning("Cannot add robot to occupied cell");
+                        return;
+                    }
+                    OpenRobotDialog();
+                    if (RobotDialog.validData) {
+                        logger.info("Adding manual robot at position: (" + x + ", " + y + ")");
+                        logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle);
+                        ManualRobot robot = Room.getInstance().addManualRobot(new Position(x, y));
+                        robot.setSpeed(RobotDialog.Speed);
+                        robot.setStepAngle(RobotDialog.Angle);
+                    }
+                }
+                if (((ToggleButton) addGroup.get(3)).isSelected()) {
+                    logger.info("Grid cell clicked in add mode, adding obstacle");
+                    if (Room.getInstance().getObjectAt(new Position(x, y)) != null) {
+                        logger.warning("Cannot add obstacle to occupied cell");
+                        return;
+                    }
+                    logger.info("Adding obstacle at position: (" + x + ", " + y + ")");
+                    Room.getInstance().addObstacle(new Position(x, y));
                 }
             }
-            if (((ToggleButton)addGroup.get(2)).isSelected()) {
-                logger.info("Grid cell clicked in add mode, adding manual robot");
-                createRequest = "MANUAL";
-                if (Room.getInstance().getObjectAt(new Position(x, y)) != null) {
-                    logger.warning("Cannot add robot to occupied cell");
-                    return;
-                }
-                OpenRobotDialog();
-                if (RobotDialog.validData) {
-                    logger.info("Adding manual robot at position: (" + x + ", " + y + ")");
-                    logger.info("Speed: " + RobotDialog.Speed + ", angle: " + RobotDialog.Angle);
-                    ManualRobot robot = Room.getInstance().addManualRobot(new Position(x, y));
-                    robot.setSpeed(RobotDialog.Speed);
-                    robot.setStepAngle(RobotDialog.Angle);
-                }
+            case "REMOVE" -> {
+                logger.info("Grid cell clicked in remove mode, removing object");
+                Room.getInstance().removeFrom(new Position(x, y));
             }
-            if (((ToggleButton)addGroup.get(3)).isSelected()) {
-                logger.info("Grid cell clicked in add mode, adding obstacle");
-                if (Room.getInstance().getObjectAt(new Position(x, y)) != null) {
-                    logger.warning("Cannot add obstacle to occupied cell");
-                    return;
-                }
-                logger.info("Adding obstacle at position: (" + x + ", " + y + ")");
-                Room.getInstance().addObstacle(new Position(x, y));
-            }
-        } else if (currentMode.equals("REMOVE")) {
-            logger.info("Grid cell clicked in remove mode, removing object");
-            Room.getInstance().removeFrom(new Position(x, y));
-        } else {
-            logger.finest("Grid cell clicked in unknown mode!!!");
+            default -> logger.finest("Grid cell clicked in unknown mode!!!");
         }
     }
 
     /**
      * Handles the user right mouse button clicking on the grid.
-     * The method checks the contents of the clicked cell and then calls the appropriate action based on the object present:
-     * - If an automatic or manual robot is clicked, opens the robot dialog to update its parameters.
-     * - If an empty cell or obstacle is clicked, performs no action.
-     *
+     * The method checks the contents of the clicked cell and then calls the appropriate action based on the object:
+     * <ul>
+     *  <li>If an automatic or manual robot is clicked, opens the robot dialog to update its parameters.
+     *  <li>If an empty cell or obstacle is clicked, performs no action.
+     * </ul>
      * @param x The x-coordinate of the cell that was clicked.
      * @param y The y-coordinate of the cell that was clicked.
      */
     private void HandleRightClick(int x, int y){
+        ToggleButton strtbttn = (ToggleButton) startGroup.get(0);
+        if(strtbttn.isSelected()) {
+            logger.info("Cannot edit objects in 'START' mode");
+            return;
+        }
+
         var object = Room.getInstance().getObjectAt(new Position(x, y));
         if (object instanceof AutomatedRobot robot) {
             logger.info("Right clicked on auto robot");
