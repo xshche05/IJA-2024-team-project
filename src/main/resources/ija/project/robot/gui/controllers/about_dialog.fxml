@@ -39,10 +39,16 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                      <children>
-                        <Pane prefHeight="200.0" prefWidth="200.0">
+                        <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: FFFFFF; -fx-background-radius: 30;">
                            <children>
-                              <Label text="Label" />
+                              <Label fx:id="aboutLabel" alignment="TOP_CENTER" layoutX="13.0" prefHeight="232.0" prefWidth="175.0" textAlignment="JUSTIFY" wrapText="true">
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding></Label>
                            </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
                         </Pane>
                      </children>
                   </HBox>
