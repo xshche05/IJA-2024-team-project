@@ -9,13 +9,25 @@ import java.util.Objects;
 
 import static ija.project.robot.RobotApp.logger;
 
+/**
+ * A singleton class responsible for loading map configurations from JSON files into the Room.
+ * This class provides methods to load maps from specific files as well as predefined maps embedded in the application.
+ */
 public class MapLoader {
 
     private static MapLoader instance = null;
 
+    /**
+     * Private constructor to prevent instantiation outside of {@link #getInstance()}.
+     */
     private MapLoader() {
     }
 
+    /**
+     * Returns a singleton instance of MapLoader.
+     *
+     * @return The singleton instance of the MapLoader.
+     */
     public static MapLoader getInstance() {
         if (instance == null) {
             instance = new MapLoader();
@@ -23,6 +35,12 @@ public class MapLoader {
         return instance;
     }
 
+    /**
+     * Loads a room configuration from a JSON file.
+     *
+     * @param jsonFile The file object representing the JSON file containing the room configuration.
+     * @return True if the map was successfully loaded and false if there were any errors during file reading or JSON parsing.
+     */
     public boolean loadMap(File jsonFile) {
         InputStream inputStream;
         try {
@@ -47,6 +65,11 @@ public class MapLoader {
         return false;
     }
 
+    /**
+     * Loads a predefined map configuration from a JSON file.
+     *
+     * @param jsonFile The input stream representing the JSON file containing the room configuration.
+     */
     public void loadPredefinedMap(InputStream jsonFile) {
         JsonRoom room;
         try {
@@ -62,17 +85,26 @@ public class MapLoader {
         }
     }
 
+    /**
+     * Loads the first predefined map configuration from a JSON file.
+     */
     public void loadPredefinedMap1() {
         // get resource from predefined map 1;
         InputStream inputStream = getClass().getResourceAsStream("map_1.json");
         loadPredefinedMap(inputStream);
     }
 
+    /**
+     * Loads the second predefined map configuration from a JSON file.
+     */
     public void loadPredefinedMap2() {
         InputStream inputStream = getClass().getResourceAsStream("map_2.json");
         loadPredefinedMap(inputStream);
     }
 
+    /**
+     * Loads the third predefined map configuration from a JSON file.
+     */
     public void loadPredefinedMap3() {
         InputStream inputStream = getClass().getResourceAsStream("map_3.json");
         loadPredefinedMap(inputStream);

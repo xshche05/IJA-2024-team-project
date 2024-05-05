@@ -162,16 +162,26 @@ public class AutomatedRobot extends AbstractRobot {
         tickSemaphore.release();
     }
 
+    /**
+     * Indicate that robot starts movement.
+     */
     public void startMoving() {
         moving = true;
         logger.info("AutomatedRobot (" + this.id + ") started moving");
     }
 
+    /**
+     * Indicate that robot start stops movement.
+     */
     public void stopMoving() {
         moving = false;
         logger.info("AutomatedRobot (" + this.id + ") stopped moving");
     }
 
+    /**
+     * Returns the view distance of the robot.
+     * @return The view distance of the robot.
+     */
     public int getViewDistance() {
         return viewDistance;
     }

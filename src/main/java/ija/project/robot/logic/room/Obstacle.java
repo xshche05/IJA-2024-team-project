@@ -10,8 +10,17 @@ import java.util.Objects;
 
 import static ija.project.robot.RobotApp.logger;
 
+/**
+ * Represents an obstacle within the robot simulation environment.
+ * Obstacles are immovable objects that can block the path of robots.
+ */
 public class Obstacle extends AbstractRoomObject {
 
+    /**
+     * Constructs an Obstacle at a specified position and initializes its graphical representation.
+     *
+     * @param pos The position in the grid where the obstacle is placed.
+     */
     public Obstacle(Position pos) {
         super(pos);
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("wall.png")));

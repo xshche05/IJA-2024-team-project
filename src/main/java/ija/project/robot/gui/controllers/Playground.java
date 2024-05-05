@@ -267,6 +267,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * When disabled, this method disables buttons, and users can remove robots or obstacles from the canvas.
      */
     public void AddOrRemoveAction() {
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         ToggleButton addBttn = (ToggleButton) addGroup.get(0);
         if (addBttn.isSelected()){
             addBttn.setText("REMOVE MODE");
@@ -323,6 +327,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * When the simulation is paused, it allows editing and disables movement controls.
      */
     public void StartPauseAction(){
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         ToggleButton strtbttn = (ToggleButton) startGroup.get(0);
         if (!strtbttn.isSelected()){
             currentMode = lastEditMode;
@@ -371,6 +379,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Calls the {@link ControlledRobot#turnLeft()} method to turn the selected robot left.
      */
     public void LeftAction(){
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         ControlledRobot.getInstance().turnLeft();
     }
 
@@ -380,6 +392,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Calls the {@link ControlledRobot#moveForward()} method to move the selected robot forward.
      */
     public void GoAction(){
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         ControlledRobot.getInstance().moveForward();
     }
 
@@ -389,6 +405,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Calls the {@link ControlledRobot#turnRight()} method to turn the selected robot right.
      */
     public void RightAction(){
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         logger.info("Right button pressed");
         ControlledRobot.getInstance().turnRight();
     }
@@ -425,6 +445,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Calls the {@link Room#playBackTransition()} method to start the playback of the simulation.
      */
     public void StartPlayBack() {
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot press button");
+            return;
+        }
         logger.info("Playback button pressed");
         Room room = Room.getInstance();
         room.playBackTransition();
