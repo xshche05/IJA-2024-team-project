@@ -5,7 +5,7 @@
     {
       "position": {
         "x": 0,
-        "y": 9
+        "y": 7
       },
       "speed": 3,
       "start_angle": 90,
@@ -14,10 +14,10 @@
     {
       "position": {
         "x": 20,
-        "y": 9
+        "y": 7
       },
       "speed": 3,
-      "start_angle": -90,
+      "start_angle": 270,
       "rotation_angle": 45
     }
   ],
