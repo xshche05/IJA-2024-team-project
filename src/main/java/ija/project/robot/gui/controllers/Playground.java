@@ -217,6 +217,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Removes all objects from the current room.
      */
     public void RemoveAllAction() {
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         logger.info("Remove all button pressed");
         Room room = Room.getInstance();
         room.removeAll();
@@ -226,6 +230,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Removes all obstacles from the current room.
      */
     public void RemoveObstaclesAction() {
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         logger.info("Remove obstacles button pressed");
         Room room = Room.getInstance();
         room.removeObstacles();
@@ -235,6 +243,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Removes all robots from the current room.
      */
     public void RemoveRobotsAction() {
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         logger.info("Remove robots button pressed");
         Room room = Room.getInstance();
         room.removeRobots();
@@ -477,6 +489,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * @param y The y-coordinate of the cell that was clicked.
      */
     private void HandleLeftClick(int x, int y){
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         switch (currentMode) {
             case "START" -> {
                 logger.info("Grid cell clicked in start mode, selecting robot");
@@ -545,6 +561,11 @@ public class Playground implements MenuInterface, SceneInterface {
      * @param y The y-coordinate of the cell that was clicked.
      */
     private void HandleRightClick(int x, int y){
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
+
         ToggleButton strtbttn = (ToggleButton) startGroup.get(0);
         if(strtbttn.isSelected()) {
             logger.info("Cannot edit objects in 'START' mode");

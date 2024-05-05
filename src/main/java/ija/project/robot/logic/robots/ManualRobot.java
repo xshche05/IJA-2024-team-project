@@ -19,6 +19,10 @@ import java.util.concurrent.Semaphore;
 import static ija.project.robot.RobotApp.logger;
 import static ija.project.robot.gui.controllers.Playground.playSemaphore;
 
+/**
+ * Represents a manually controlled robot within the simulation.
+ * This robot can be controlled to move in various directions or perform no action based on commands queued in its action queue.
+ */
 public class ManualRobot extends AbstractRobot {
     private final Semaphore semaphore = new Semaphore(1);
 
@@ -28,6 +32,10 @@ public class ManualRobot extends AbstractRobot {
 
     public boolean running = false;
 
+    /**
+     * Constructs a ManualRobot at a specified position with a predefined image.
+     * @param pos The initial position of the robot.
+     */
     public ManualRobot(Position pos) {
         super(pos);
         logger.info("ManualRobot ("+this.id+") created at " + pos);
@@ -42,11 +50,17 @@ public class ManualRobot extends AbstractRobot {
         return imageView;
     }
 
+    /**
+     * Sets the robot as the controlled robot in the simulation, changing its image to indicate it's under control.
+     */
     public void setControlled() {
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("selected_robot.png")));
         imageView.setImage(image);
     }
 
+    /**
+     * Unsets the robot as the controlled robot in the simulation, changing its image back to the default robot image.
+     */
     public void unsetControlled() {
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("robot.png")));
         imageView.setImage(image);
@@ -66,16 +80,19 @@ public class ManualRobot extends AbstractRobot {
             case 225: x--; y++; break;
             case 270: x--; break;         // Left
             case 315: x--; y--; break;
-            default: return null;         // TODO: throw exception
+            default: return null;
         }
 
-        Position pos = new Position(x, y); // todo
+        Position pos = new Position(x, y);
         if (Room.getInstance().isPositionFree(pos) && _checkDiagonals(pos)) {
             return pos;
         }
         return null;
     }
 
+    /**
+     * Moves the robot forward.
+     */
     public void Go() {
         for (int i = 0; i < speed; i++) {
             semaphore.acquireUninterruptibly();
@@ -104,6 +121,7 @@ public class ManualRobot extends AbstractRobot {
             });
         }
     }
+
 
     public void Left() {
         semaphore.acquireUninterruptibly();
