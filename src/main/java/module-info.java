@@ -19,6 +19,13 @@ module ija.project.robot {
     requires com.google.gson;
 
     opens ija.project.robot to javafx.fxml;
-    exports ija.project.robot.maps to com.google.gson;
-    exports ija.project.robot to javafx.graphics;
+    exports ija.project.robot;
+    exports ija.project.robot.gui;
+    exports ija.project.robot.gui.controllers;
+    exports ija.project.robot.gui.logic;
+    exports ija.project.robot.gui.interfaces;
+    exports ija.project.robot.logic.robots;
+    exports ija.project.robot.logic.room;
+    exports ija.project.robot.logic.common;
+    exports ija.project.robot.maps;
 }

@@ -361,7 +361,7 @@ public class Playground implements MenuInterface, SceneInterface {
         }
         room.setGrid(grid);
         room.initGrid();
-        grid.setGridLinesVisible(true);
+//        grid.setGridLinesVisible(true);
     }
 
     private void HandleLeftClick(int x, int y){
