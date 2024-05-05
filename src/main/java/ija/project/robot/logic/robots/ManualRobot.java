@@ -30,6 +30,8 @@ public class ManualRobot extends AbstractRobot {
 
     private boolean controlFlag = false;
 
+    public boolean running = false;
+
     public ManualRobot(Position pos) {
         super(pos);
         logger.info("ManualRobot ("+this.id+") created at " + pos);
@@ -178,6 +180,10 @@ public class ManualRobot extends AbstractRobot {
     public void tick() {
         tickSemaphore.acquireUninterruptibly();
         String action = queue.poll();
+        if (!running) {
+            tickSemaphore.release();
+            return;
+        }
         if (action == null) {
             Nothing();
             logger.info("ManualRobot ("+this.id+") did nothing SKIP");
@@ -199,8 +205,14 @@ public class ManualRobot extends AbstractRobot {
         tickSemaphore.release();
     }
 
+    public void start() {
+        running = true;
+        logger.info("ManualRobot ("+this.id+") got request to start");
+    }
+
     public void pause() {
         queue.clear();
+        running = false;
         logger.info("ManualRobot ("+this.id+") got request to pause CLEARED QUEUE");
     }
 

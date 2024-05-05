@@ -5,6 +5,7 @@ import ija.project.robot.gui.interfaces.SceneInterface;
 import ija.project.robot.gui.logic.ControlledRobot;
 import ija.project.robot.gui.logic.Menu;
 import ija.project.robot.logic.common.Position;
+import ija.project.robot.logic.robots.AbstractRobot;
 import ija.project.robot.logic.robots.AutomatedRobot;
 import ija.project.robot.logic.robots.ManualRobot;
 import ija.project.robot.logic.room.Room;
@@ -250,16 +251,16 @@ public class Playground implements MenuInterface, SceneInterface {
      * The timeline triggers the {@link #tick()} method.
      */
     private void setupTimeline() {
-        tickThread = new Thread(() -> {
-            while (true) {
-                try {
-                    tick();
-                    Thread.sleep((long) (tickPeriod * 0.9));
-                } catch (InterruptedException e) {
-                    logger.warning("Tick thread interrupted");
-                }
-            }
-        });
+//        tickThread = new Thread(() -> {
+//            while (true) {
+//                try {
+//                    tick();
+//                    Thread.sleep((long) (tickPeriod * 0.9));
+//                } catch (InterruptedException e) {
+//                    logger.warning("Tick thread interrupted");
+//                }
+//            }
+//        });
     }
 
     /**
@@ -350,7 +351,22 @@ public class Playground implements MenuInterface, SceneInterface {
             else if (lastEditMode.equals("REMOVE"))
                 HBoxBttnUp.getChildren().addAll(removeGroup);
         } else {
+            if (!AbstractRobot.isPlayBackFinished()) {
+                logger.warning("Cannot start simulation while playback is in progress");
+                strtbttn.setSelected(false);
+                return;
+            }
             currentMode = "START";
+            tickThread = new Thread(() -> {
+                while (true) {
+                    try {
+                        tick();
+                        Thread.sleep((long) (tickPeriod * 0.9));
+                    } catch (InterruptedException e) {
+                        logger.warning("Tick thread interrupted");
+                    }
+                }
+            });
             tickThread.start();
             Room.getInstance().startSimulation();
             strtbttn.setText("PAUSE");

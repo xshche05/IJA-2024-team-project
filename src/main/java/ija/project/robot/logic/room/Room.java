@@ -187,6 +187,8 @@ public class Room {
         for (AbstractRobot robot : robots) {
             if (robot instanceof AutomatedRobot) {
                 ((AutomatedRobot) robot).startMoving();
+            } else if (robot instanceof ManualRobot) {
+                ((ManualRobot) robot).start();
             }
         }
     }
@@ -310,5 +312,9 @@ public class Room {
     }
     public String toString() {
         return getJsonRoomString();
+    }
+
+    public List<AbstractRobot> getRobots() {
+        return robots;
     }
 }

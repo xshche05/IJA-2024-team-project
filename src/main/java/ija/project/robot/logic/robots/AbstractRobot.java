@@ -25,8 +25,7 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     protected Position playBackPosition;
     protected int playBackAngle;
     protected final Semaphore resourceSemaphore = new Semaphore(1);
-
-    public boolean backPlayed = false;
+    public boolean backPlaying = false;
     public AbstractRobot(Position pos) {
         super(pos);
         this.currentAngle = 0;
@@ -86,28 +85,30 @@ public abstract class AbstractRobot extends AbstractRoomObject {
         resourceSemaphore.release();
     }
     public void playBackTransition() {
-        if (backPlayed) {
+        if (backPlaying) {
             return;
         }
-        backPlayed = true;
+        backPlaying = true;
         new Thread(() -> {
             Semaphore semaphore = new Semaphore(1);
             while (!play_back_transition.isEmpty()) {
                 semaphore.acquireUninterruptibly();
                 Transition transition = play_back_transition.pop();
                 playSemaphore.acquireUninterruptibly();
+                transition.setAutoReverse(true);
                 transition.play();
                 transition.setOnFinished(event -> semaphore.release());
                 playSemaphore.release();
             }
-            backPlayed = false;
+            backPlaying = false;
             pos = playBackPosition;
-            currentAngle = playBackAngle;
+            setStartAngle(playBackAngle);
         }).start();
     }
 
     public void setStartAngle(int startAngle) {
         this.currentAngle = startAngle;
+        this.playBackAngle = startAngle;
         imageView.setRotate(startAngle);
     }
 
@@ -120,4 +121,14 @@ public abstract class AbstractRobot extends AbstractRoomObject {
     }
 
     abstract public void tick();
+
+    static public boolean isPlayBackFinished() {
+        List<AbstractRobot> robots = Room.getInstance().getRobots();
+        for (AbstractRobot robot : robots) {
+            if (robot.backPlaying) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
