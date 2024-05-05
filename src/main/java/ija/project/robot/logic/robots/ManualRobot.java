@@ -159,14 +159,14 @@ public class ManualRobot extends AbstractRobot {
                 // do nothing
             }
         };
-        playSemaphore.acquireUninterruptibly();
-        tt.play();
-        playSemaphore.release();
-        tt.setOnFinished(event -> {
-            semaphore.release();
-            logger.info("ManualRobot ("+this.id+") did nothing");
-            addToBackTransition(tt);
-        });
+        try {
+            Thread.sleep((long) Playground.tickPeriod / speed);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        semaphore.release();
+        logger.info("ManualRobot ("+this.id+") did nothing");
+        addToBackTransition(tt);
     }
 
     @Override

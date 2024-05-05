@@ -43,7 +43,7 @@ public class Playground implements MenuInterface, SceneInterface {
     @FXML public HBox HBoxBttnDown;
     @FXML public HBox HBoxBttnUp;
 
-    public static final int gridWidth = 28; // Width of each cell in the grid
+    public static final int gridWidth = 32; // Width of each cell in the grid
     public static final int tickPeriod = 1000; // Milliseconds between each application tick
     public GridPane grid; // Grid layout for placing robots and obstacles
 

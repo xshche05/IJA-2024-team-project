@@ -83,15 +83,11 @@ public abstract class AbstractRobot extends AbstractRoomObject {
             back_tt.setNode(getSelfImageView()); // todo
             play_back_transition.push(back_tt);
         } else {
-            Transition back_transition = new Transition() {
-                {
-                    setCycleDuration(Duration.millis(duration));
-                }
-                @Override
-                protected void interpolate(double v) {
-                }
-            };
-            play_back_transition.push(back_transition);
+            try {
+                Thread.sleep(duration);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         resourceSemaphore.release();
     }
@@ -105,11 +101,11 @@ public abstract class AbstractRobot extends AbstractRoomObject {
             while (!play_back_transition.isEmpty()) {
                 semaphore.acquireUninterruptibly();
                 Transition transition = play_back_transition.pop();
-                playSemaphore.acquireUninterruptibly();
                 transition.setAutoReverse(true);
+                playSemaphore.acquireUninterruptibly();
                 transition.play();
-                transition.setOnFinished(event -> semaphore.release());
                 playSemaphore.release();
+                transition.setOnFinished(event -> semaphore.release());
             }
             backPlaying = false;
             pos = playBackPosition;
