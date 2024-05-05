@@ -19,22 +19,22 @@ import javafx.scene.control.Label;
  */
 public class AboutDialog extends Dialog {
 
-    @FXML
-    public Label aboutLabel;
-
-    private final String about = "Project within the university subject \"IJA\".\n" +
-            "\n" +
-            "\n" +
-            "Built on May 5, 2024\n" +
-            "For educational use only.\n" +
-            "\n" +
-            "\n" +
-            "Authors:\n" +
-            "Kirill Shchetiniuk (xshche05)\n" +
-            "Artur Sultanov (xsulta01)";
+    @FXML public Label aboutLabel;
 
     public void initialize() {
         // Set the dialog title
+        String about = """
+                Project within the university subject "IJA".
+
+
+                Built on May 5, 2024
+                For educational use only.
+
+
+                Authors:
+                Kirill Shchetiniuk (xshche05)
+                Artur Sultanov (xsulta01)""";
+
         aboutLabel.setText(about);
     }
 

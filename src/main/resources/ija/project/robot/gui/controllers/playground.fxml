@@ -54,6 +54,5 @@
             </VBox>
          </children>
       </VBox>
-      <Button fx:id="tick" mnemonicParsing="false" onAction="#tick" text="Tick" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="1.0" />
    </children>
 </AnchorPane>
