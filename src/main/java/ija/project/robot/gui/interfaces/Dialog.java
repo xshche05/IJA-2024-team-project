@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file provides the logic for the dialog windows in the application
+ * and shared dialog buttons logic for handling user actions.
+ */
 package ija.project.robot.gui.interfaces;
 
 import javafx.fxml.FXML;

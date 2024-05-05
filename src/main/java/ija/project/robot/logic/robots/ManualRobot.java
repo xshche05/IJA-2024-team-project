@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file provides the logic for the manual robot class in the application,
+ * including its movement and rotation.
+ */
 package ija.project.robot.logic.robots;
 
 import ija.project.robot.gui.controllers.Playground;

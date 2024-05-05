@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file the position representation that can be used as robots' and obstacles' property
+ * within JSON configuration format.
+ */
 package ija.project.robot.maps;
 
 /**

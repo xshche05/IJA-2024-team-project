@@ -1,3 +1,7 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file contains the logic for loading map configurations from JSON files into the Room.
+ */
 package ija.project.robot.maps;
 
 import com.google.gson.Gson;

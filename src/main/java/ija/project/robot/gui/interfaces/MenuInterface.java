@@ -1,3 +1,7 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file contains the interface for the top menu functionalities in the application.
+ */
 package ija.project.robot.gui.interfaces;
 
 /**

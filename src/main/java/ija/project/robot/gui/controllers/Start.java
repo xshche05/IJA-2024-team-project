@@ -1,3 +1,10 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file provides the logic for the start scene of the application.
+ * It handles the initial interactions of the user with the application's main menu, including loading files,
+ * saving files, accessing help, and creating new projects.
+ */
+
 package ija.project.robot.gui.controllers;
 
 import ija.project.robot.gui.interfaces.MenuInterface;

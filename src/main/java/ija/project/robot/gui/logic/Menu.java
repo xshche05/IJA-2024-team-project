@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file contains the logic of the program's buttons menus.
+ * It handles the menu buttons operations including file loading, saving, and other configurations' management.
+ */
 package ija.project.robot.gui.logic;
 
 import ija.project.robot.gui.controllers.AboutDialog;

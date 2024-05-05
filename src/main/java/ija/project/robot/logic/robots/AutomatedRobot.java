@@ -1,3 +1,9 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file contains the implementation of an automated robot
+ * that can move and rotate autonomously within the simulation environment.
+ * It provides automatic pathfinding, obstacle avoidance, and transition management for the robot's movement.
+ */
 package ija.project.robot.logic.robots;
 
 import ija.project.robot.gui.controllers.Playground;

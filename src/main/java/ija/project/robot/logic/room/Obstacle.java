@@ -1,3 +1,7 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05)
+ * Description: This file contains the logic for the obstacle in the simulation.
+ */
 package ija.project.robot.logic.room;
 
 import ija.project.robot.gui.controllers.Playground;

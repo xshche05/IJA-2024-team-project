@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file contains the representation of manual robot properties and configuration
+ * within JSON configuration format.
+ */
 package ija.project.robot.maps;
 
 /**

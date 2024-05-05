@@ -1,3 +1,7 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file contains the main class for the robot simulation application.
+ */
 package ija.project.robot;
 
 import ija.project.robot.gui.App;
@@ -21,7 +25,7 @@ public class RobotApp {
      * The main method that starts the entire application.
      * It initializes the logging configuration and starts the GUI application.
      *
-     * @param args Command-line arguments passed to the application. Currently not used.
+     * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
         try {

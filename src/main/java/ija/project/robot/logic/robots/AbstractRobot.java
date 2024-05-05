@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file provides the logic for the abstract robot class in the application.
+ * It defines the basic functionalities for moving and rotating robots in a simulated environment.
+ */
 package ija.project.robot.logic.robots;
 
 import ija.project.robot.logic.common.AbstractRoomObject;

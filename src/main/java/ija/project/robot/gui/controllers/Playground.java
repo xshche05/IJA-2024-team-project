@@ -1,3 +1,9 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file contains the implementation of the Playground controller. It handles the user interactions with the playground scene.
+ * It allows users to add robots and obstacles to the room, start and pause the simulation, and control the movement of robots.
+ * Initializes the UI components and prepares the simulation environment.
+ */
 package ija.project.robot.gui.controllers;
 
 import ija.project.robot.gui.interfaces.MenuInterface;

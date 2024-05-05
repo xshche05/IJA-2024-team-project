@@ -1,3 +1,7 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05)
+ * Description: Create dialog controller file, that provides the logic for the Create dialog.
+ */
 package ija.project.robot.gui.controllers;
 
 import ija.project.robot.gui.interfaces.Dialog;

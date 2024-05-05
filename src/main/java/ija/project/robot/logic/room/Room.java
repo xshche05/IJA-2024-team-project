@@ -1,3 +1,8 @@
+/*
+ * Author: Kirill Shchetiniuk (xshche05), Artur Sultanov (xsulta01)
+ * Description: This file contains the logic for the room in the simulation.
+ * Includes the placement of robots and obstacles, movement, and interaction within the grid.
+ */
 package ija.project.robot.logic.room;
 
 import ija.project.robot.gui.logic.ControlledRobot;
