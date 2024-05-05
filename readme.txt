@@ -12,27 +12,29 @@ It allows users to interactively add, move, and manage mobile robots in a simula
 The application provides functionalities to simulate robot movements, obstacle placements,
 and various robot interactions within a defined area.
 
+How to run the project:
 
-1. How to Build:
+1. Build program and documentation:
 
-mvn package
+  mvn
 
-2. How to create the documentation:
+2. Program run:
 
-mvn javadoc:javadoc
-
-3. How to Start the Application:
-
-java -jar ./target/robot-1.0.jar
-
-4. ALL-IN-ONE:
-
-mvn
-
-Program run:
-
-java -jar robot-1.0-jar-with-dependencies.jar
+  java -jar robot-1.0-jar-with-dependencies.jar
 
 Final JAR archive with dependencies is located in the base directory of the project and is named robot-1.0-jar-with-dependencies.jar.
 Automatically generated Javadoc documentation is located in the javadoc folder in the base directory of the project.
 
+Additional commands:
+
+ALL-IN-ONE command to build program, create documentation, and run the program:
+
+  mvn && java -jar robot-1.0-jar-with-dependencies.jar
+
+Only build program:
+
+  mvn package
+
+Only create the documentation:
+
+  mvn javadoc:javadoc
