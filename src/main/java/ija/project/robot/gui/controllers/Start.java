@@ -13,6 +13,7 @@ import static ija.project.robot.RobotApp.logger;
 
 /**
  * Controller for the start scene of the application.
+ * Implements the {@link MenuInterface} and {@link SceneInterface} interfaces.
  * This class handles the initial interactions of the user with the application's main menu,
  * including loading files, saving files, accessing help, and creating new projects.
  */
@@ -28,55 +29,43 @@ public class Start implements MenuInterface, SceneInterface {
     @FXML
     public MenuItem MenuNewFile;
 
-    /**
-     * Loads a room state from file.txt contains room map into the application.
-     * This method is triggered when the user selects the 'Load File' option from the menu.
-     */
     @Override
     @FXML
     public void FileLoad() {
         new Menu().initialize().FileLoad(AnchorPane);
     }
 
-    /**
-     * Saves the current room state to a file.
-     * This method is triggered when the user selects the 'Save As' option from the menu.
-     */
     @Override
     @FXML
     public void FileSaveAs() {
         new Menu().initialize().FileSaveAs(AnchorPane);
     }
 
-    /**
-     * Displays help information related to the application.
-     * This method is triggered when the user selects the 'Help' option from the menu.
-     */
     @Override
     @FXML
     public void About() {
         new Menu().initialize().About(AnchorPane);
     }
 
-    /**
-     * Initiates the manual creation of a new room map by user.
-     * This method is triggered when the user clicks the 'Create New' button.
-     */
+    @Override
     @FXML
     public void CreateNew() {
         new Menu().initialize().CreateNew(AnchorPane);
     }
 
+    @Override
     @FXML
     public void LoadPredefinedMap1() {
         new Menu().initialize().LoadPredefinedMap1(AnchorPane);
     }
 
+    @Override
     @FXML
     public void LoadPredefinedMap2() {
         new Menu().initialize().LoadPredefinedMap2(AnchorPane);
     }
 
+    @Override
     @FXML
     public void LoadPredefinedMap3() {
         new Menu().initialize().LoadPredefinedMap3(AnchorPane);

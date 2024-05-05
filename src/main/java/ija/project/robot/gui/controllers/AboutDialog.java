@@ -4,7 +4,6 @@ import ija.project.robot.gui.interfaces.Dialog;
 import ija.project.robot.gui.interfaces.SceneInterface;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 /**
@@ -39,12 +38,11 @@ public class AboutDialog extends Dialog {
     }
 
     /**
-     * Invoked when the Close button is clicked. This method overloads the abstract {@code Ok}
-     * method from the {@link Dialog} class.
+     * This method overloads the abstract {@code Ok} method from the {@link Dialog} class.
      */
     @Override
     public void Ok() {
-        return;
+        Cancel();
     }
 
     /**
