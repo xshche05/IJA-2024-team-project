@@ -217,6 +217,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Removes all objects from the current room.
      */
     public void RemoveAllAction() {
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         logger.info("Remove all button pressed");
         Room room = Room.getInstance();
         room.removeAll();
@@ -226,6 +230,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Removes all obstacles from the current room.
      */
     public void RemoveObstaclesAction() {
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         logger.info("Remove obstacles button pressed");
         Room room = Room.getInstance();
         room.removeObstacles();
@@ -235,6 +243,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Removes all robots from the current room.
      */
     public void RemoveRobotsAction() {
+        if (!AbstractRobot.isPlayBackFinished()) {
+            logger.warning("Playback is running, cannot edit objects");
+            return;
+        }
         logger.info("Remove robots button pressed");
         Room room = Room.getInstance();
         room.removeRobots();
