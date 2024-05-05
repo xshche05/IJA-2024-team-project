@@ -16,6 +16,10 @@ How to Build:
 
 mvn package
 
+How to create the documentation:
+
+mvn javadoc:javadoc
+
 How to Start the Application:
 
 java -jar ./target/robot-1.0.jar
