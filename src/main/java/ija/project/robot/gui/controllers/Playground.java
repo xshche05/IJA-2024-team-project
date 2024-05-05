@@ -20,7 +20,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -29,6 +28,7 @@ import static ija.project.robot.RobotApp.logger;
 
 /**
  * Controller for the playground scene of the application.
+ * Implements the {@link MenuInterface} and {@link SceneInterface} interfaces.
  * This class handles the interactions of the user with the playground.
  * The playground allows users to add robots and obstacles to the room, start and pause the simulation,
  * and control the movement of robots.
@@ -73,58 +73,46 @@ public class Playground implements MenuInterface, SceneInterface {
         setupTimeline();
     }
 
-    /**
-     * Initiates the manual creation of a new room map by user.
-     * This method is triggered when the user clicks the 'Create New' button.
-     */
+    @Override
     @FXML
     public void CreateNew() {
         new Menu().initialize().CreateNew(AnchorPane);
     }
 
-    /**
-     * Loads the game configuration from a file into the current session.
-     */
+
+    @Override
     @FXML
     public void FileLoad() {
         new Menu().initialize().FileLoad(AnchorPane);
     }
 
-    /**
-     * Saves the current game configuration to a file.
-     */
+
+    @Override
     @FXML
     public void FileSaveAs() {
         new Menu().initialize().FileSaveAs(AnchorPane);
     }
 
-    /**
-     * Loads the 1 predefined map configuration into the current session.
-     */
+
+    @Override
     @FXML
     public void LoadPredefinedMap1() {
         new Menu().initialize().LoadPredefinedMap1(AnchorPane);
     }
 
-    /**
-     * Loads the 2 predefined map configuration into the current session.
-     */
+    @Override
     @FXML
     public void LoadPredefinedMap2() {
         new Menu().initialize().LoadPredefinedMap2(AnchorPane);
     }
 
-    /**
-     * Loads the 3 predefined map configuration into the current session.
-     */
+    @Override
     @FXML
     public void LoadPredefinedMap3() {
         new Menu().initialize().LoadPredefinedMap3(AnchorPane);
     }
 
-    /**
-     * Opens the 'About' dialog to display information about the application.
-     */
+    @Override
     @FXML
     public void About() {
         new Menu().initialize().About(AnchorPane);

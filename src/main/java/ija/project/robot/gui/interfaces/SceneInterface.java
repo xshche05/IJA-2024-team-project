@@ -1,6 +1,5 @@
 package ija.project.robot.gui.interfaces;
 
-import ija.project.robot.gui.controllers.Start;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 

@@ -1,23 +1,48 @@
 package ija.project.robot.gui.interfaces;
 
+import ija.project.robot.gui.logic.Menu;
+import javafx.fxml.FXML;
+
 /**
  * Defines the basic file handling and help functionalities for a user interface menu.
  */
 public interface MenuInterface {
     /**
-     * Initiates the process to load a .txt file with the room map.
-     * Map contains the room dimensions and the initial positions of the robots and obstacles.
+     * Loads a room state from JSON file contains room map into the application.
+     * This method is triggered when the user selects the 'Load File' option from the menu.
      */
     void FileLoad();
 
     /**
-     * Initiates the process to save data or a file.
-     * Save the map of the room to a .txt file.
+     * Saves the current room state to a JSON file.
+     * This method is triggered when the user selects the 'Save As' option from the menu.
      */
     void FileSaveAs();
 
     /**
-     * Initiates the process to display help information related to the application.
+     * Displays help information about the application.
+     * This method is triggered when the user selects the 'About' option from the 'Help' menu.
      */
     void About();
+
+    /**
+     * Initiates the manual creation of a new room map by user.
+     * This method is triggered when the user clicks the 'Create New' button.
+     */
+    void CreateNew();
+
+    /**
+     * Loads a 'Map 1' predefined configuration of the room.
+     */
+    void LoadPredefinedMap1();
+
+    /**
+     * Loads a 'Map 2' predefined configuration of the room.
+     */
+    void LoadPredefinedMap2();
+
+    /**
+     * Loads a 'Map 3' predefined configuration of the room.
+     */
+    void LoadPredefinedMap3();
 }
