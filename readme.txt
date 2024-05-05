@@ -25,9 +25,15 @@ mvn javadoc:javadoc
 
 java -jar ./target/robot-1.0.jar
 
-ALL-IN-ONE:
+4. ALL-IN-ONE:
 
 mvn package && mvn javadoc:javadoc && java -jar ./target/robot-1.0.jar
 
+
 This commands will compile the project and packages it into a runnable jar file located in the ./target directory.
 And will launch the graphical user interface of the simulator, where you can start interacting with the mobile robots.
+
+
+If you need to clean all the compiled files and the jar file, you can use the following command:
+
+mvn clean
