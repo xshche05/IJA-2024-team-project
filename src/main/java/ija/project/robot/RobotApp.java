@@ -13,6 +13,6 @@ public class RobotApp {
     public static void main(String[] args) throws InterruptedException, IOException {
         LogManager.getLogManager().readConfiguration(RobotApp.class.getResourceAsStream("logging.properties"));
         logger.info("Starting application");
-        App.run(args);
+        App.run();
     }
 }

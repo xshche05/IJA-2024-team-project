@@ -1,7 +1,6 @@
 package ija.project.robot.logic.robots;
 
 import ija.project.robot.gui.controllers.Playground;
-import ija.project.robot.gui.logic.ControlledRobot;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.room.Room;
 import javafx.animation.Interpolator;
@@ -13,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
@@ -21,17 +19,21 @@ import java.util.concurrent.Semaphore;
 import static ija.project.robot.RobotApp.logger;
 import static ija.project.robot.gui.controllers.Playground.playSemaphore;
 
+/**
+ * Represents a manually controlled robot within the simulation.
+ * This robot can be controlled to move in various directions or perform no action based on commands queued in its action queue.
+ */
 public class ManualRobot extends AbstractRobot {
     private final Semaphore semaphore = new Semaphore(1);
-
     private final Queue<String> queue = new LinkedList<>();
-
     private final Semaphore tickSemaphore = new Semaphore(1);
-
     private boolean controlFlag = false;
-
     public boolean running = false;
 
+    /**
+     * Constructs a ManualRobot at a specified position with a predefined image.
+     * @param pos The initial position of the robot.
+     */
     public ManualRobot(Position pos) {
         super(pos);
         logger.info("ManualRobot ("+this.id+") created at " + pos);
@@ -46,12 +48,18 @@ public class ManualRobot extends AbstractRobot {
         return imageView;
     }
 
+    /**
+     * Sets the robot as the controlled robot in the simulation, changing its image to indicate it's under control.
+     */
     public void setControlled() {
         controlFlag = true;
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("selected_robot.png")));
         imageView.setImage(image);
     }
 
+    /**
+     * Unsets the robot as the controlled robot in the simulation, changing its image back to the default robot image.
+     */
     public void unsetControlled() {
         controlFlag = false;
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("robot.png")));
@@ -82,7 +90,10 @@ public class ManualRobot extends AbstractRobot {
         return null;
     }
 
-    public boolean Go() {
+    /**
+     * Moves the robot forward.
+     */
+    public void Go() {
         for (int i = 0; i < speed; i++) {
             semaphore.acquireUninterruptibly();
             Position prevPos = this.pos;
@@ -90,7 +101,7 @@ public class ManualRobot extends AbstractRobot {
             if (newPos == null) {
                 logger.warning("ManualRobot (" + this.id + ") cannot move forward, there is an obstacle on the way");
                 semaphore.release();
-                return false;
+                return;
             }
             this.pos = newPos;
             // Make translate transition
@@ -109,8 +120,8 @@ public class ManualRobot extends AbstractRobot {
                 addToBackTransition(tt);
             });
         }
-        return true;
     }
+
 
     public void Left() {
         semaphore.acquireUninterruptibly();

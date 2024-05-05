@@ -15,13 +15,21 @@ import java.util.concurrent.Semaphore;
 import static ija.project.robot.RobotApp.logger;
 import static ija.project.robot.gui.controllers.Playground.playSemaphore;
 
+/**
+ * Represents an automated robot that can move and rotate autonomously within the simulation environment.
+ * This robot can perform automatic pathfinding, avoid obstacles, and manage its movement through transitions.
+ */
 public class AutomatedRobot extends AbstractRobot {
 
-    private int viewDistance = 1;
-    private boolean moving = false;
-    private final Semaphore transitionSemaphore = new Semaphore(1);
-    private final Semaphore tickSemaphore = new Semaphore(1);
+    private int viewDistance = 1; // The maximum distance the robot can view and move towards in a straight line.
+    private boolean moving = false; // Indicates if the robot is currently moving.
+    private final Semaphore transitionSemaphore = new Semaphore(1); // Controls access to transition animations.
+    private final Semaphore tickSemaphore = new Semaphore(1); // Controls tick operations for synchronous execution.
 
+    /**
+     * Constructs an AutomatedRobot at a specified position.
+     * @param pos The starting position of the robot on the grid.
+     */
     public AutomatedRobot(Position pos) {
         super(pos);
         logger.info("AutomatedRobot (" + this.id + ") created at " + pos);
@@ -38,6 +46,11 @@ public class AutomatedRobot extends AbstractRobot {
         return imageView;
     }
 
+    /**
+     * Attempts to calculate a move from the current position based on the robot's angle.
+     * @param pos The starting position for the calculation.
+     * @return The new position if the move is possible, null otherwise.
+     */
     public Position _canMoveFrom(Position pos) {
         int y = pos.y();
         int x = pos.x();
@@ -61,10 +74,15 @@ public class AutomatedRobot extends AbstractRobot {
         return null;
     }
 
+    /**
+     * Sets the view distance for the robot, defining how far it can "see" or move in a straight line during automatic operations.
+     * @param newViewDistance The new view distance to set.
+     */
     public void setViewDistance(int newViewDistance) {
         this.viewDistance = newViewDistance;
         logger.info("AutomatedRobot (" + this.id + ") view distance set to " + newViewDistance);
     }
+
 
     @Override
     public Position canMove() {
@@ -102,9 +120,7 @@ public class AutomatedRobot extends AbstractRobot {
         tt.setCycleCount(1);
         tt.setAutoReverse(true);
         tt.setInterpolator(Interpolator.LINEAR);
-        tt.setOnFinished(event -> {
-            transitionSemaphore.release();
-        });
+        tt.setOnFinished(event -> transitionSemaphore.release());
         playSemaphore.acquireUninterruptibly();
         addToBackTransition(tt);
         tt.play();
@@ -112,6 +128,9 @@ public class AutomatedRobot extends AbstractRobot {
         return true;
     }
 
+    /**
+     * Rotates the robot by a specified angle.
+     */
     public void rotate() {
         transitionSemaphore.acquireUninterruptibly();
         super.rotate(stepAngle);
@@ -121,15 +140,14 @@ public class AutomatedRobot extends AbstractRobot {
         rt.setCycleCount(1);
         rt.setAutoReverse(true);
         rt.setInterpolator(Interpolator.LINEAR);
-        rt.setOnFinished(event -> {
-            transitionSemaphore.release();
-        });
+        rt.setOnFinished(event -> transitionSemaphore.release());
         playSemaphore.acquireUninterruptibly();
         addToBackTransition(rt);
         rt.play();
         playSemaphore.release();
     }
 
+    @Override
     public void tick() {
         logger.info("AutomatedRobot (" + this.id + ") ticked");
         tickSemaphore.acquireUninterruptibly();

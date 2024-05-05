@@ -12,9 +12,21 @@ import javafx.stage.WindowEvent;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
+/**
+ * Main entry point for the Robot Simulation application.
+ * This class sets up the main window and initializes the application.
+ */
 public class App extends Application {
 
     private static final Logger logger = Logger.getAnonymousLogger();
+
+    /**
+     * Starts and sets up the primary stage for the application.
+     * This method is called when the application launches and is used to initialize
+     * the main user interface including setting the scene, title, minimum size, and icons.
+     *
+     * @param stage The primary stage for this application, onto which the application scene can be set.
+     */
     @Override
     public void start(Stage stage) {
         setIcon(stage);
@@ -30,6 +42,12 @@ public class App extends Application {
         stage.show();
     }
 
+    /**
+     * Sets the icon for the application window.
+     * This method attempts to load an image file from the resources to set it as the icon of the provided stage.
+     *
+     * @param stage The stage for which to set the icon.
+     */
     public void setIcon(Stage stage) {
         InputStream iconStream = getClass().getResourceAsStream("icon.png");
         if (iconStream != null) {
@@ -41,7 +59,11 @@ public class App extends Application {
         }
     }
 
-    public static void run(String[] args) {
+    /**
+     * Launches the application.
+     * This method is the main entry point for the application and is called by the main method.
+     */
+    public static void run() {
         launch();
     }
 }
