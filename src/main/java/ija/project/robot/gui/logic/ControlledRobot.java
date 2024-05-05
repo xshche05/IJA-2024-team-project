@@ -1,14 +1,11 @@
 package ija.project.robot.gui.logic;
 
-import ija.project.robot.gui.controllers.Playground;
 import ija.project.robot.logic.common.AbstractRoomObject;
 import ija.project.robot.logic.common.Position;
 import ija.project.robot.logic.robots.ManualRobot;
 import ija.project.robot.logic.room.Room;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.util.Objects;
 
 import static ija.project.robot.RobotApp.logger;
 
