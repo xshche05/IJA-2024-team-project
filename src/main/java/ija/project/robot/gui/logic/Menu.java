@@ -80,6 +80,51 @@ public class Menu {
         dialog.show();
     }
 
+    public void LoadPredefinedMap1(AnchorPane AnchorPane){
+        System.Logger logger = System.getLogger(Start.class.getName());
+        try {
+            MapLoader.getInstance().loadPredefinedMap1();
+            Scene playGround = Playground.getScene();
+            Stage stage = (Stage) AnchorPane.getScene().getWindow();
+            stage.setScene(playGround);
+            logger.log(System.Logger.Level.INFO, "ROOM CONFIGURATION loaded");
+        }
+        catch (Exception e){
+            logger.log(System.Logger.Level.ERROR, "Error loading file");
+        }
+
+    }
+
+    public void LoadPredefinedMap2(AnchorPane AnchorPane){
+        System.Logger logger = System.getLogger(Start.class.getName());
+        try {
+            MapLoader.getInstance().loadPredefinedMap2();
+            Scene playGround = Playground.getScene();
+            Stage stage = (Stage) AnchorPane.getScene().getWindow();
+            stage.setScene(playGround);
+            logger.log(System.Logger.Level.INFO, "ROOM CONFIGURATION loaded");
+        }
+        catch (Exception e){
+            logger.log(System.Logger.Level.ERROR, "Error loading file");
+        }
+
+    }
+
+    public void LoadPredefinedMap3(AnchorPane AnchorPane){
+        System.Logger logger = System.getLogger(Start.class.getName());
+        try {
+            MapLoader.getInstance().loadPredefinedMap3();
+            Scene playGround = Playground.getScene();
+            Stage stage = (Stage) AnchorPane.getScene().getWindow();
+            stage.setScene(playGround);
+            logger.log(System.Logger.Level.INFO, "ROOM CONFIGURATION loaded");
+        }
+        catch (Exception e){
+            logger.log(System.Logger.Level.ERROR, "Error loading file");
+        }
+
+    }
+
     public void About(AnchorPane AnchorPane) {
         logger.info("Help opened");
         Stage dialog = new Stage();

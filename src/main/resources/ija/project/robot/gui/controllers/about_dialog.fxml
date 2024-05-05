@@ -3,11 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -35,19 +35,22 @@
                      </VBox.margin>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="355.0" prefWidth="480.0">
-                     <children>
-                        <TextArea editable="false" prefHeight="190.0" prefWidth="200.0" text="Project within the university subject &quot;IJA&quot;.&#10;&#10;&#10;Built on May 5, 2024&#10;For educational use only.&#10;&#10;&#10;Authors:&#10;Kirill Shchetiniuk (xshche05)&#10;Artur Sultanov (xsulta01)" wrapText="true">
-                           <font>
-                              <Font name="System Bold" size="13.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </TextArea>
-                     </children>
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
+                     <children>
+                        <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: FFFFFF; -fx-background-radius: 30;">
+                           <children>
+                              <Label fx:id="aboutLabel" alignment="TOP_CENTER" layoutX="13.0" prefHeight="232.0" prefWidth="175.0" textAlignment="JUSTIFY" wrapText="true">
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding></Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Pane>
+                     </children>
                   </HBox>
                </children>
                <VBox.margin>

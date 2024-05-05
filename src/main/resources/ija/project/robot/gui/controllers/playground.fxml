@@ -22,6 +22,13 @@
                   <MenuItem fx:id="MenuFileSaveAs" mnemonicParsing="false" onAction="#FileSaveAs" text="Save As" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Preset">
+               <items>
+                  <MenuItem fx:id="Preset1" mnemonicParsing="false" onAction="#LoadPredefinedMap1" text="Preset 1" />
+                  <MenuItem fx:id="Preset2" mnemonicParsing="false" onAction="#LoadPredefinedMap2" text="Preset 2" />
+                  <MenuItem fx:id="Preset3" mnemonicParsing="false" onAction="#LoadPredefinedMap3" text="Preset 3" />
+               </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
                   <MenuItem fx:id="about" mnemonicParsing="false" onAction="#About" text="About" />
@@ -47,7 +54,6 @@
             </VBox>
          </children>
       </VBox>
-      <Button fx:id="playback" mnemonicParsing="false" onAction="#StartPlayBack" text="PlayBack" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="1.0" />
       <Button fx:id="tick" mnemonicParsing="false" onAction="#tick" text="Tick" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="1.0" />
    </children>
 </AnchorPane>

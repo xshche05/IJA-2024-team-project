@@ -67,6 +67,21 @@ public class Start implements MenuInterface, SceneInterface {
         new Menu().initialize().CreateNew(AnchorPane);
     }
 
+    @FXML
+    public void LoadPredefinedMap1() {
+        new Menu().initialize().LoadPredefinedMap1(AnchorPane);
+    }
+
+    @FXML
+    public void LoadPredefinedMap2() {
+        new Menu().initialize().LoadPredefinedMap2(AnchorPane);
+    }
+
+    @FXML
+    public void LoadPredefinedMap3() {
+        new Menu().initialize().LoadPredefinedMap3(AnchorPane);
+    }
+
     /**
      * Provides the scene for the start screen of the application.
      *

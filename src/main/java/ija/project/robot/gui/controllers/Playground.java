@@ -106,6 +106,11 @@ public class Playground implements MenuInterface, SceneInterface {
         right.setOnAction(e -> RightAction());
         moveGroup.add(right);
 
+        Button playback = new Button("PLAYBACK");
+        playback.setOnAction(e -> StartPlayBack());
+        playback.setStyle("-fx-background-color: Orange;"); //
+        pauseGroup.add(playback);
+
         Button removeAll = new Button("REMOVE ALL");
         removeAll.setOnAction(e -> RemoveAllAction());
         removeGroup.add(removeAll);
@@ -163,6 +168,21 @@ public class Playground implements MenuInterface, SceneInterface {
     @FXML
     public void FileSaveAs() {
         new Menu().initialize().FileSaveAs(AnchorPane);
+    }
+
+    @FXML
+    public void LoadPredefinedMap1() {
+        new Menu().initialize().LoadPredefinedMap1(AnchorPane);
+    }
+
+    @FXML
+    public void LoadPredefinedMap2() {
+        new Menu().initialize().LoadPredefinedMap2(AnchorPane);
+    }
+
+    @FXML
+    public void LoadPredefinedMap3() {
+        new Menu().initialize().LoadPredefinedMap3(AnchorPane);
     }
 
     @Override
