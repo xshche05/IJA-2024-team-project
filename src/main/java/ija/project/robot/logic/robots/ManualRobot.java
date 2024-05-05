@@ -51,7 +51,8 @@ public class ManualRobot extends AbstractRobot {
     }
 
     /**
-     * Sets the robot as the controlled robot in the simulation, changing its image to indicate it's under control.
+     * Sets the robot as the controlled robot in the simulation,
+     * changing image to indicate that robot is under user control.
      */
     public void setControlled() {
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("selected_robot.png")));
