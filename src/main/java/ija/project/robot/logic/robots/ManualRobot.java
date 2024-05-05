@@ -28,6 +28,8 @@ public class ManualRobot extends AbstractRobot {
 
     private final Semaphore tickSemaphore = new Semaphore(1);
 
+    private boolean controlFlag = false;
+
     public ManualRobot(Position pos) {
         super(pos);
         logger.info("ManualRobot ("+this.id+") created at " + pos);
@@ -43,11 +45,13 @@ public class ManualRobot extends AbstractRobot {
     }
 
     public void setControlled() {
+        controlFlag = true;
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("selected_robot.png")));
         imageView.setImage(image);
     }
 
     public void unsetControlled() {
+        controlFlag = false;
         Image image = new Image(Objects.requireNonNull(ManualRobot.class.getResourceAsStream("robot.png")));
         imageView.setImage(image);
     }
@@ -193,6 +197,11 @@ public class ManualRobot extends AbstractRobot {
             }
         }
         tickSemaphore.release();
+    }
+
+    public void pause() {
+        queue.clear();
+        logger.info("ManualRobot ("+this.id+") got request to pause CLEARED QUEUE");
     }
 
     public void rotateLeft() {

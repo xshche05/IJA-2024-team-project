@@ -44,8 +44,9 @@ public class Playground implements MenuInterface, SceneInterface {
 
     public static final int gridWidth = 28; // Width of each cell in the grid
     public static final int tickPeriod = 1000; // Milliseconds between each application tick
-    private Timeline timeline; // Timeline for managing automatic updates
     public GridPane grid; // Grid layout for placing robots and obstacles
+
+    private Thread tickThread;
 
     public static String createRequest; // Tracks requests for creating new robots or obstacles
     private final List<Node> addGroup = new ArrayList<>(); // Group of buttons for adding objects
@@ -261,8 +262,16 @@ public class Playground implements MenuInterface, SceneInterface {
      * The timeline triggers the {@link #tick()} method.
      */
     private void setupTimeline() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(tickPeriod), e -> tick()));
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        tickThread = new Thread(() -> {
+            while (true) {
+                try {
+                    tick();
+                    Thread.sleep((long) (tickPeriod * 0.9));
+                } catch (InterruptedException e) {
+                    logger.warning("Tick thread interrupted");
+                }
+            }
+        });
     }
 
     /**
@@ -270,8 +279,10 @@ public class Playground implements MenuInterface, SceneInterface {
      * Calls the {@link Room#tick()} method to update the room state.
      */
     public void tick() {
-        Room room = Room.getInstance();
-        room.tick();
+        if (currentMode.equals("START")) {
+            Room room = Room.getInstance();
+            room.tick();
+        }
     }
 
     /**
@@ -338,8 +349,8 @@ public class Playground implements MenuInterface, SceneInterface {
     public void StartPauseAction(){
         ToggleButton strtbttn = (ToggleButton) startGroup.get(0);
         if (!strtbttn.isSelected()){
-            timeline.stop();
             currentMode = lastEditMode;
+            tickThread.interrupt();
             strtbttn.setText("START");
             Room.getInstance().stopSimulation();
             strtbttn.setStyle("-fx-background-color: lightgreen;");
@@ -351,8 +362,8 @@ public class Playground implements MenuInterface, SceneInterface {
             else if (lastEditMode.equals("REMOVE"))
                 HBoxBttnUp.getChildren().addAll(removeGroup);
         } else {
-            timeline.play();
             currentMode = "START";
+            tickThread.start();
             Room.getInstance().startSimulation();
             strtbttn.setText("PAUSE");
             strtbttn.setStyle("-fx-background-color: yellow;");

@@ -25,9 +25,7 @@ public class Room {
     private final System.Logger logger;
     private static Room instance = null;
     private GridPane grid;
-
     private int tick_counter = 0;
-
     public boolean back_play_running = false;
 
     private Room() {
@@ -179,6 +177,8 @@ public class Room {
         for (AbstractRobot robot : robots) {
             if (robot instanceof AutomatedRobot) {
                 ((AutomatedRobot) robot).stopMoving();
+            } else if (robot instanceof ManualRobot) {
+                ((ManualRobot) robot).pause();
             }
         }
     }

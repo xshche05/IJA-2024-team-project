@@ -108,6 +108,7 @@ public abstract class AbstractRobot extends AbstractRoomObject {
 
     public void setStartAngle(int startAngle) {
         this.currentAngle = startAngle;
+        imageView.setRotate(startAngle);
     }
 
     public int getSpeed() {
