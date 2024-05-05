@@ -18,8 +18,6 @@ import java.util.concurrent.Semaphore;
 import static ija.project.robot.RobotApp.logger;
 
 public class ManualRobot extends AbstractRobot {
-
-    private final ImageView imageView;
     private final Semaphore semaphore = new Semaphore(1);
 
     public ManualRobot(Position pos) {
